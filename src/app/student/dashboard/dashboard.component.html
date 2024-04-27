@@ -1,0 +1,212 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'"></app-breadcrumb>
+    </div>
+    <!-- Widgets -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="body">
+            <div class="row align-items-center">
+              <div class="col-md-4">
+                <img src="assets/images/pages/wcb.jpg" alt="" class="w-100">
+              </div>
+              <div class="col-md-8">
+                <h4 class="font-18 font-b-500 mb-2">
+                  Welcome back <div class="weight-600 font-25 col-blue pt-1">{{ getFullName() }}!</div>
+                </h4>
+                <p class="font-16 max-width-600">Welcome back to AttendEase! We're thrilled to have you here again as
+                  you continue your journey with us to make attending school even more enjoyable and rewarding. We truly
+                  appreciate your commitment to enhancing your educational experience through our platform.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- #END# Widgets -->
+        <!--GEOLOCATION-->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="header">
+                <h2>Your Location</h2>
+              </div>
+              <div class="body">
+                <div class="location">
+                  <google-map height="400px" width="auto" [zoom]="zoom" [center]="center" [options]="options">
+                    <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"
+                      [title]="marker.title" [options]="marker.options">
+                    </map-marker>
+                  </google-map>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END GEOLOCATION-->
+
+    <!--CALENDAR-->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card card-statistic-2">
+          <div class="card-calendar">
+            <div class="card-header">
+              <h2 class="p">
+                {{ currentDate | date:'EEEE'}}
+                <br>
+                {{ currentDate | date:'MMMM d, yyyy'}}
+              </h2>
+            </div>
+            <div class="calendar-body">
+              <div class="month-navigation">
+                <button (click)="previousMonth()">◀</button>
+                <span>{{ currentMonth }}</span>
+                <button (click)="nextMonth()">▶</button>
+              </div>
+              <div class="days">
+                <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
+              </div>
+              <div class="dates">
+                <div *ngFor="let date of dates" class="date"
+                  [ngClass]="{ 'current-date': isCurrentDate(date), 'empty-date': date === -1 }"
+                  (click)="handleDateClick(date)">
+                  {{ date !== -1 ? date : '' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--END CALENDAR-->
+      <!--todaysclass-->
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <span>Today's Class:</span> &nbsp;&nbsp;
+
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+
+              <button mat-menu-item>
+                <mat-icon>refresh</mat-icon>
+                <span>Refresh</span>
+              </button>
+            </mat-menu>
+          </div>
+          <div class="body">
+
+           <!--Added-->
+            <!--<table class="table table-hover dashboard-task-infos text-center">
+              <div *ngFor="let class of class">
+                {{ class.description }}
+                {{ class.classStart_Time }}
+                {{ class.classEnd_Time }}
+                {{ class.class_Section }}
+                {{ class.class_Day}}
+              </div>
+            </table>-->
+
+
+        <div *ngFor="let cls of class">
+          <div *ngIf="cls.class_Day === (currentDate | date:'EEEE')">
+            <ng-container *ngIf="class.length > 0; else noClasses">
+              <tr *ngFor="let class of class">
+                {{ class.class_Day }}
+                {{ class.classStart_Time }}
+                {{ class.class_Section }}
+                {{ class.description }}
+              </tr>
+              </ng-container>
+            </div>
+        </div>
+          <ng-template #noClasses>
+            <tr>
+              <td colspan="4"> No class for Today </td>
+            </tr>
+          </ng-template>
+
+          <!--<ng-container *ngIf="filteredClasses.length > 0; else noClasses">
+            <tr *ngFor="let cls of filteredClasses">
+              <td>{{ cls.class_Day }}</td>
+              <td>{{ cls.classStart_Time }}</td>
+              <td>{{ cls.class_Section }}</td>
+              <td>{{ cls.description }}</td>
+            </tr>
+          </ng-container>
+          <ng-template #noClasses>
+            <tr>
+              <td colspan="4"> No class for Today </td>
+            </tr>
+          </ng-template>-->
+
+          </div>
+        </div>
+      </div>
+
+      <!------------------------------------------------------------teacherlist-------------------------------------------------------->
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+          <div class="header">
+            <span>List of Teachers</span>
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+
+              <button mat-menu-item>
+                <mat-icon>refresh</mat-icon>
+                <span>Refresh</span>
+              </button>
+            </mat-menu>
+          </div>
+
+
+          <!-- <div class="table-img">
+              <img class="notice-object" src="assets/images/user/user4.jpg" alt="...">
+            </div>-->
+          <div *ngFor="let teacher of teachers">
+            <div class="notice-board">
+              <div class="table-img">
+                <img class="notice-object" [src]="teacher.uploadimage" alt="Teacher Image">
+              </div>
+              <div class="notice-body">
+                <div>
+                  <ul>
+                    <!--<h6 class="notice-heading" [ngClass]="{'col-green': i % 2 == 0, 'col-blue': i % 2 != 0}">-->
+                    <h6 class="notice-heading" [style.color]="teacher.color">
+                      {{ teacher.First_Name }} {{ teacher.Middle_Name }} {{ teacher.Last_Name }}
+                    </h6>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!--
+            <div class="card-body">
+            <ul class="teacher-list">
+              <li *ngFor="let classItem of filteredClasses">
+                <img src="{{ teacher.uploadimage}}" alt="Teacher Profile Picture">
+                <div>
+                  <ul>
+                    <li *ngFor="let teacher of teachers">
+                      <div class="teacher-info">
+                        <img [src]="teacher.uploadimage" alt="Image" class="teacher-image">
+                        <span>{{ teacher.First_Name }} {{ teacher.Middle_Name }} {{ teacher.Last_Name }}</span>
+                      </div>
+                    </li>
+                  </ul>
+
+                </div>
+             </li>
+            </ul>-->
+          </div>
+        </div>
+      </div>
+      <!--teacher end-->
+    </div>
+  </div>
+</section>

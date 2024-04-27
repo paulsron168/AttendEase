@@ -1,0 +1,11 @@
+.teacher-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .teacher-image {
+    width: 50px; /* Adjust the width as per your requirement */
+    height: auto; /* Automatically adjust height to maintain aspect ratio */
+    margin-right: 10px; /* Optional: Add some spacing between image and text */
+  }
+  
