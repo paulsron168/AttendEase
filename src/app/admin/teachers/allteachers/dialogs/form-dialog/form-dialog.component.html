@@ -1,0 +1,178 @@
+<div class="addContainer">
+  <div class="modalHeader clearfix">
+    <div class="editRowModal">
+      <div class="modal-about">
+        {{ dialogTitle }}
+      </div>
+    </div>
+    <button 
+      mat-icon-button 
+      class="modal-close-button" 
+      aria-label="Close dialog" 
+      (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="teachersForm" (ngSubmit)="submit()">
+      <div class="row">
+        <!-- Teacher ID -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>#</mat-label>
+            <input 
+              matInput 
+              formControlName="ID" 
+              required 
+              [readonly]="true" />
+            <mat-icon matSuffix>assignment_ind</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Teacher ID Number -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Teacher ID Number</mat-label>
+            <input 
+              matInput 
+              formControlName="TeacherID_Number" 
+              required />
+            <mat-icon matSuffix>assignment_ind</mat-icon>
+            <mat-error *ngIf="teachersForm.get('TeacherID_Number')?.hasError('required')">
+              Teacher ID Number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- First Name -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input 
+              matInput 
+              formControlName="First_Name" 
+              required />
+            <mat-icon matSuffix>face</mat-icon>
+            <mat-error *ngIf="teachersForm.get('First_Name')?.hasError('required')">
+              First Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Middle Name -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Middle Name</mat-label>
+            <input 
+              matInput 
+              formControlName="Middle_Name" 
+              required />
+            <mat-icon matSuffix>face</mat-icon>
+            <mat-error *ngIf="teachersForm.get('Middle_Name')?.hasError('required')">
+              Middle Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input 
+              matInput 
+              formControlName="Last_Name" 
+              required />
+            <mat-icon matSuffix>face</mat-icon>
+            <mat-error *ngIf="teachersForm.get('Last_Name')?.hasError('required')">
+              Last Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input 
+              matInput 
+              formControlName="DOB" 
+              required />
+            <mat-icon matSuffix>event</mat-icon>
+            <mat-error *ngIf="teachersForm.get('DOB')?.hasError('required')">
+              Date of Birth is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Gender -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select 
+              formControlName="Gender" 
+              required>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
+            </mat-select>
+            <mat-error *ngIf="teachersForm.get('Gender')?.hasError('required')">
+              Gender is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Email Address -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input 
+              matInput 
+              formControlName="Email_Address" 
+              required />
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="teachersForm.get('Email_Address')?.hasError('required') || teachersForm.get('Email_Address')?.touched">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Contact Number -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact Number</mat-label>
+            <input 
+              matInput 
+              formControlName="Contact_Number" 
+              required />
+            <mat-icon matSuffix>call</mat-icon>
+            <mat-error *ngIf="teachersForm.get('Contact_Number')?.hasError('required')">
+              Contact Number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button 
+              mat-raised-button 
+              color="primary" 
+              [disabled]="!teachersForm.valid" 
+              (click)="updateTeacher()">
+              Save
+            </button>
+            <button 
+              mat-raised-button 
+              color="warn" 
+              (click)="onNoClick()" 
+              tabindex="-1">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

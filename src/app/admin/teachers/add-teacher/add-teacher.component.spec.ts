@@ -1,0 +1,21 @@
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { AddTeacherComponent } from "./add-teacher.component";
+describe("AddtTeacherComponent", () => {
+  let component: AddTeacherComponent;
+  let fixture: ComponentFixture<AddTeacherComponent>;
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+    imports: [AddTeacherComponent],
+}).compileComponents();
+    })
+  );
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AddTeacherComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
+});

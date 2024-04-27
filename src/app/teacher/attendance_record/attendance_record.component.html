@@ -1,0 +1,33 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Chat'" [items]="['Home']" [active_item]="'Chat'"></app-breadcrumb>
+    </div>
+    <div class="row">
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="card">
+          <div class="body">
+
+            <div class="body">
+              <div class="generate">
+                <input type="text" [value]="code[0]" readonly />
+                <input type="text" [value]="code[1]" readonly />
+                <input type="text" [value]="code[2]" readonly />
+                <input type="text" [value]="code[3]" readonly />
+              </div>
+              <div>
+                <button color= "primary" (click)="generateCode()">Generate</button>
+                <button color= "primary" (click)="sendNotification()">Send</button>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

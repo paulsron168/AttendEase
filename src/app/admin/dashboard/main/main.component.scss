@@ -1,0 +1,57 @@
+.p {
+    font-weight: bold;
+}
+
+.month-navigation {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+    
+    button {
+        background-color: #826bd4;
+        color: #fff;
+    }
+}
+
+.dates,
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    
+}
+
+.day,
+.date {
+    padding: 3px;
+    text-align: center;
+    height: 74px;
+    position: relative; /* Add position relative */
+}
+
+.current-date {
+    top: 50%; /* Move the circle to the middle vertically */
+    left: 50%; /* Move the circle to the middle horizontally */
+    transform: translate(-50%, -50%); /* Center the circle */
+    background-color: #826bd4;
+    border-radius: 50%;
+    width: 50px; /* Adjust width to your preference */
+    height: 50px; /* Adjust height to your preference */
+    display: flex; /* Add flex display */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.date:hover {
+   
+    background-color: #826bd4;
+    border-radius: 50%;
+    width: 50px; /* Adjust width to your preference */
+    height: 50px; /* Adjust height to your preference */
+    display: flex; /* Add flex display */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+

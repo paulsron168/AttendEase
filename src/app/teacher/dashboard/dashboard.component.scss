@@ -1,0 +1,91 @@
+//welcome
+.image{
+   height:170px ;
+   border-radius: 50%;
+     width: 170px;
+      margin-left: 30px;
+    }
+
+
+//schedule--------------------------------------------
+
+.class-item {
+    font-size: 14px;
+    border: 1px solid #0a0a0a;
+    border-radius:5px;
+    width: auto;
+    height: auto;
+    display: grid;
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: auto;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.class-item span {
+    flex: 3;
+}
+
+
+
+//calendar-------------------------------------------
+.p {
+    font-weight: bold;
+}
+
+.month-navigation {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+
+    button {
+        background-color:  #826bd4;
+        color: #fff;
+    }
+}
+
+.days {
+    margin-bottom: 5px;
+
+}
+
+.dates,
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.day,
+.date {
+    padding: 4px;
+    text-align: center;
+}
+
+.current-date {
+    border-radius: 5px;
+    background-color: #826bd4;
+
+}
+
+
+.date:hover {
+
+    border-radius:5px;
+    background-color: #826bd4;
+
+}
+
+
+
+
+
+
+main {
+    margin-bottom: 1rem;
+}

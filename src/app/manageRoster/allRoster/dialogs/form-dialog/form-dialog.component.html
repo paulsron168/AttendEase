@@ -1,0 +1,193 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <!--<img [src]='teachers.img' alt="avatar">-->
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="manageRosterForm" (ngSubmit)="submit">
+      <div class="row">
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Class Roster ID</mat-label>
+            <input matInput formControlName="classRoster_ID" required>
+            <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>assignment_ind</mat-icon>
+            @if (  manageRosterForm.get('classRoster_ID')?.hasError('required')) {
+            <mat-error>
+              Class Roster ID is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Major</mat-label>
+            <mat-select formControlName="major" required>
+              <mat-option [value]="'Computer Technology'">
+                Computer Technology
+              </mat-option>
+              <mat-option [value]="' Electronic Technology'">
+                Electronic Technology
+              </mat-option>
+            </mat-select>
+            @if (  manageRosterForm.get('major')?.hasError('required')) {
+            <mat-error>
+              Major is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Year Level</mat-label>
+            <mat-select formControlName="year_level" required>
+              <mat-option [value]="'First Year'">
+                First Year
+              </mat-option>
+              <mat-option [value]="'  Second Year'">
+                Second Year
+              </mat-option>
+              <mat-option [value]="'Third Year'">
+                Third Year
+              </mat-option>
+              <mat-option [value]="' Fourth Year'">
+                Fourth Year
+              </mat-option>
+            </mat-select>
+            @if (  manageRosterForm.get('year_level')?.hasError('required')) {
+            <mat-error>
+              Year Level is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Class Section</mat-label>
+            <mat-select formControlName="class_Section" required>
+              <mat-option [value]="'A'">
+                A
+              </mat-option>
+              <mat-option [value]="'B'">
+                B
+              </mat-option>
+              <mat-option [value]="'C'">
+                C
+              </mat-option>
+              <mat-option [value]="'D'">
+                D
+              </mat-option>
+              <mat-option [value]="'EA'">
+                EA
+              </mat-option>
+            </mat-select>
+            @if (  manageRosterForm.get('class_Section')?.hasError('required')) {
+            <mat-error>
+              Class Section is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject" required>
+            <mat-icon class="material-icons-outlined color-icon p-3" matSuffix></mat-icon>
+            @if (  manageRosterForm.get('subject')?.hasError('required') ||   manageRosterForm.get('subject')?.touched) {
+            <mat-error>
+              Subject is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Teacher</mat-label>
+            <input matInput formControlName="" required>
+            <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+            @if (  manageRosterForm.get('TeacherID_Number')?.hasError('required') ||
+            manageRosterForm.get('TeacherID_Number')?.touched) {
+            <mat-error>
+              Teacher is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Class Start Time
+            </mat-label>
+            <input matInput [owlDateTimeTrigger]="class_Start" [owlDateTime]="class_Start">
+            <mat-icon matSuffix [owlDateTimeTrigger]="class_Start">access_time</mat-icon>
+            <owl-date-time [pickerType]="'timer'" #class_Start></owl-date-time>
+            @if (  manageRosterForm.get('class_Start')?.hasError('required')) {
+            <mat-error>
+              Class Start Time is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Class End Time
+            </mat-label>
+            <input matInput [owlDateTimeTrigger]="class_End" [owlDateTime]="class_End">
+            <mat-icon matSuffix [owlDateTimeTrigger]="class_End">access_time</mat-icon>
+            <owl-date-time [pickerType]="'timer'" #class_End></owl-date-time>
+            @if (  manageRosterForm.get('class_End')?.hasError('required')) {
+            <mat-error>
+              Class End Time is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Class Day</mat-label>
+            <mat-select formControlName="class_Day" multiple required>
+              @for (day of class_Day; track day) {
+              <mat-option [value]="day">{{day}}
+              </mat-option>
+              }
+            </mat-select>
+            <mat-error>
+              Class Day is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [disabled]="!manageRosterForm.valid"
+              (click)="updateManageRoster()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

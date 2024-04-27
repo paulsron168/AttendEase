@@ -1,0 +1,151 @@
+<main>
+  <section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'">
+        </app-breadcrumb>
+      </div>
+
+      <!-- Welcome user -->
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="body">
+              <div class="row align-items-center">
+                <div class="col-md-3">
+                  <img class="image" src="assets/images/pages/user1.jpg" alt="">
+                </div>
+                <div class="col-md-9">
+                  <h4 class="font-30 font-b-500 mb-2">
+                    Welcome back
+                    <div class="weight-600 font-25 col-blue pt-1">Benings</div>
+                  </h4>
+                  <p class="font-16 max-width-600">We would like to take this opportunity to welcome you to our practice
+                    and to thank you
+                    for choosing our company. Nam quis ligula est. Nunc sed risus non turpis tristique tempor. Ut
+                    sollicitudin faucibus magna nec gravida..</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #END# Welcome user -->
+
+
+
+      <!--GEOLOCATION-->
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="header">
+              <h2>Your Location</h2>
+            </div>
+            <div class="body">
+              <div class="location">
+                <google-map height="400px" width="auto" [zoom]="zoom" [center]="center" [options]="options">
+                  <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"
+                    [title]="marker.title" [options]="marker.options">
+                  </map-marker>
+                </google-map>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--END GEOLOCATION-->
+
+
+
+      <div class="row">
+
+        <!--CHART-->
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="header">
+              <h2>Student Attendance Percentage</h2>
+            </div>
+            <apx-chart [series]="radialChartOptions.radialseries!" [chart]="radialChartOptions.chart!"
+              [plotOptions]="radialChartOptions.plotOptions!" [labels]="radialChartOptions.labels!"></apx-chart>
+            <div class="text-center p-t-20">
+              <div class="chart-note">
+                <span class="dot bg-orange"></span>
+                <span>Late</span>
+              </div>
+              <div class="chart-note msr-0">
+                <span class="dot bg-green"></span>
+                <span>Present</span>
+              </div>
+              <div class="chart-note">
+                <span class="dot bg-indigo"></span>
+                <span>Absent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END CHART-->
+
+        <!--TODAY CLASS-->
+<div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+    <div class="card">
+        <div class="header">
+            <h2>Today's Class</h2>
+        </div>
+        <br>
+        <div class="body">
+            <table class="table dashboard-task-infos text-center">
+                <ng-container *ngIf="class.length > 0; else noClasses">
+                    <tr *ngFor="let cls of class">
+                        <td>{{ cls.subject }}</td>
+                        <td>{{ cls.classStart_Time }}</td>
+                        <td>{{ cls.classEnd_Time }}</td>
+                        <td>{{ cls.class_Section }}</td>
+                        <td>{{ cls.class_Day }}</td>
+                        <td>{{ cls.subject_room }}</td>
+                    </tr>
+                </ng-container>
+            </table>
+            <ng-template #noClasses>
+                <tr>
+                    <td colspan="6">No class for today</td>
+                </tr>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<!--END TODAY CLASS-->
+
+        <!--CALENDAR-->
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <div class="card">
+            <div class="header" style="background-color: #fbfbfc; border-radius: 10px 10px  0 0;">
+              <h2 class="p">{{ currentDate | date:'EEEE MMMM d, yyyy'}}</h2>
+              <br>
+            </div>
+            <div class="body">
+              <div class="month-navigation">
+                <button (click)="previousMonth()">◀</button>
+                <span>{{ currentMonth }}</span>
+                <button (click)="nextMonth()">▶</button>
+              </div>
+              <div class="days">
+                <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
+              </div>
+              <div class="dates">
+                <div *ngFor="let date of dates" class="date"
+                  [ngClass]="{ 'current-date': isCurrentDate(date), 'empty-date': date === -1 }"
+                  (click)="handleDateClick(date)">
+                  {{ date !== -1 ? date : '' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END CALENDAR-->
+
+      </div>
+    </div>
+
+  </section>
+</main>

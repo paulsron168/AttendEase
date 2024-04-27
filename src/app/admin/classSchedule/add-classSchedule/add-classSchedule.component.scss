@@ -1,0 +1,49 @@
+::ng-deep ngx-material-timepicker-content{
+ 
+  .timepicker__header {
+    height: 110px; /* Your desired height */
+    line-height: 50px; /* Match the height for vertical alignment */
+  }
+
+ 
+
+.timepicker-dial__time[_ngcontent-ng-c1969807207] {
+  line-height: normal;
+  font-size: 50px;
+  color: #ffffff80;
+  font-family: "Roboto",sans-serif;
+}
+
+
+
+button, input, select, a {
+  outline: none !important;
+  font-size: 30px !important;
+  text-decoration: none;
+
+}
+
+ngx-material-timepicker-content .timepicker__header {
+  line-height: 40px;
+}
+
+
+.timepicker-dial__control[_ngcontent-ng-c2521926485] {
+  border: none;
+  background-color: transparent;
+  font-size: 40px;
+  width: 40px;
+  padding: 0;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.timepicker__header[_ngcontent-ng-c2055447140] {
+  padding: 05px 60px;
+  background-color: #00bfff;
+}
+
+
+ 
+
+}

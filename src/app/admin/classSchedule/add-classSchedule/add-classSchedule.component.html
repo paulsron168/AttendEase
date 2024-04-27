@@ -1,0 +1,161 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- Breadcrumb -->
+      <app-breadcrumb
+        [title]="'Class Schedule'"
+        [items]="['Class Schedule']"
+        [active_item]="'Add Class Schedule'"
+      ></app-breadcrumb>
+    </div>
+
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>New Class Schedule Information</h2>
+          </div>
+          <div class="body">
+            <form class="m-4" [formGroup]="docForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <!-- Class ID -->
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Class ID</mat-label>
+                    <input matInput formControlName="class_ID" required />
+                    <mat-error *ngIf="docForm.get('class_ID')?.hasError('required')">
+                      Class ID is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Class Day -->
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Class Day</mat-label>
+                    <mat-select formControlName="class_Day" multiple required>
+                      <mat-option *ngFor="let day of class_Day" [value]="day">
+                        {{ day }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="docForm.get('class_Day')?.hasError('required')">
+                      Class Day is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Class Start -->
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field appearance="outline" class="example-full-width mb-3">
+                    <mat-label>Class Start</mat-label>
+                    <input
+                      matInput
+                      [ngxTimepicker]="class_Start"
+                      name="class_Start"
+                      formControlName="class_Start"
+                      placeholder="Select Class Start Time"
+                      style="font-size: 25px;"
+                    />
+                    <ngx-material-timepicker #class_Start></ngx-material-timepicker>
+                
+                    <mat-error *ngIf="docForm.get('class_Start')?.hasError('required')">
+                      Class Start is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+
+                <!-- Class End -->
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field appearance="outline" class="example-full-width mb-3">
+                    <mat-label>Class End</mat-label>
+                    <input
+                      matInput
+                      [ngxTimepicker]="class_End"
+                      name="class_End"
+                      formControlName="class_End"
+                      placeholder="Select Class End Time"
+                      style="font-size: 25px;"
+                    />
+                    <ngx-material-timepicker #class_End></ngx-material-timepicker>
+                
+                    <mat-error *ngIf="docForm.get('class_End')?.hasError('required')">
+                      Class End is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>                
+              </div>
+
+              <div class="row">
+                <!-- Class Section -->
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Class Section</mat-label>
+                    <mat-select formControlName="class_Section" required>
+                      <mat-option [value]="'A'">A</mat-option>
+                      <mat-option [value]="'B'">B</mat-option>
+                      <mat-option [value]="'C'">C</mat-option>
+                      <mat-option [value]="'D'">D</mat-option>
+                      <mat-option [value]="'E'">E</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="docForm.get('class_Section')?.hasError('required')"
+                    >
+                      Class Section is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Room -->
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Room</mat-label>
+                    <mat-select formControlName="room" required>
+                      <mat-option [value]="'Lecture'">Lecture</mat-option>
+                      <mat-option [value]="'Computer Laboratory'">
+                        Computer Laboratory
+                      </mat-option>
+                      <mat-option [value]="'Electronic Laboratory'">
+                        Electronic Laboratory
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="docForm.get('room')?.hasError('required')"
+                    >
+                      Room is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Buttons -->
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button
+                    class="btn-space"
+                    [disabled]="!docForm.valid"
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    mat-raised-button
+                    color="warn"
+                    (click)="cancel()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,194 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Add Student'" [items]="['Students']" [active_item]="'Add Student'">
+      </app-breadcrumb>
+    </div>
+
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>New Student Information</h2>
+          </div>
+
+          <div class="body">
+            <form class="m-4" [formGroup]="docForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Student ID Number</mat-label>
+                    <input matInput formControlName="StudentID_Number" required placeholder="StudentID_Number">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>assignment_ind</mat-icon>
+                    <mat-error *ngIf="docForm.get('StudentID_Number')?.hasError('required')">
+                      Student ID Number is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>First Name</mat-label>
+                    <input matInput formControlName="First_Name" required placeholder="First_Name">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+                    <mat-error *ngIf="docForm.get('First_Name')?.hasError('required')">
+                      First name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Middle Name</mat-label>
+                    <input matInput formControlName="Middle_Name" required placeholder="Middle_Name">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+                    <mat-error *ngIf="docForm.get('Middle_Name')?.hasError('required')">
+                      Middle name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput formControlName="Last_Name" required placeholder="Last_Name">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+                    <mat-error *ngIf="docForm.get('Last_Name')?.hasError('required')">
+                      Last name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Gender</mat-label>
+                    <mat-select formControlName="Gender" required>
+                      <mat-option [value]="'Male'">Male</mat-option>
+                      <mat-option [value]="'Female'">Female</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="docForm.get('Gender')?.hasError('required')">
+                      Gender is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Date Of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="DOB" required placeholder="DOB">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="docForm.get('DOB')?.hasError('required')">
+                      Please select date
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email Address</mat-label>
+                    <input matInput formControlName="Email_Address" required placeholder="Email_Address">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
+                    <mat-error *ngIf="docForm.get('Email_Address')?.hasError('Email_Address') && docForm.get('Email_Address')?.touched">
+                      Please enter a valid email address
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Contact Number</mat-label>
+                    <input matInput formControlName="Contact_Number" required placeholder="Contact_Number">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
+                    <mat-error *ngIf="docForm.get('Contact_Number')?.hasError('required')">
+                      Contact number is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput formControlName="password" type="{{ hide ? 'password' : 'text' }}" required
+                      placeholder="password">
+                    <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix
+                      (click)="togglePasswordVisibility()">
+                      {{ hide ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                    <mat-error *ngIf="docForm.get('password')?.hasError('required')">
+                      Password is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Re-Enter Password</mat-label>
+                    <input matInput formControlName="conformPassword" 
+                      type="{{ hideConformPassword ? 'password' : 'text' }}" required 
+                      placeholder="confirmPassword">
+                    <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix
+                      (click)="toggleConformPasswordVisibility()">
+                      {{ hideConformPassword ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                    <mat-error *ngIf="docForm.get('conformPassword')?.hasError('required')">Re-entered password is required</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Class Section</mat-label>
+                    <mat-select formControlName="class_Section" required>
+                      <mat-option [value]="'A'">A</mat-option>
+                      <mat-option [value]="'B'">B</mat-option>
+                      <mat-option [value]="'C'">C</mat-option>
+                      <mat-option [value]="'D'">D</mat-option>
+                      <mat-option [value]="'EA'">EA</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="docForm.get('class_Section')?.hasError('required')">
+                      Class Section is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-label>Upload Image</mat-label>
+                  <app-file-upload formControlName="uploadImg"></app-file-upload>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button class="btn-space" 
+                    [disabled]="!docForm.valid" 
+                    mat-raised-button 
+                    color="primary">
+                    Submit
+                  </button>
+                  <button type="button" 
+                    mat-raised-button 
+                    color="warn" 
+                    (click)="cancel()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

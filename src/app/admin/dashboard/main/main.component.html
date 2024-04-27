@@ -1,0 +1,119 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <h2> Dashboard </h2>
+    </div>
+    <div class="row ">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="row align-items-center">
+              <div class="col-md-4">
+                <img src="assets/images/pages/welcome.png" alt="" class="w-100">
+              </div>
+              <div class="col-md-8">
+                <h4 class="font-18 font-b-500 mb-2">
+                  Welcome back <div class="weight-600 font-25 col-blue pt-1">Ella Jones!</div>
+                </h4>
+                <p class="font-16 max-width-600">Admin Ella Jones, welcome back to AttendEase! We're delighted to see
+                  you return as you persist in your journey with us to enrich the school experience. Your dedication to
+                  enhancing education through our platform is truly valued.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="card">
+          <div class="card-statistic-4">
+            <div class="align-items-center justify-content-between">
+              <div class="row ">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 card-spacing">
+                  <div class="card-content">
+                    <h2 class="mb-3 font-18">Students</h2>
+                    <h5 class="font-15">No. of Student</h5>
+                    <p class="mb-0"><span class="col-green">1,025</span></p>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <div class="banner-img">
+                    <img src="assets/images/banner/1.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="card">
+          <div class="card-statistic-4">
+            <div class="align-items-center justify-content-between">
+              <div class="row ">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 card-spacing">
+                  <div class="card-content">
+                    <h2 class="mb-3 font-18">Teacher</h2>
+                    <h5 class="font-15">No. of Teacher</h5>
+                    <p class="mb-0"><span class="col-orange">50</span></p>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-8 col-xs-6">
+                  <div class="banner-img">
+                    <img src="assets/images/banner/2.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <!-- Bar chart with line -->
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h4>School Map</h4>
+          </div>
+          <div class="card-body">
+            <google-map height="500px" width="100%" [center]="center" [zoom]="zoom" (mapClick)="moveMap($event)"
+              (mapMousemove)="move($event)">
+            </google-map>
+            <div>Latitude: {{display?.lat}}</div>
+            <div>Longitude: {{display?.lng}}</div>
+          </div>
+        </div>
+      </div>
+      <!--------------Calendar------------------------------->
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Calendar</h2>
+          </div>
+          <div class="header" >
+            <h2 class="p">{{ currentDate | date:'EEEE MMMM d, yyyy'}}</h2>
+            <br>
+          </div>
+          <div class="body">
+            <div class="month-navigation">
+              <button (click)="previousMonth()">◀</button>
+              <span>{{ currentMonth }}</span>
+              <button (click)="nextMonth()">▶</button>
+            </div>
+            <div class="days">
+              <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
+            </div>
+            <div class="dates m-t-15">
+              <div *ngFor="let date of dates" class="date"
+                [ngClass]="{ 'current-date': isCurrentDate(date), 'empty-date': date === -1 }"
+                (click)="handleDateClick(date)">
+                {{ date !== -1 ? date : '' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

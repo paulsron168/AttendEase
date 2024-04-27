@@ -1,0 +1,214 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb 
+        [title]="'Add Teacher'" 
+        [items]="['Teachers']" 
+        [active_item]="'Add Teacher'">
+      </app-breadcrumb>
+    </div>
+    
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>New Teacher Information</h2>
+          </div>
+          
+          <div class="body">
+            <form class="m-4" [formGroup]="docForm" (ngSubmit)="onSubmit()">
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Teacher ID Number</mat-label>
+                    <input 
+                      matInput 
+                      formControlName="TeacherID_Number" 
+                      required 
+                      placeholder="Teacher ID Number" />
+                    <mat-icon matSuffix>assignment_ind</mat-icon>
+                    <mat-error *ngIf="docForm.get('TeacherID_Number')?.hasError('required')">
+                      Teacher ID Number is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>First Name</mat-label>
+                    <input 
+                      matInput 
+                      formControlName="First_Name" 
+                      required 
+                      placeholder="First Name" />
+                    <mat-icon matSuffix>face</mat-icon>
+                    <mat-error *ngIf="docForm.get('First_Name')?.hasError('required')">
+                      First Name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Middle Name</mat-label>
+                    <input 
+                      matInput 
+                      formControlName="Middle_Name" 
+                      required 
+                      placeholder="Middle Name" />
+                    <mat-icon matSuffix>face</mat-icon>
+                    <mat-error *ngIf="docForm.get('Middle_Name')?.hasError('required')">
+                      Middle Name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <input 
+                      matInput 
+                      formControlName="Last_Name" 
+                      required 
+                      placeholder="Last Name" />
+                    <mat-icon matSuffix>face</mat-icon>
+                    <mat-error *ngIf="docForm.get('Last_Name')?.hasError('required')">
+                      Last Name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Gender</mat-label>
+                    <mat-select 
+                      formControlName="Gender" 
+                      required>
+                      <mat-option value="Male">Male</mat-option>
+                      <mat-option value="Female">Female</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="docForm.get('Gender')?.hasError('required')">
+                      Gender is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Contact Number</mat-label>
+                    <input 
+                      matInput 
+                      formControlName="Contact_Number" 
+                      required 
+                      placeholder="Contact Number" />
+                    <mat-icon matSuffix>phone</mat-icon>
+                    <mat-error *ngIf="docForm.get('Contact_Number')?.hasError('required')">
+                      Contact Number is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input 
+                      matInput 
+                      type="{{ hide ? 'password' : 'text' }}" 
+                      formControlName="password" 
+                      required 
+                      placeholder="Password" />
+                    <mat-icon matSuffix (click)="togglePasswordVisibility()">
+                      {{ hide ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                    <mat-error *ngIf="docForm.get('password')?.hasError('required')">
+                      Password is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Re-Enter Password</mat-label>
+                    <input 
+                      matInput 
+                      type="{{ hideConformPassword ? 'password' : 'text' }}" 
+                      formControlName="conformPassword" 
+                      required 
+                      placeholder="Re-Enter Password" />
+                    <mat-icon matSuffix (click)="toggleConformPasswordVisibility()">
+                      {{ hideConformPassword ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                    <mat-error *ngIf="docForm.get('conformPassword')?.hasError('required')">
+                      Re-Enter Password is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email Address</mat-label>
+                    <input 
+                      matInput 
+                      formControlName="Email_Address" 
+                      required 
+                      placeholder="Email Address" />
+                    <mat-icon matSuffix>email</mat-icon>
+                    <mat-error *ngIf="docForm.get('Email_Address')?.hasError('required')">
+                      Please enter a valid email address
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Date Of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="DOB" required placeholder="DOB">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="docForm.get('DOB')?.hasError('required')">
+                      Please select date
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <app-file-upload 
+                    formControlName="uploadImg">
+                    <mat-label>Upload Image</mat-label>
+                  </app-file-upload>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button 
+                    mat-raised-button 
+                    color="primary" 
+                    [disabled]="!docForm.valid">
+                    Submit
+                  </button>
+                  <button 
+                    mat-raised-button 
+                    color="warn" 
+                    (click)="cancel()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
