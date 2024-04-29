@@ -2,30 +2,32 @@ import { formatDate } from '@angular/common';
 
 export class Students {
   //img: string;
-  ID: number;
-  StudentID_Number: number;
-  Email_Address: string;
-  First_Name: string;
-  Middle_Name: string;
-  Last_Name: string;
-  DOB: string;
-  Contact_Number: string;
-  Gender: string;
-  class_Section: string;
+  id: number;
+  id_number: number;
+  email_address: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  date_of_birth: string;
+  contact_number: string;
+  gender: string;
+  student_class_section: string;
+  student_class_section_display: string;
 
   constructor(students: Students) {
     {
-      this.ID = students.ID || this.getRandomID();
+      this.id = students.id || this.getRandomID();
       //this.img = students.img || 'assets/images/user/user1.jpg';
-      this.StudentID_Number = typeof students.StudentID_Number === 'number' ? students.StudentID_Number : 0; // Default to 0 if not a number
-      this.Email_Address = students.Email_Address || '';
-      this.First_Name = students.First_Name || '';
-      this.Middle_Name = students.Middle_Name || '';
-      this.Last_Name = students.Last_Name || '';
-      this.DOB = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
-      this.Contact_Number = students.Contact_Number || '';
-      this.Gender = students.Gender || '';
-      this.class_Section = students.class_Section || '';
+      this.id_number = typeof students.id_number === 'number' ? students.id_number : 0; // Default to 0 if not a number
+      this.email_address = students.email_address || '';
+      this.firstname = students.firstname || '';
+      this.middlename = students.middlename || '';
+      this.lastname = students.lastname || '';
+      this.date_of_birth = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
+      this.contact_number = students.contact_number || '';
+      this.gender = students.gender || '';
+      this.student_class_section = students.student_class_section || '';
+      this.student_class_section_display = students.student_class_section || '';
     }
   }
 

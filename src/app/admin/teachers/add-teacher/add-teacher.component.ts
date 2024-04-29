@@ -65,22 +65,40 @@ export class AddTeacherComponent {
 
   constructor(private fb: FormBuilder, private teacherService: TeachersService, private snackBar: MatSnackBar, private _dialog: MatDialog) {
     this.docForm = this.fb.group({
-      TeacherID_Number: ['', [Validators.required]],
-      First_Name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      Middle_Name: ['', [Validators.required]],
-      Last_Name: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      Contact_Number: ['', [Validators.required]],
+      id_number: ['', [Validators.required]],
+      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      middlename: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      contact_number: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      conformPassword: ['', [Validators.required]],
-      Email_Address: ['', [Validators.required, Validators.email, Validators.minLength(5)]],
-      DOB: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      email_address: ['', [Validators.required, Validators.email, Validators.minLength(5)]],
+      date_of_birth: ['', [Validators.required]]
     });
   }
 
   onSubmit() {
     if (this.docForm.valid) {
-      this.teacherService.addTeacher(this.docForm.value)
+
+      let q_data = {
+        id_number: this.docForm.value.id_number,
+        created_by: "admin",
+        created_datetime: new Date(),
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        firstname: this.docForm.value.firstname,
+        middlename: this.docForm.value.middlename,
+        lastname: this.docForm.value.lastname,
+        gender: this.docForm.value.gender,
+        contact_number: this.docForm.value.contact_number,
+        password: this.docForm.value.password, 
+        username:this.docForm.value.email_address,
+        email_address:this.docForm.value.email_address,
+        date_of_birth: this.docForm.value.date_of_birth
+      }
+
+      this.teacherService.addTeacher(q_data)
         .subscribe(
           response => {
             console.log('Teacher added successfully:', response);

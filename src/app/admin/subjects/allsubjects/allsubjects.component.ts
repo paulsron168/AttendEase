@@ -59,7 +59,6 @@ export class AllsubjectsComponent
 {
   displayedColumns = [
     'select',
-    'subjectID',
     'subjectCode',
     'subject',
     'description',
@@ -67,6 +66,7 @@ export class AllsubjectsComponent
     'major',
     'year_level',
     'type',
+    'subjectID',
     'actions',
   ];
   

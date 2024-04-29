@@ -9,8 +9,10 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 })
 export class ClassScheduleService extends UnsubscribeOnDestroyAdapter {
 
-  private readonly API_URL = 'http://localhost:5005/classschedule';
-  private readonly ADD_CLASSSCHEDULE_URL = 'http://localhost:5005/addclassschedule';
+  private readonly SCHEDULE_URL = 'http://localhost:5005/class_schedule';
+  private readonly ADD_SCHEDULE_URL = 'http://localhost:5005/add_schedule';
+  private readonly UPD_SCHEDULE_URL = 'http://localhost:5005/update_schedule';
+  private readonly DEL_SCHEDULE_URL = 'http://localhost:5005/delete_schedule';
 
   isTblLoading = true;
   dataChange: BehaviorSubject<ClassSchedule[]> = new BehaviorSubject<ClassSchedule[]>([]);
@@ -31,7 +33,7 @@ export class ClassScheduleService extends UnsubscribeOnDestroyAdapter {
  //---- Display Class Schedule ----//
 
   getAllClassSchedule(): void {
-    this.subs.sink = this.httpClient.get<ClassSchedule[]>(this.API_URL).subscribe({
+    this.subs.sink = this.httpClient.get<ClassSchedule[]>(this.SCHEDULE_URL).subscribe({
       next: (data) => {
         this.isTblLoading = false;
         this.dataChange.next(data);
@@ -45,21 +47,18 @@ export class ClassScheduleService extends UnsubscribeOnDestroyAdapter {
 
  //---- Add  Class Schedule ----//
   addClassSchedule(classScheduleData: any): Observable<any> {
-    return this.httpClient.post<any>(this.ADD_CLASSSCHEDULE_URL, classScheduleData);
-
-
+    return this.httpClient.post<any>(this.ADD_SCHEDULE_URL, classScheduleData);
   }
 
    //---- Update  Class Schedule ----//
 
   updateClassSchedule(ID:number, updatedClassSchedule: any):  Observable<any> {
-    const url = `${this.API_URL}/${ID}`;
+    const url = `${this.UPD_SCHEDULE_URL}/${ID}`;
     return this.httpClient.put(url, updatedClassSchedule);
-  
   }
 
   deleteClassSchedule(class_ID:number): Observable<any> {
-    const url = `${this.API_URL}/${class_ID}`;
+    const url = `${this.DEL_SCHEDULE_URL}/${class_ID}`;
     return this.httpClient.delete(url);
     
   }

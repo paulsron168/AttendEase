@@ -61,13 +61,13 @@ export class AllclassScheduleComponent
 {
   displayedColumns = [
     'select',
-    'ID',
-    'class_ID',
-    'class_Day',
-    'class_Start',
-    'class_End',
-    'class_Section',
-    'room',
+    'class_days',
+    'class_start',
+    'class_end',
+    'class_section',
+    'class_subject',
+    'class_room',
+    'id',
     'actions'
   ];
   exampleDatabase?: ClassScheduleService;
@@ -131,7 +131,7 @@ export class AllclassScheduleComponent
     });
   }
   editCall(row: ClassSchedule) {
-    this.id = row.ID;
+    this.id = row.id;
     let tempDirection: Direction;
     
     const dialogRef = this.dialog.open(FormDialogComponent, {
@@ -145,7 +145,7 @@ export class AllclassScheduleComponent
       if (result === 1) {
         // When using an edit things are little different, firstly we find record inside DataService by id
         const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.ID === this.id
+          (x) => x.id === this.id
         );
         // Then you update that record using data from dialogData (values you enetered)
         if (foundIndex != null && this.exampleDatabase) {
@@ -165,7 +165,7 @@ export class AllclassScheduleComponent
   }
   deleteItem(i: number, row: ClassSchedule) {
     this.index = i;
-    this.id = row.ID;
+    this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
@@ -180,9 +180,9 @@ export class AllclassScheduleComponent
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        this.classScheduleService.deleteClassSchedule(row.class_ID).subscribe(
+        this.classScheduleService.deleteClassSchedule(row.id).subscribe(
           () => {
-            const foundIndex = this.exampleDatabase?.dataChange.value.findIndex((x) => x.ID === this.id);
+            const foundIndex = this.exampleDatabase?.dataChange.value.findIndex((x) => x.id === this.id);
             if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
               this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
               // Refresh the table
@@ -270,13 +270,13 @@ export class AllclassScheduleComponent
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        ID: x.ID,
-        class_ID: x.class_ID,
-        class_Day: x.class_Day,
-        class_Start: x.class_Start,
-        class_End: x.class_End,
-        class_Section: x.class_Section,
-        room: x.room,
+        ID: x.id,
+        class_days: x.class_days,
+        class_start: x.class_start,
+        class_end: x.class_end,
+        class_room: x.class_room,
+        class_section: x.class_section,
+        class_subject: x.class_subject,
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -332,13 +332,13 @@ export class ExampleDataSource extends DataSource<ClassSchedule> {
           .slice()
           .filter((classSchedule: ClassSchedule) => {
             const searchStr = (
-              classSchedule.ID +
-              classSchedule.class_ID +
-              classSchedule.class_Day +
-              classSchedule.class_Start +
-              classSchedule.class_End +
-              classSchedule.class_Section +
-              classSchedule.room
+              classSchedule.id +
+              classSchedule.class_days +
+              classSchedule.class_start +
+              classSchedule.class_end +
+              classSchedule.class_section +
+              classSchedule.class_subject +
+              classSchedule.class_room
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -366,27 +366,27 @@ export class ExampleDataSource extends DataSource<ClassSchedule> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case 'ID':
-          [propertyA, propertyB] = [a.ID, b.ID];
+        case 'id':
+          [propertyA, propertyB] = [a.id, b.id];
           break;
-        case 'class_ID':
-          [propertyA, propertyB] = [a.class_ID, b.class_ID];
+        case 'class_days':
+          [propertyA, propertyB] = [a.class_days, b.class_days];
           break;
-        case 'class_Day':
-          [propertyA, propertyB] = [a.class_Day, b.class_Day];
+        case 'class_start':
+          [propertyA, propertyB] = [a.class_start, b.class_start];
           break;
-        case 'class_Start':
-          [propertyA, propertyB] = [a.class_Start, b.class_Start];
+        case 'class_end':
+          [propertyA, propertyB] = [a.class_end, b.class_end];
           break;
-        case 'class_End':
-          [propertyA, propertyB] = [a.class_End, b.class_End];
+        case 'class_section':
+          [propertyA, propertyB] = [a.class_section, b.class_section];
           break;
-        case 'class_Section':
-          [propertyA, propertyB] = [a.class_Section, b.class_Section];
+        case 'class_subject':
+          [propertyA, propertyB] = [a.class_subject, b.class_subject];
           break;
-          case 'room':
-            [propertyA, propertyB] = [a.room, b.room];
-            break;
+        case 'class_room':
+          [propertyA, propertyB] = [a.class_room, b.class_room];
+          break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

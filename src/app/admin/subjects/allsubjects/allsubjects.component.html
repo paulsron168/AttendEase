@@ -73,7 +73,7 @@
                 </ng-container>
                 <!-- ID Column -->
                 <ng-container matColumnDef="subjectID">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>#</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                   <mat-cell *matCellDef="let row">{{row.subjectID}}</mat-cell>
                 </ng-container>
 
@@ -96,7 +96,7 @@
 
                 <ng-container matColumnDef="units">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Units</mat-header-cell>
-                  <mat-cell *matCellDef="let row"><span class="mobile-label">Units:</span>{{row.units}}
+                  <mat-cell *matCellDef="let row"><span class="mobile-label">Units:</span>{{row.units.toFixed(1)}}
                   </mat-cell>
                 </ng-container>
                 

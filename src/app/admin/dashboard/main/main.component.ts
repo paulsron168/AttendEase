@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { NgClass } from '@angular/common';
 import { CommonModule } from '@angular/common'
+import { TeachersService } from 'app/admin/teachers/allteachers/teachers.service';
 
 
 
@@ -51,16 +52,43 @@ export class MainComponent implements OnInit {
   daysOfWeek: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   dates: number[] = [];
 
+  studentCount:number = 0;
+  teacherCount:number = 0;
 
 
-
-  constructor() {
+  constructor(
+    public teacherService:TeachersService
+  ) {
     this.generateDates();
 
   }
-  ngOnInit() {
 
+  ngOnInit(): void {
+    this.initializeData();
   }
+
+  initializeData(){
+    this.teacherService.countStudent()
+    .subscribe(
+      response => {
+        this.studentCount = response[0]['count'];
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+
+    this.teacherService.countTeacher()
+    .subscribe(
+      response => {
+        this.teacherCount = response[0]['count'];
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+  }
+
   generateDates() {
     const firstDayOfMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1).getDay();
     const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
