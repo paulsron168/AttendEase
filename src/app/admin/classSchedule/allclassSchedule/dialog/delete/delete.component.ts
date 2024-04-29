@@ -4,12 +4,13 @@ import { ClassScheduleService } from '../../classSchedule.service';
 import { MatButtonModule } from '@angular/material/button';
 
 export interface DialogData {
-  class_ID: number;
-  class_Day: string;
-  class_Start: string;
-  class_End: string;
-  class_Section: string;
-  room: string
+  id: number;
+  class_days: string;
+  class_start: string;
+  class_end: string;
+  class_section: string;
+  class_subject: string;
+  class_room: string
 }
 
 @Component({
@@ -43,7 +44,7 @@ export class DeleteDialogComponent {
   
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.classScheduleService.deleteClassSchedule(this.data.class_ID).subscribe({
+        this.classScheduleService.deleteClassSchedule(this.data.id).subscribe({
           next: (result: any) => {
             console.log(result); // Handle the result as needed
             this.dialogRef.close(); // Close the dialog after successful deletion

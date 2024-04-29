@@ -26,7 +26,7 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>#</mat-label>
-            <input matInput formControlName="ID" required [readonly]="true">
+            <input matInput formControlName="id" required [readonly]="true">
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>assignment_ind</mat-icon>
           </mat-form-field>
         </div>
@@ -35,9 +35,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Student ID Number</mat-label>
-            <input matInput formControlName="StudentID_Number" required>
+            <input matInput formControlName="id_number" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>assignment_ind</mat-icon>
-            <mat-error *ngIf="studentsForm.get('StudentID_Number')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('id_number')?.hasError('required')">
               Student ID Number is required
             </mat-error>
           </mat-form-field>
@@ -47,9 +47,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>First Name</mat-label>
-            <input matInput formControlName="First_Name" required>
+            <input matInput formControlName="firstname" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-            <mat-error *ngIf="studentsForm.get('First_Name')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('firstname')?.hasError('required')">
               First Name is required
             </mat-error>
           </mat-form-field>
@@ -59,9 +59,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Middle Name</mat-label>
-            <input matInput formControlName="Middle_Name" required>
+            <input matInput formControlName="middlename" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-            <mat-error *ngIf="studentsForm.get('Middle_Name')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('middlename')?.hasError('required')">
               Middle Name is required
             </mat-error>
           </mat-form-field>
@@ -71,9 +71,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Last Name</mat-label>
-            <input matInput formControlName="Last_Name" required>
+            <input matInput formControlName="lastname" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-            <mat-error *ngIf="studentsForm.get('Last_Name')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('lastname')?.hasError('required')">
               Last Name is required
             </mat-error>
           </mat-form-field>
@@ -83,9 +83,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Date of Birth</mat-label>
-            <input matInput formControlName="DOB" required>
+            <input matInput formControlName="date_of_birth" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>event</mat-icon>
-            <mat-error *ngIf="studentsForm.get('DOB')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('date_of_birth')?.hasError('required')">
               DOB is required
             </mat-error>
           </mat-form-field>
@@ -95,11 +95,11 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Gender</mat-label>
-            <mat-select formControlName="Gender" required>
+            <mat-select formControlName="gender" required>
               <mat-option [value]="'Male'">Male</mat-option>
               <mat-option [value]="'Female'">Female</mat-option>
             </mat-select>
-            <mat-error *ngIf="studentsForm.get('Gender')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('gender')?.hasError('required')">
               Gender is required
             </mat-error>
           </mat-form-field>
@@ -109,12 +109,12 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Email Address</mat-label>
-            <input matInput formControlName="Email_Address" required>
+            <input matInput formControlName="email_address" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
-            <mat-error *ngIf="studentsForm.get('Email_Address')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('email_address')?.hasError('required')">
               Email is required
             </mat-error>
-            <mat-error *ngIf="studentsForm.get('Email_Address')?.hasError('email')">
+            <mat-error *ngIf="studentsForm.get('email_address')?.hasError('email')">
               Please enter a valid email
             </mat-error>
           </mat-form-field>
@@ -124,9 +124,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Contact Number</mat-label>
-            <input matInput formControlName="Contact_Number" required>
+            <input matInput formControlName="contact_number" required>
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>call</mat-icon>
-            <mat-error *ngIf="studentsForm.get('Contact_Number')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('contact_number')?.hasError('required')">
               Contact number is required
             </mat-error>
           </mat-form-field>
@@ -136,14 +136,10 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Class Section</mat-label>
-            <mat-select formControlName="class_Section" required>
-              <mat-option [value]="'A'">A</mat-option>
-              <mat-option [value]="'B'">B</mat-option>
-              <mat-option [value]="'C'">C</mat-option>
-              <mat-option [value]="'D'">D</mat-option>
-              <mat-option [value]="'E'">E</mat-option>
+            <mat-select formControlName="student_class_section" required>
+              <mat-option *ngFor="let sec of sectionList" [value]="sec.id">{{sec.section_year}} - {{sec.section_name}}</mat-option>
             </mat-select>
-            <mat-error *ngIf="studentsForm.get('class_Section')?.hasError('required')">
+            <mat-error *ngIf="studentsForm.get('student_class_section')?.hasError('required')">
               Class Section is required
             </mat-error>
           </mat-form-field>

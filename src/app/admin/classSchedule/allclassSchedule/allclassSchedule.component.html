@@ -71,43 +71,43 @@
                     </mat-cell>
                   </ng-container>
                   <!-- ID Column -->
-                  <ng-container matColumnDef="ID">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>#</mat-header-cell>
-                    <mat-cell *matCellDef="let row">{{row.ID}}</mat-cell>
+                  <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                   </ng-container>
-                  <ng-container matColumnDef="class_ID">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Class ID</mat-header-cell>
-                    <mat-cell *matCellDef="let row">{{row.class_ID}}</mat-cell>
-                  </ng-container>
-
-                  <ng-container matColumnDef="class_Day">
+     
+                  <ng-container matColumnDef="class_days">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Class Day</mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Day:</span>{{row.class_Day}}
+                    <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Day:</span>{{row.class_days}}
                   </mat-cell>
                 </ng-container>
                
-              <ng-container matColumnDef="class_Section">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Class Section</mat-header-cell>
-                <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Section:</span>{{row.class_Section}}</mat-cell>
+                <ng-container matColumnDef="class_section">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Section</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Section:</span>{{row.class_section_display}}</mat-cell>
+                </ng-container>
+                
+                <ng-container matColumnDef="class_subject">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Subject</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Subject:</span>{{row.class_subject_display}}</mat-cell>
+                </ng-container>
+                
+
+              <ng-container matColumnDef="class_start">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Class Start</mat-header-cell>
+                <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Start:</span>{{row.class_start}}</mat-cell>
               </ng-container>
-        
-              
 
-            <ng-container matColumnDef="class_Start">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Class Start</mat-header-cell>
-              <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Start:</span>{{row.class_Start}}</mat-cell>
+              <ng-container matColumnDef="class_end">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Class End</mat-header-cell>
+                <mat-cell *matCellDef="let row"> <span class="mobile-label">Class End:</span>{{row.class_end}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="class_room">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Room</mat-header-cell>
+                <mat-cell *matCellDef="let row"> <span class="mobile-label">Room:</span>{{row.class_room}}
+              </mat-cell>
             </ng-container>
-
-            <ng-container matColumnDef="class_End">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Class End</mat-header-cell>
-              <mat-cell *matCellDef="let row"> <span class="mobile-label">Class End:</span>{{row.class_End}}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="room">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Room</mat-header-cell>
-              <mat-cell *matCellDef="let row"> <span class="mobile-label">Room:</span>{{row.room}}
-            </mat-cell>
-          </ng-container>
     
             <!-- actions -->
             <ng-container matColumnDef="actions">

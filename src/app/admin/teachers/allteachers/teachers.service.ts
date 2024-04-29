@@ -9,8 +9,13 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 })
 export class TeachersService extends UnsubscribeOnDestroyAdapter {
   
-  private readonly API_URL = 'http://localhost:5005/teacher';
-  private readonly ADD_TEACHER_URL = 'http://localhost:5005/addteacher';
+  private readonly CNT_TEACHER_URL = 'http://localhost:5005/count_teacher';
+  private readonly CNT_STUDENT_URL = 'http://localhost:5005/count_student';
+
+  private readonly TEACHER_URL = 'http://localhost:5005/teacher';
+  private readonly ADD_TEACHER_URL = 'http://localhost:5005/add_teacher';
+  private readonly UPD_TEACHER_URL = 'http://localhost:5005/update_teacher';
+  private readonly DEL_TEACHER_URL = 'http://localhost:5005/delete_teacher';
 
   isTblLoading = true;
   dataChange: BehaviorSubject<Teachers[]> = new BehaviorSubject<Teachers[]>([]);
@@ -30,7 +35,7 @@ export class TeachersService extends UnsubscribeOnDestroyAdapter {
   }
 
   getAllTeachers(): void {
-    this.subs.sink = this.httpClient.get<Teachers[]>(this.API_URL).subscribe({
+    this.subs.sink = this.httpClient.get<Teachers[]>(this.TEACHER_URL).subscribe({
       next: (data) => {
         this.isTblLoading = false;
        this.dataChange.next(data);
@@ -58,17 +63,25 @@ export class TeachersService extends UnsubscribeOnDestroyAdapter {
    // });
  // }
 
-  updateTeacher(TeacherID_Number: number, updatedTeacher: any): Observable<any> {
-    const url = `${this.API_URL}/${TeacherID_Number}`;
+  updateTeacher(id: number, updatedTeacher: any): Observable<any> {
+    const url = `${this.UPD_TEACHER_URL}/${id}`;
     return this.httpClient.put(url, updatedTeacher);
   }
 
-  deleteTeacher(TeacherID_Number: number): Observable<any> {
-    const url = `${this.API_URL}/${TeacherID_Number}`;
+  deleteTeacher(id: number): Observable<any> {
+    const url = `${this.DEL_TEACHER_URL}/${id}`;
     return this.httpClient.delete(url);
   }
 
   addTeacher(teacherData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_TEACHER_URL, teacherData);
+  }
+
+  countTeacher(): Observable<any> {
+    return this.httpClient.get<any>(this.CNT_TEACHER_URL);
+  }
+
+  countStudent(): Observable<any> {
+    return this.httpClient.get<any>(this.CNT_STUDENT_URL);
   }
 }

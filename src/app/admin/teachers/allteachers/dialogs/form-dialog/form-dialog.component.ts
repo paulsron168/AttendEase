@@ -64,8 +64,9 @@ export class FormDialogComponent {
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
-      this.dialogTitle = data.teachers.First_Name + ' ' +  data.teachers.Middle_Name + ' ' + data.teachers.Last_Name;
+      this.dialogTitle = "Teacher: " + data.teachers.firstname + ' ' +  data.teachers.middlename + ' ' + data.teachers.lastname;
       this.teachers = data.teachers;
+      console.log('teachers',this.teachers);
     } else {
       this.dialogTitle = 'New Teachers';
       const blankObject = {} as Teachers;
@@ -86,19 +87,19 @@ export class FormDialogComponent {
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      ID: [this.teachers.ID],
+      id: [this.teachers.id],
       //img: [this.teachers.img],
-      TeacherID_Number: [this.teachers.TeacherID_Number],
-      Email_Address: [this.teachers.Email_Address],
-      First_Name: [this.teachers.First_Name],
-      Middle_Name: [this.teachers.Middle_Name],
-      Last_Name: [this.teachers.Last_Name],      
-      DOB: [
-        formatDate(this.teachers.DOB, 'yyyy-MM-dd', 'en'),
+      id_number: [this.teachers.id_number],
+      email_address: [this.teachers.email_address],
+      firstname: [this.teachers.firstname],
+      middlename: [this.teachers.middlename],
+      lastname: [this.teachers.lastname],      
+      date_of_birth: [
+        formatDate(this.teachers.date_of_birth, 'yyyy-MM-dd', 'en'),
         [Validators.required],
       ],
-      Contact_Number: [this.teachers.Contact_Number], 
-      Gender: [this.teachers.Gender], 
+      contact_number: [this.teachers.contact_number], 
+      gender: [this.teachers.gender], 
     });
   }
   submit() {
@@ -109,9 +110,20 @@ export class FormDialogComponent {
   }
   updateTeacher() {
     if (this.teachersForm.valid && this.data && this.data.teachers) {
-      const updatedTeacher: Teachers = this.teachersForm.value;
-      updatedTeacher.TeacherID_Number = this.data.teachers.TeacherID_Number; // Corrected access
-      this.teachersService.updateTeacher(this.data.teachers.TeacherID_Number, updatedTeacher).subscribe({
+
+      let q_data = {
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        id_number: this.teachersForm.value.id_number,
+        firstname: this.teachersForm.value.firstname,
+        middlename: this.teachersForm.value.middlename,
+        lastname: this.teachersForm.value.lastname,
+        gender: this.teachersForm.value.gender,
+        contact_number: this.teachersForm.value.contact_number,
+        email_address:this.teachersForm.value.email_address,
+        date_of_birth: this.teachersForm.value.date_of_birth,
+      }
+      this.teachersService.updateTeacher(this.data.teachers.id, q_data).subscribe({
         next: (val: any) => {
           this.openSuccessDialog('Teacher information has been successfully Updated!');
           this.dialogRef.close(true);
