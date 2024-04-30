@@ -61,16 +61,16 @@ export class AllstudentsComponent
   implements OnInit {
   displayedColumns = [
     'select',
-    'ID',
-    'StudentID_Number',
-    'First_Name',
-    'Middle_Name',
-    'Last_Name',
-    'DOB',
-    'Gender',
-    'Email_Address',
-    'Contact_Number',
-    'class_Section',
+    'id_number',
+    'firstname',
+    'middlename',
+    'lastname',
+    'date_of_birth',
+    'gender',
+    'email_address',
+    'contact_number',
+    'class_section',
+    'id',
     'actions',
   ];
   exampleDatabase?: StudentsService;
@@ -136,7 +136,7 @@ export class AllstudentsComponent
     });
   }
   editCall(row: Students) {
-    this.id = row.ID;
+    this.id = row.id;
     let tempDirection: Direction;
 
     const dialogRef = this.dialog.open(FormDialogComponent, {
@@ -150,7 +150,7 @@ export class AllstudentsComponent
       if (result === 1) {
         // When using an edit things are little different, firstly we find record inside DataService by id
         const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.ID === this.id
+          (x) => x.id === this.id
         );
         // Then you update that record using data from dialogData (values you enetered)
         if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
@@ -170,7 +170,7 @@ export class AllstudentsComponent
   }
   deleteItem(i: number, row: Students) {
     this.index = i;
-    this.id = row.ID;
+    this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
@@ -188,10 +188,10 @@ export class AllstudentsComponent
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         // Call the service method to delete the item from the database
-        this.studentsService.deleteStudent(row.ID).subscribe(
+        this.studentsService.deleteStudent(row.id).subscribe(
           () => {
             // On success, remove the item from the local data array
-            const foundIndex = this.exampleDatabase?.dataChange.value.findIndex((x) => x.ID === this.id);
+            const foundIndex = this.exampleDatabase?.dataChange.value.findIndex((x) => x.id === this.id);
             if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
               this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
               // Refresh the table
@@ -260,6 +260,7 @@ export class AllstudentsComponent
   }
   public loadData() {
     this.exampleDatabase = new StudentsService(this.httpClient);
+    // console.log('exampleDatabase',this.exampleDatabase);
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,
       this.paginator,
@@ -279,18 +280,16 @@ export class AllstudentsComponent
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        ID: x.ID,
-        StudentID_Number: x.StudentID_Number,
-        First_Name: x.First_Name,
-        Middle_Name: x.Middle_Name,
-        Last_Name: x.Last_Name,
-        DOB: x.DOB,
-        Gender: x.Gender,
-        Email_Address: x.Email_Address,
-        Contact_Number: x.Contact_Number,
-        class_Section: x.class_Section,
-
-
+        ID: x.id,
+        id_number: x.id_number,
+        firstname: x.firstname,
+        middlename: x.middlename,
+        lastname: x.lastname,
+        date_of_birth: x.date_of_birth,
+        gender: x.gender,
+        email_address: x.email_address,
+        contact_number: x.contact_number,
+        student_class_section: x.student_class_section
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -357,14 +356,14 @@ export class ExampleDataSource extends DataSource<Students> {
           .slice()
           .filter((students: Students) => {
             const searchStr = (
-              students.ID +
-              students.StudentID_Number +
-              students.Email_Address +
-              students.First_Name +
-              students.Middle_Name +
-              students.Last_Name +
-              students.Contact_Number +
-              students.class_Section
+              students.id +
+              students.id_number +
+              students.email_address +
+              students.firstname +
+              students.middlename +
+              students.lastname +
+              students.contact_number +
+              students.student_class_section_display
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -392,36 +391,37 @@ export class ExampleDataSource extends DataSource<Students> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case 'ID':
-          [propertyA, propertyB] = [a.ID, b.ID];
+        case 'id':
+          [propertyA, propertyB] = [a.id, b.id];
           break;
-        case 'StudentID_Number':
-          [propertyA, propertyB] = [a.StudentID_Number, b.StudentID_Number];
+        case 'id_number':
+          [propertyA, propertyB] = [a.id_number, b.id_number];
           break;
-        case 'Email_Address':
-          [propertyA, propertyB] = [a.Email_Address, b.Email_Address];
+        case 'email_address':
+          [propertyA, propertyB] = [a.email_address, b.email_address];
           break;
-        case 'First_Name':
-          [propertyA, propertyB] = [a.First_Name, b.First_Name];
+        case 'firstname':
+          [propertyA, propertyB] = [a.firstname, b.firstname];
           break;
-        case 'Middle_Name':
-          [propertyA, propertyB] = [a.Middle_Name, b.Middle_Name];
+        case 'middlename':
+          [propertyA, propertyB] = [a.middlename, b.middlename];
           break;
-        case 'Last_Name':
-          [propertyA, propertyB] = [a.Last_Name, b.Last_Name];
+        case 'lastname':
+          [propertyA, propertyB] = [a.lastname, b.lastname];
           break;
-        case 'DOB':
-          [propertyA, propertyB] = [a.DOB, b.DOB];
+        case 'date_of_birth':
+          [propertyA, propertyB] = [a.date_of_birth, b.date_of_birth];
           break;
-        case 'Contact_Number':
-          [propertyA, propertyB] = [a.Contact_Number, b.Contact_Number];
+        case 'contact_number':
+          [propertyA, propertyB] = [a.contact_number, b.contact_number];
           break;
-        case 'Gender':
-          [propertyA, propertyB] = [a.Gender, b.Gender];
+        case 'gender':
+          [propertyA, propertyB] = [a.gender, b.gender];
           break;
-        case 'class_Section':
-          [propertyA, propertyB] = [a.class_Section, b.class_Section];
+        case 'student_class_section':
+          [propertyA, propertyB] = [a.student_class_section, b.student_class_section];
           break;
+       
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

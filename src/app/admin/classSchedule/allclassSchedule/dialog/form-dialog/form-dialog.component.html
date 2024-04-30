@@ -16,120 +16,117 @@
 
   <div mat-dialog-content>
     <form class="register-form m-4" [formGroup]="classScheduleForm" (ngSubmit)="submit()">
-      <div class="row">
-        <!-- Class ID -->
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field class="example-full-width" appearance="outline">
-            <mat-label>Class ID</mat-label>
-            <input matInput formControlName="class_ID" required [readonly]="true" />
-            <mat-icon matSuffix>assignment_ind</mat-icon>
-          </mat-form-field>
-        </div>
-
-
-        <!-- Class Day -->
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field class="example-full-width" appearance="outline">
-            <mat-label>Class Day</mat-label>
-            <mat-select formControlName="class_Day" multiple required>
-              <mat-option *ngFor="let day of class_Day" [value]="day">
-                {{ day }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="classScheduleForm.get('class_Day')?.hasError('required')">
-              Class Day is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <!-- Class Start -->
-
-      <div class="row">
-        <!-- Class Start -->
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field appearance="outline" class="example-full-width mb-3">
-            <mat-label>Class Start</mat-label>
-            <input matInput [ngxTimepicker]="class_Start" name="class_Start" formControlName="class_Start"
-              placeholder="Select Class Start Time" style="font-size: 25px;" />
-            <ngx-material-timepicker #class_Start></ngx-material-timepicker>
-
-            <mat-error *ngIf="classScheduleForm.get('class_Start')?.hasError('required')">
-              Class Start is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-
-        <!-- Class End -->
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field appearance="outline" class="example-full-width mb-3">
-            <mat-label>Class End</mat-label>
-            <input matInput [ngxTimepicker]="class_End" name="class_End" formControlName="class_End"
-              placeholder="Select Class End Time" style="font-size: 25px;" />
-            <ngx-material-timepicker #class_End></ngx-material-timepicker>
-
-            <mat-error *ngIf="classScheduleForm.get('class_End')?.hasError('required')">
-              Class End is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-
-      <div class="row">
-        <!-- Class Section -->
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field class="example-full-width mb-3" appearance="outline">
-            <mat-label>Class Section</mat-label>
-            <mat-select formControlName="class_Section" required>
-              <mat-option [value]="'A'">A</mat-option>
-              <mat-option [value]="'B'">B</mat-option>
-              <mat-option [value]="'C'">C</mat-option>
-              <mat-option [value]="'D'">D</mat-option>
-              <mat-option [value]="'E'">E</mat-option>
-            </mat-select>
-            <mat-error *ngIf="classScheduleForm.get('class_Section')?.hasError('required')">
-              Class Section is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <!-- Room -->
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field class="example-full-width mb-3" appearance="outline">
-            <mat-label>Room</mat-label>
-            <mat-select formControlName="room" required>
-              <mat-option [value]="'Lecture'">Lecture</mat-option>
-              <mat-option [value]="'Computer Laboratory'">
-                Computer Laboratory
-              </mat-option>
-              <mat-option [value]="'Electronic Laboratory'">
-                Electronic Laboratory
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="classScheduleForm.get('room')?.hasError('required')">
-              Room is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-
-
-      <div class="row">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-          <div class="example-button-row" align="end">
-            <button mat-raised-button color="primary" [disabled]="!classScheduleForm.valid" [mat-dialog-close]="1"
-              (click)="updateClassSchedule()">
-              Save
-            </button>
-            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">
-              Cancel
-            </button>
+        <!-- Class Subject -->
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Class Subject</mat-label>
+              <mat-select formControlName="class_subject" required>
+                <mat-option *ngFor="let sub of subjectList" [value]="sub.subjectID">{{sub.subject}} - {{sub.subjectCode}} - [{{sub.units.toLocaleString('en-us', {minimumFractionDigits: 1})}}]</mat-option>
+              </mat-select>
+              <mat-error *ngIf="classScheduleForm.get('class_subject')?.hasError('required')">
+                Class Subject is required
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
-      </div>
+        <div class="row">
+          <!-- Class Section -->
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Class Section</mat-label>
+              <mat-select formControlName="class_section" required>
+                <mat-option *ngFor="let sec of sectionList" [value]="sec.id">{{sec.section_year}} - {{sec.section_name}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="classScheduleForm.get('class_section')?.hasError('required')">
+                Class Section is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Room -->
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Room</mat-label>
+              <mat-select formControlName="class_room" required>
+                <mat-option [value]="'Lecture'">Lecture</mat-option>
+                <mat-option [value]="'Computer Laboratory'">
+                  Computer Laboratory
+                </mat-option>
+                <mat-option [value]="'Electronic Laboratory'">
+                  Electronic Laboratory
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="classScheduleForm.get('class_room')?.hasError('required')">
+                Room is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Class Day -->
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Class Day</mat-label>
+              <mat-select formControlName="class_days" multiple required>
+                <mat-option *ngFor="let day of class_Day" [value]="day">
+                  {{ day }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="classScheduleForm.get('class_days')?.hasError('required')">
+                Class Day is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Class Start -->
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field appearance="outline" class="example-full-width mb-3">
+              <mat-label>Class Start</mat-label>
+              <input matInput [ngxTimepicker]="class_start" name="class_start" formControlName="class_start"
+                placeholder="Select Class Start Time" style="font-size: 25px;" />
+              <ngx-material-timepicker #class_start></ngx-material-timepicker>
+
+              <mat-error *ngIf="classScheduleForm.get('class_start')?.hasError('required')">
+                Class Start is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Class End -->
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field appearance="outline" class="example-full-width mb-3">
+              <mat-label>Class End</mat-label>
+              <input matInput [ngxTimepicker]="class_end" name="class_end" formControlName="class_end"
+                placeholder="Select Class End Time" style="font-size: 25px;" />
+              <ngx-material-timepicker #class_end></ngx-material-timepicker>
+              <mat-error *ngIf="classScheduleForm.get('class_end')?.hasError('required')">
+                Class End is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <div class="example-button-row" align="end">
+              <button mat-raised-button color="primary" *ngIf="action=='edit'" [disabled]="!classScheduleForm.valid" [mat-dialog-close]="1"
+                (click)="updateClassSchedule()">
+                Save
+              </button>
+              <button mat-raised-button color="primary" *ngIf="action!='edit'" [disabled]="!classScheduleForm.valid" [mat-dialog-close]="1"
+              (click)="addSchedule()">
+              Save
+            </button>
+              <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
     </form>
   </div>
 </div>

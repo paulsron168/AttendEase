@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose, MatDialog } from '@angular/material/dialog';
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { StudentsService } from '../../students.service';
 import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Students } from '../../students.model';
@@ -39,10 +39,9 @@ export interface DialogData {
         CommonModule
     ],
 })
-export class FormDialogComponent {
+export class FormDialogComponent implements OnInit{
  
-   
-
+  sectionList:any;
   loading: boolean = false;
   action: string;
   dialogTitle: string;
@@ -61,10 +60,11 @@ export class FormDialogComponent {
     private _dialog: MatDialog
    
   ) {
+    this.initializeData();
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
-      this.dialogTitle = data.students.First_Name + ' ' +  data.students.Middle_Name + ' ' + data.students.Last_Name;
+      this.dialogTitle = data.students.firstname + ' ' +  data.students.middlename + ' ' + data.students.lastname;
       this.students = data.students;
     } else {
       this.dialogTitle = 'New Students';
@@ -84,23 +84,42 @@ export class FormDialogComponent {
       ? 'Not a valid email'
       : '';
   }
+
+  ngOnInit(): void {
+   
+  }
+
+  initializeData(){
+    this.studentsService.getSection()
+    .subscribe(
+      response => {
+        this.sectionList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+  }
+
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      ID: [this.students.ID],
+      id: [this.students.id],
       //img: [this.students.img],
-      StudentID_Number: [this.students.StudentID_Number],
-      Email_Address: [this.students.Email_Address],
-      First_Name: [this.students.First_Name],
-      Middle_Name: [this.students.Middle_Name],
-      Last_Name: [this.students.Last_Name],      
-      DOB: [
-        formatDate(this.students.DOB, 'yyyy-MM-dd', 'en'),
+      id_number: [this.students.id_number],
+      email_address: [this.students.email_address],
+      firstname: [this.students.firstname],
+      middlename: [this.students.middlename],
+      lastname: [this.students.lastname],      
+      date_of_birth: [
+        formatDate(this.students.date_of_birth, 'yyyy-MM-dd', 'en'),
         [Validators.required],
       ],
-      Contact_Number: [this.students.Contact_Number], 
-      Gender: [this.students.Gender], 
-      class_Section: [this.students. class_Section],
+      contact_number: [this.students.contact_number], 
+      gender: [this.students.gender],
+      student_class_section: [parseInt(this.students.student_class_section)],
     });
+    
+
   }
   submit() {
     // emppty stuff
@@ -110,9 +129,22 @@ export class FormDialogComponent {
   }
   updateStudent() {
     if (this.studentsForm.valid && this.data && this.data.students) {
-      const updatedStudent: Students = this.studentsForm.value;
-      updatedStudent.StudentID_Number = this.data.students.StudentID_Number; // Corrected access
-      this.studentsService.updateStudent(this.data.students.StudentID_Number, updatedStudent).subscribe({
+
+      let q_data = {
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        id_number: this.studentsForm.value.id_number,
+        firstname: this.studentsForm.value.firstname,
+        middlename: this.studentsForm.value.middlename,
+        lastname: this.studentsForm.value.lastname,
+        gender: this.studentsForm.value.gender,
+        contact_number: this.studentsForm.value.contact_number,
+        email_address:this.studentsForm.value.email_address,
+        date_of_birth: this.studentsForm.value.date_of_birth,
+        student_class_section: this.studentsForm.value.student_class_section,
+      }
+
+      this.studentsService.updateStudent(this.data.students.id, q_data).subscribe({
         next: (val: any) => {
           this.openSuccessDialog('Student information has been successfully Updated!');
           this.dialogRef.close(true);

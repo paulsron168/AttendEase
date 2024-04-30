@@ -4,9 +4,9 @@ import { StudentsService  } from '../../students.service';
 import { MatButtonModule } from '@angular/material/button';
 
 export interface DialogData {
-  ID: number;
-  StudentID_Number: string;
-  First_Name: string;
+  id: number;
+  id_number: string;
+  firstname: string;
  
   
 }
@@ -41,7 +41,7 @@ export class DeleteDialogComponent {
   
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.studentsService.deleteStudent(this.data.ID).subscribe({
+        this.studentsService.deleteStudent(this.data.id).subscribe({
           next: (result: any) => {
             console.log(result); // Handle the result as needed
             this.dialogRef.close(); // Close the dialog after successful deletion

@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose, MatDialog } from '@angular/material/dialog';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ClassScheduleService } from '../../classSchedule.service';
 import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClassSchedule } from '../../classSchedule.model';
@@ -13,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { UpdateDialogComponent } from '../update-dialog/update-dialog.component';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { CommonModule } from '@angular/common';
- 
+import { StudentsService } from 'app/admin/students/allstudents/students.service';
  
 //import { TimePickerModule } from '@syncfusion/ej2-angular-calendars';
 
@@ -49,7 +49,7 @@ export interface DialogData {
         
     ],
 })
-export class FormDialogComponent  {
+export class FormDialogComponent implements OnInit {
   classSection: any[] = [];
 
 
@@ -63,7 +63,8 @@ export class FormDialogComponent  {
   //dialog: any;
   isReadOnly: boolean = true;
   private _dialogRef: MatDialogRef<UpdateDialogComponent> | undefined;
-  
+  sectionList:any;
+  subjectList:any;
   paginator: any;
 
   class_Day: string[] = [
@@ -79,6 +80,7 @@ export class FormDialogComponent  {
     public dialogRef: MatDialogRef<FormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public classScheduleService: ClassScheduleService,
+    public studentsService: StudentsService,
     private fb: UntypedFormBuilder,
     private _dialog: MatDialog,
         
@@ -86,7 +88,7 @@ export class FormDialogComponent  {
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
-      this.dialogTitle = data.classSchedule.ID + ' '  ;
+      this.dialogTitle = data.classSchedule.id + ' '  ;
       this.classSchedule = data.classSchedule;
     } else {
       this.dialogTitle = 'New ClassSchedule';
@@ -95,6 +97,33 @@ export class FormDialogComponent  {
     }
     this.classScheduleForm = this.createContactForm();
   }
+
+  ngOnInit(): void {
+    this.initializeData();
+  }
+
+  initializeData(){
+    this.studentsService.getSection()
+    .subscribe(
+      response => {
+        this.sectionList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+
+    this.studentsService.getSubject()
+    .subscribe(
+      response => {
+        this.subjectList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+  }
+
   formControl = new UntypedFormControl('', [
     Validators.required,
     // Validators.email,
@@ -108,30 +137,82 @@ export class FormDialogComponent  {
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      ID: [this.classSchedule.ID],
-      class_ID: [this.classSchedule.class_ID],
-      class_Day: [this.classSchedule.class_Day],
-      class_Start: [this.classSchedule.class_Start],
-      class_End: [this.classSchedule.class_End],
-      class_Section: [this.classSchedule.class_Section],
-      room: [this.classSchedule.room],
-      
-    
-      
+      ID: [this.classSchedule.id],
+      class_days: [this.classSchedule.class_days],
+      class_start: [this.classSchedule.class_start],
+      class_end: [this.classSchedule.class_end],
+      class_subject: [this.classSchedule.class_subject],
+      class_section: [this.classSchedule.class_section],
+      class_room: [this.classSchedule.class_room],      
     });
   }
   submit() {
-    // emppty stuff
+    //empty
   }
   onNoClick(): void {
     this.dialogRef.close();
   }
-   
+
+  formatTime(time:any) {
+    const [hourMinute, ampm] = time.split(' ');
+    let [hour, minute] = hourMinute.split(':');
+
+    // Convert hour to 24-hour format if PM
+    // if (ampm.toUpperCase() === 'PM') {
+    //     hour = (parseInt(hour, 10) + 12).toString(); // Add 12 hours for PM
+    // }
+
+    hour = hour.padStart(2, '0');
+    minute = minute.padStart(2, '0');
+
+    return `${hour}:${minute}:00`; // Append seconds
+  }
+
+  addSchedule(){
+    if (this.classScheduleForm.valid) {
+      let q_data = {
+        created_by: "admin",
+        created_datetime: new Date(),
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        class_days: this.classScheduleForm.value.class_days.join(', '), // Join all academic levels into a single string
+        class_start: this.formatTime(this.classScheduleForm.value.class_start),
+        class_end: this.formatTime(this.classScheduleForm.value.class_end),
+        class_room: this.classScheduleForm.value.class_room,
+        class_subject_id: this.classScheduleForm.value.class_subject,
+        class_section_id: this.classScheduleForm.value.class_section,
+      };
+      console.log(q_data);
+
+      this.classScheduleService.addClassSchedule(q_data).subscribe({
+        next: (val: any) => {
+          this.openSuccessDialog('Class Schedule information has been successfully inserted!');
+          this.dialogRef.close(true);
+           //Reload the page
+          //window.location.reload();
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
+    }
+  }
+
   updateClassSchedule() {
     if (this.classScheduleForm.valid && this.data && this.data.classSchedule) {
-      const updatedClassSchedule: ClassSchedule = this.classScheduleForm.value;
-      updatedClassSchedule.ID = this.data.classSchedule.ID; // Corrected access
-      this.classScheduleService.updateClassSchedule(this.data.classSchedule.ID, updatedClassSchedule).subscribe({
+
+      let q_data = {
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        class_days: this.classScheduleForm.value.class_days.join(', '), // Join all academic levels into a single string
+        class_start: this.formatTime(this.classScheduleForm.value.class_start),
+        class_end: this.formatTime(this.classScheduleForm.value.class_end),
+        class_room: this.classScheduleForm.value.class_room,
+        class_subject_id: this.classScheduleForm.value.class_subject,
+        class_section_id: this.classScheduleForm.value.class_section,
+      };
+
+      this.classScheduleService.updateClassSchedule(this.data.classSchedule.id, q_data).subscribe({
         next: (val: any) => {
           this.openSuccessDialog('Class Schedule information has been successfully Updated!');
           this.dialogRef.close(true);
@@ -144,6 +225,7 @@ export class FormDialogComponent  {
       });
     }
   }
+
   openSuccessDialog(message: string): void {
     const dialogRef = this._dialog.open(UpdateDialogComponent, {
       width: '300px',

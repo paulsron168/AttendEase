@@ -9,8 +9,12 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 })
 export class StudentsService extends UnsubscribeOnDestroyAdapter {
   
-  private readonly API_URL = 'http://localhost:5005/student';
-  private readonly ADD_STUDENT_URL = 'http://localhost:5005/addstudent';
+  private readonly SUBJECT_URL = 'http://localhost:5005/get_subject';
+  private readonly STUDENT_URL = 'http://localhost:5005/student';
+  private readonly SECTION_URL = 'http://localhost:5005/section';
+  private readonly ADD_STUDENT_URL = 'http://localhost:5005/add_student';
+  private readonly DEL_STUDENT_URL = 'http://localhost:5005/delete_student';
+  private readonly UPD_STUDENT_URL = 'http://localhost:5005/update_student';
 
   isTblLoading = true;
   dataChange: BehaviorSubject<Students[]> = new BehaviorSubject<Students[]>([]);
@@ -30,7 +34,7 @@ export class StudentsService extends UnsubscribeOnDestroyAdapter {
   }
 
   getAllStudents(): void {
-    this.subs.sink = this.httpClient.get<Students[]>(this.API_URL).subscribe({
+    this.subs.sink = this.httpClient.get<Students[]>(this.STUDENT_URL).subscribe({
       next: (data) => {
         this.isTblLoading = false;
        this.dataChange.next(data);
@@ -38,8 +42,8 @@ export class StudentsService extends UnsubscribeOnDestroyAdapter {
       error: (error: HttpErrorResponse) => {
      this.isTblLoading = false;
         console.log(error.name + ' ' + error.message);
-  },
- });
+    },
+  });
  }
 
   //getAllStudents(): Observable<Students[]> {
@@ -58,17 +62,25 @@ export class StudentsService extends UnsubscribeOnDestroyAdapter {
    // });
  // }
 
-  updateStudent(StudentID_Number: number, updatedStudent: any): Observable<any> {
-    const url = `${this.API_URL}/${StudentID_Number}`;
+  updateStudent(id: number, updatedStudent: any): Observable<any> {
+    const url = `${this.UPD_STUDENT_URL}/${id}`;
     return this.httpClient.put(url, updatedStudent);
   }
 
-  deleteStudent(StudentID_Number: number): Observable<any> {
-    const url = `${this.API_URL}/${StudentID_Number}`;
+  deleteStudent(id: number): Observable<any> {
+    const url = `${this.DEL_STUDENT_URL}/${id}`;
     return this.httpClient.delete(url);
   }
 
   addStudent(studentData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_STUDENT_URL, studentData);
+  }
+
+  getSection(): Observable<any> {
+    return this.httpClient.get<any>(this.SECTION_URL);
+  }
+
+  getSubject(): Observable<any> {
+    return this.httpClient.get<any>(this.SUBJECT_URL);
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import {
   //UntypedFormBuilder,
   //UntypedFormGroup,
@@ -41,9 +41,10 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
     CommonModule
   ],
 })
-export class AddStudentComponent {
+export class AddStudentComponent implements OnInit{
 
   docForm: FormGroup;
+  sectionList:any;
   hide3 = true;
   agree3 = false;
   hide: boolean = true;
@@ -58,26 +59,61 @@ export class AddStudentComponent {
     this.hideConformPassword = !this.hideConformPassword;
   }
 
-
   constructor(private fb: FormBuilder, private studentService: StudentsService, private snackBar: MatSnackBar, private _dialog: MatDialog) {
     this.docForm = this.fb.group({
-      StudentID_Number: ['', [Validators.required]],
-      First_Name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      Middle_Name: ['', [Validators.required]],
-      Last_Name: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      Contact_Number: ['', [Validators.required]],
+      id_number: ['', [Validators.required]],
+      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      middlename: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      contact_number: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      conformPassword: ['', [Validators.required]],
-      Email_Address: ['', [Validators.required, Validators.email, Validators.minLength(5)]],
-      DOB: ['', [Validators.required]],
-      class_Section:['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]],
+      email_address: ['', [Validators.required, Validators.email, Validators.minLength(5)]],
+      date_of_birth: ['', [Validators.required]],
+      class_section: ['', [Validators.required]],
+      uploadImg:[]
     });
+  }
+
+  ngOnInit(): void {
+    this.initializeData();
+  }
+
+  initializeData(){
+    this.studentService.getSection()
+    .subscribe(
+      response => {
+        this.sectionList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
   }
 
   onSubmit() {
     if (this.docForm.valid) {
-      this.studentService.addStudent(this.docForm.value)
+
+      let q_data = {
+        id_number: this.docForm.value.id_number,
+        created_by: "admin",
+        created_datetime: new Date(),
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        firstname: this.docForm.value.firstname,
+        middlename: this.docForm.value.middlename,
+        lastname: this.docForm.value.lastname,
+        gender: this.docForm.value.gender,
+        contact_number: this.docForm.value.contact_number,
+        password: this.docForm.value.password, 
+        username:this.docForm.value.email_address,
+        email_address:this.docForm.value.email_address,
+        date_of_birth: this.docForm.value.date_of_birth,
+        student_class_section: this.docForm.value.class_section,
+      }
+
+      this.studentService.addStudent(q_data)
         .subscribe(
           response => {
             console.log('Student added successfully:', response);

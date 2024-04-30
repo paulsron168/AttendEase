@@ -2,28 +2,28 @@ import { formatDate } from '@angular/common';
 
 export class Teachers {
   //img: string;
-  ID: number;
-  TeacherID_Number: number;
-  Email_Address: string;
-  First_Name: string;
-  Middle_Name: string;
-  Last_Name: string;
-  DOB: string;
-  Contact_Number: string;
-  Gender: string;
+  id: number;
+  id_number: number;
+  email_address: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  date_of_birth: string;
+  contact_number: string;
+  gender: string;
 
   constructor(teachers: Teachers) {
     {
-      this.ID = teachers.ID || this.getRandomID();
+      this.id = teachers.id || this.getRandomID();
       //this.img = teachers.img || 'assets/images/user/user1.jpg';
-      this.TeacherID_Number = typeof teachers.TeacherID_Number === 'number' ? teachers.TeacherID_Number : 0; // Default to 0 if not a number
-      this.Email_Address = teachers.Email_Address || '';
-      this.First_Name = teachers.First_Name || '';
-      this.Middle_Name = teachers.Middle_Name || '';
-      this.Last_Name = teachers.Last_Name || '';
-      this.DOB = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
-      this.Contact_Number = teachers.Contact_Number || '';
-      this.Gender = teachers.Gender || '';
+      this.id_number = typeof teachers.id_number === 'number' ? teachers.id_number : 0; // Default to 0 if not a number
+      this.email_address = teachers.email_address || '';
+      this.firstname = teachers.firstname || '';
+      this.middlename = teachers.middlename || '';
+      this.lastname = teachers.lastname || '';
+      this.date_of_birth = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
+      this.contact_number = teachers.contact_number || '';
+      this.gender = teachers.gender || '';
     }
   }
 

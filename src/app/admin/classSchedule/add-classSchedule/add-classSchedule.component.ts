@@ -81,18 +81,39 @@ export class AddClassScheduleComponent {
       room: ['', [Validators.required]],
     });
   }
-  
+
+  formatTime(time:any) {
+    const [hourMinute, ampm] = time.split(' ');
+    let [hour, minute] = hourMinute.split(':');
+
+    // Convert hour to 24-hour format if PM
+    if (ampm.toUpperCase() === 'PM') {
+        hour = (parseInt(hour, 10) + 12).toString(); // Add 12 hours for PM
+    }
+
+    hour = hour.padStart(2, '0');
+    minute = minute.padStart(2, '0');
+
+    return `${hour}:${minute}:00`; // Append seconds
+  }
+
 
   onSubmit() {
     if (this.docForm.valid) {
-      const formValue = this.docForm.value;
-     
-      // Format class_Start time to 'HH:mm' format
-      //formValue.class_Start = formatDate(formValue.class_Start, 'HH:mm', 'en-US');
-      // Similarly, format class_End time if needed
-      //formValue.class_End= formatDate(formValue.class_End, 'HH:mm', 'en-US');
+      let q_data = {
+        created_by: "admin",
+        created_datetime: new Date(),
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        class_days: this.docForm.value.class_days.join(', '),
+        class_start: this.formatTime(this.docForm.value.value.class_start),
+        class_end: this.formatTime(this.docForm.value.value.class_end),
+        class_room: this.docForm.value.value.class_room,
+        class_subject_id: this.docForm.value.value.class_subject_id,
+        class_section_id: this.docForm.value.value.class_section_id,
+      }
   
-      this.classScheduleService.addClassSchedule(formValue)
+      this.classScheduleService.addClassSchedule(q_data)
         .subscribe(
           (response: any) => {
             console.log('Class Schedule added successfully:', response);
