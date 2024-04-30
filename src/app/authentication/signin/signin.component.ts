@@ -107,43 +107,18 @@ export class SigninComponent
           setTimeout(() => {
             let user = response[0];
             const role = this.capitalizeFirstLetter(response[0]['user_type']);
-            console.log('role',role);
-            if (role === Role.All || role === Role.Admin) {
-              console.log('/admin/dashboard/main');
-              // this.currentUserSubject.next(user);
-              // this.authService.currentUserValue.id = user.id;
-              // this.authService.currentUserValue.username = user.username;
-              // this.authService.currentUserValue.password = user.password;
-              // this.authService.currentUserValue.firstName = user.firstname;
-              // this.authService.currentUserValue.lastName = user.lastname;
-              // this.authService.currentUserValue.role = role;
-              // this.authService.currentUserValue.token = 'admin-token';
 
-           
-
-              // this.ok({
-              //   id: user.id,
-              //   img: user.id,
-              //   username: user.username,
-              //   firstName: user.firstname,
-              //   lastName: user.lastname,
-              //   token: user.token,
-              // });
-
+            if (role === Role.All || role === Role.Admin) {             
               this.router.navigate(['admin/dashboard/main']);
-
             } else if (role === Role.Teacher){
-              console.log('/teacher/dashboard');
               this.router.navigate(['/teacher/dashboard']);
             } else if (role === Role.Student){
-              console.log('/student/dashboard');
               this.router.navigate(['/student/dashboard']);
             } else {
               this.router.navigate(['../authentication/signin']);
             }
             this.loading = false;
           }, 1000);
-          console.log('user login successfully:', response[0]);
 
           // Optionally, reset the form here
         },
@@ -154,32 +129,5 @@ export class SigninComponent
         }
       );
   }
-    //   this.subs.sink = this.authService
-    //     .login(this.f['username'].value, this.f['password'].value)
-    //     .subscribe(
-    //       (res) => {
-    //         if (res) {
-    //           setTimeout(() => {
-    //             const role = this.authService.currentUserValue.role;
-    //             if (role === Role.All || role === Role.Admin) {
-    //               this.router.navigate(['/admin/dashboard/main']);
-    //             } else if (role === Role.Teacher){
-    //               this.router.navigate(['/teacher/dashboard']);
-    //             } else {
-    //               this.router.navigate(['/authentication/signin']);
-    //             }
-    //             this.loading = false;
-    //           }, 1000);
-    //         } else {
-    //           this.error = 'Invalid Login';
-    //         }
-    //       },
-    //       (error) => {
-    //         this.error = error;
-    //         this.submitted = false;
-    //         this.loading = false;
-    //       }
-    //     );
-    // }
   }
 }
