@@ -37,6 +37,15 @@ export const APP_ROUTE: Route[] = [
         loadChildren: () =>
           import('./teacher/teacher.routes').then((m)=> m.TEACHER_ROUTE),
       },
+      {
+        path: 'student',
+        canActivate:[AuthGuard],
+        data:{
+          role: Role.Student,
+        },
+        loadChildren: () =>
+          import('./student/student.routes').then((m)=> m.STUDENT_ROUTE),
+      },
 
        
     ],

@@ -45,7 +45,7 @@ export class HeaderComponent
   userImg?: string;
   homePage?: string;
   isNavbarCollapsed = true;
-  
+  userFullName:any;
   countryName: string | string[] = [];
   langStoreValue?: string;
   
@@ -117,6 +117,9 @@ export class HeaderComponent
     },
   ];
   ngOnInit() {
+
+    this.userFullName = this.authService.currentUserValue.firstName + ' ' + this.authService.currentUserValue.lastName;
+
     this.config = this.configService.configData;
     const userRole = this.authService.currentUserValue.role;
     this.userImg = this.authService.currentUserValue.img;
