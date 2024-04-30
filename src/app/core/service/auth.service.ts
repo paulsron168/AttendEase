@@ -11,6 +11,8 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
+  private readonly LOGIN_URL = 'http://localhost:5005/login';
+
   private users = [
     {
       id: 1,
@@ -55,25 +57,56 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  capitalizeFirstLetter(string:any) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  
+
   login(username: string, password: string) {
 
-    const user = this.users.find((u) => u.username === username && u.password === password);
-
-    if (!user) {
-      return this.error('Username or password is incorrect');
-    } else {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      this.currentUserSubject.next(user);
-      return this.ok({
-        id: user.id,
-        img: user.img,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        token: user.token,
-      });
+    let q_data = {
+      "username":username,
+      "password":password
     }
+    // return this.http.post<any>(this.LOGIN_URL, q_data);
+  
+    // return this.http.post<any>(this.LOGIN_URL, q_data);
+    this.http.post<any>(this.LOGIN_URL,q_data).subscribe({
+        next: (data) => {
+          console.log('user', data[0]);
+          let user = data[0];
+          let userstate = {
+            id: user.id,
+            img: 'assets/images/user/client.jpg',
+            username: user.username,
+            password: user.password,
+            firstName: user.firstname,
+            lastName: user.lastname,
+            role: this.capitalizeFirstLetter(user.user_type),
+            token: 'admin-token',
+          };
+          
+          this.currentUserSubject.next(userstate);
+          localStorage.setItem('currentUser', JSON.stringify(userstate));
+          // return this.error('Username or password is correct');
+          // return this.ok({
+          //   id: user.id,
+          //   img: user.id,
+          //   username: user.username,
+          //   firstName: user.firstname,
+          //   lastName: user.lastname,
+          //   token: user.lastname,
+          // });
+        },
+        error: (error: any) => {
+          console.log(error.name + ' ' + error.message);
+          return this.error('Username or password is correct');
+      },
+    });
+
+      return this.http.post<any>(this.LOGIN_URL, q_data);
   }
+
   ok(body?: {
     id: number;
     img: string;
@@ -84,6 +117,7 @@ export class AuthService {
   }) {
     return of(new HttpResponse({ status: 200, body }));
   }
+
   error(message: string) {
     return throwError(message);
   }
