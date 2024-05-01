@@ -16,6 +16,7 @@ export class TeachersService extends UnsubscribeOnDestroyAdapter {
   private readonly ADD_TEACHER_URL = 'http://localhost:5005/add_teacher';
   private readonly UPD_TEACHER_URL = 'http://localhost:5005/update_teacher';
   private readonly DEL_TEACHER_URL = 'http://localhost:5005/delete_teacher';
+  private readonly UPLOAD_URL = 'http://localhost:5005/uploadProfilePicture';
 
   isTblLoading = true;
   dataChange: BehaviorSubject<Teachers[]> = new BehaviorSubject<Teachers[]>([]);
@@ -75,6 +76,10 @@ export class TeachersService extends UnsubscribeOnDestroyAdapter {
 
   addTeacher(teacherData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_TEACHER_URL, teacherData);
+  }
+
+  uploadImage(image: any): Observable<any> {
+    return this.httpClient.post<any>(this.UPLOAD_URL, image);
   }
 
   countTeacher(): Observable<any> {

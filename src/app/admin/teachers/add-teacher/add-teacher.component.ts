@@ -23,7 +23,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessDialogComponent } from '../allteachers/dialogs/success-dialog/success-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-
+import { environment } from 'environments/environment.development';
 
 @Component({
   selector: 'app-add-teacher',
@@ -74,45 +74,82 @@ export class AddTeacherComponent {
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
       email_address: ['', [Validators.required, Validators.email, Validators.minLength(5)]],
-      date_of_birth: ['', [Validators.required]]
+      date_of_birth: ['', [Validators.required]],
+      uploadImg:[]
     });
   }
 
   onSubmit() {
     if (this.docForm.valid) {
 
-      let q_data = {
-        id_number: this.docForm.value.id_number,
-        created_by: "admin",
-        created_datetime: new Date(),
-        updated_by: "admin",
-        updated_datetime: new Date(),
-        firstname: this.docForm.value.firstname,
-        middlename: this.docForm.value.middlename,
-        lastname: this.docForm.value.lastname,
-        gender: this.docForm.value.gender,
-        contact_number: this.docForm.value.contact_number,
-        password: this.docForm.value.password, 
-        username:this.docForm.value.email_address,
-        email_address:this.docForm.value.email_address,
-        date_of_birth: this.docForm.value.date_of_birth
+
+      
+      var fd = new FormData();
+      var filestoUpload = this.docForm.value.uploadImg;
+      if (filestoUpload) {
+        let files_len = 1;
+        for (let index = 0; index < files_len; index++) {
+          fd.append("file", filestoUpload);
+
+        }
       }
 
-      this.teacherService.addTeacher(q_data)
-        .subscribe(
-          response => {
-            console.log('Teacher added successfully:', response);
-            // Optionally, reset the form here
-            this.openSuccessDialog('Teacher information has been successfully Added!');
-            this.docForm.reset();
-            //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
+      let filePath = "";
 
-          },
-          error => {
-            console.error('Error adding teacher:', error);
-            // Handle error
-          }
-        );
+      this.teacherService.uploadImage(fd)
+      .subscribe(
+        response => {
+          console.log(response);
+          filePath = environment.ImagesPath + response.filepath;
+          console.log('uploadedImagePath',filePath);
+
+          filePath = environment.ImagesPath + response[0]['filename'];
+          console.log('uploadedImagePath',filePath);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    
+      setTimeout(()=>{
+
+        let q_data = {
+          id_number: this.docForm.value.id_number,
+          created_by: "admin",
+          created_datetime: new Date(),
+          updated_by: "admin",
+          updated_datetime: new Date(),
+          firstname: this.docForm.value.firstname,
+          middlename: this.docForm.value.middlename,
+          lastname: this.docForm.value.lastname,
+          gender: this.docForm.value.gender,
+          contact_number: this.docForm.value.contact_number,
+          password: this.docForm.value.password, 
+          username:this.docForm.value.email_address,
+          email_address:this.docForm.value.email_address,
+          date_of_birth: this.docForm.value.date_of_birth,
+          profile_picture:filePath,
+        }
+
+        this.teacherService.addTeacher(q_data)
+          .subscribe(
+            response => {
+              console.log('Teacher added successfully:', response);
+              // Optionally, reset the form here
+              this.openSuccessDialog('Teacher information has been successfully Added!');
+              this.docForm.reset();
+              //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
+
+            },
+            error => {
+              console.error('Error adding teacher:', error);
+              // Handle error
+            }
+          );
+        },1000)
+
+
+   
     }
   }
 
