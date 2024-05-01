@@ -22,6 +22,8 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessDialogComponent } from '../allstudents/dialogs/success-dialog/success-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { environment } from 'environments/environment.development';
+
 @Component({
   selector: 'app-add-student',
   templateUrl: './add-student.component.html',
@@ -95,6 +97,37 @@ export class AddStudentComponent implements OnInit{
   onSubmit() {
     if (this.docForm.valid) {
 
+      var fd = new FormData();
+      var filestoUpload = this.docForm.value.uploadImg;
+      if (filestoUpload) {
+        let files_len = 1;
+        for (let index = 0; index < files_len; index++) {
+          fd.append("file", filestoUpload);
+
+        }
+      }
+
+      let filePath = "";
+
+      this.studentService.uploadImage(fd)
+      .subscribe(
+        response => {
+          console.log(response);
+          filePath = environment.ImagesPath + response.filepath;
+          console.log('uploadedImagePath',filePath);
+
+          filePath = environment.ImagesPath + response[0]['filename'];
+          console.log('uploadedImagePath',filePath);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    
+      setTimeout(()=>{
+     
+      console.log('uploadedImagePath2',filePath);
+
       let q_data = {
         id_number: this.docForm.value.id_number,
         created_by: "admin",
@@ -111,6 +144,7 @@ export class AddStudentComponent implements OnInit{
         email_address:this.docForm.value.email_address,
         date_of_birth: this.docForm.value.date_of_birth,
         student_class_section: this.docForm.value.class_section,
+        profile_picture:filePath,
       }
 
       this.studentService.addStudent(q_data)
@@ -128,6 +162,8 @@ export class AddStudentComponent implements OnInit{
             // Handle error
           }
         );
+      },1000)
+
     }
   }
 

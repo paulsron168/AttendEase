@@ -77,7 +77,7 @@ export class AuthService {
           let user = data[0];
           let userstate = {
             id: user.id,
-            img: 'assets/images/user/client.jpg',
+            img: user.profile_picture,
             username: user.username,
             password: user.password,
             firstName: user.firstname,
