@@ -15,7 +15,8 @@ export class StudentsService extends UnsubscribeOnDestroyAdapter {
   private readonly ADD_STUDENT_URL = 'http://localhost:5005/add_student';
   private readonly DEL_STUDENT_URL = 'http://localhost:5005/delete_student';
   private readonly UPD_STUDENT_URL = 'http://localhost:5005/update_student';
-
+  private readonly UPLOAD_URL = 'http://localhost:5005/uploadProfilePicture';
+  
   isTblLoading = true;
   dataChange: BehaviorSubject<Students[]> = new BehaviorSubject<Students[]>([]);
   dialogData!: Students;
@@ -74,6 +75,10 @@ export class StudentsService extends UnsubscribeOnDestroyAdapter {
 
   addStudent(studentData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_STUDENT_URL, studentData);
+  }
+
+  uploadImage(image: any): Observable<any> {
+    return this.httpClient.post<any>(this.UPLOAD_URL, image);
   }
 
   getSection(): Observable<any> {
