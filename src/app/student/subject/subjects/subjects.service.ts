@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Allsubjects } from './subjects.model';
+import { environment } from 'environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MyProjectsService {
 
-  private readonly API_SUBJECT_URL = 'http://localhost:5005/subject';
-  private readonly API_ATTENDANCE_URL = 'http://localhost:5005/recordAttendance'; // Add your attendance API endpoint here
+  private readonly API_SUBJECT_URL = environment.apiUrl + '/subject';
+  private readonly API_ATTENDANCE_URL = environment.apiUrl + '/recordAttendance'; // Add your attendance API endpoint here
 
   constructor(private httpClient: HttpClient) { }
 

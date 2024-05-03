@@ -68,16 +68,15 @@ export class AllRosterComponent
   implements OnInit {
   displayedColumns = [
     'select',
+    'subject_name',
+    'subject_major',
+    'subject_type',
+    'class_days',
+    'class_start',
+    'class_end',
+    'teacher_name',
+    'section',
     'rosterID',
-    'classRoster_ID',
-    'major',
-    'year_level',
-    'class_Section',
-    'subjectCode',
-    'TeacherID_Number',
-    'class_Start',
-    'class_End',
-    'class_Day',
     'actions',
   ];
   exampleDatabase?: ManageRosterService;
@@ -118,6 +117,8 @@ export class AllRosterComponent
       tempDirection = 'ltr';
     }
     const dialogRef = this.dialog.open(FormDialogComponent, {
+      width: "700px",
+      height: "350px",
       data: {
         manageRoster: this.manageRoster,
         action: 'add',
@@ -142,12 +143,14 @@ export class AllRosterComponent
     });
   }
   editCall(row: ManageRoster) {
-    this.id = row.rosterID;
+    this.id = row.id;
     let tempDirection: Direction;
 
     const dialogRef = this.dialog.open(FormDialogComponent, {
+      width: "700px",
+      height: "350px",
       data: {
-        roster: row,
+        manageRoster: row,
         action: 'edit',
       },
 
@@ -156,7 +159,7 @@ export class AllRosterComponent
       if (result === 1) {
         // When using an edit things are little different, firstly we find record inside DataService by id
         const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.rosterID === this.id
+          (x) => x.id === this.id
         );
         // Then you update that record using data from dialogData (values you enetered)
         if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
@@ -176,7 +179,7 @@ export class AllRosterComponent
   }
   deleteItem(i: number, row: ManageRoster) {
     this.index = i;
-    this.id = row.rosterID;
+    this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
@@ -194,10 +197,10 @@ export class AllRosterComponent
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         // Call the service method to delete the item from the database
-        this.manageRosterService.deleteManageRoster(row.rosterID).subscribe(
+        this.manageRosterService.deleteManageRoster(row.id).subscribe(
           () => {
             // On success, remove the item from the local data array
-            const foundIndex = this.exampleDatabase?.dataChange.value.findIndex((x) => x.rosterID === this.id);
+            const foundIndex = this.exampleDatabase?.dataChange.value.findIndex((x) => x.id === this.id);
             if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
               this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
               // Refresh the table
@@ -285,17 +288,17 @@ export class AllRosterComponent
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        rosterID: x.rosterID,
-        classRoster_ID: x.classRoster_ID,
-        major: x.major,
-        year_level: x.year_level,
-        class_Section: x.class_Section,
-        subjectCode: x.subjectCode,
-        TeacherID_Number: x.TeacherID_Number,
-        class_Start: x.class_Start,
-        class_End: x.class_End,
-        class_Day: x.class_Day,
-
+        id: x.id,
+        schedule_id: x.schedule_id,
+        subject_name: x.subject_name,
+        subject_major: x.subject_major,
+        subject_type: x.subject_type,
+        class_days: x.class_days,
+        class_start: x.class_start,
+        class_end: x.class_end,
+        teacher_id: x.teacher_id,
+        teacher_name: x.teacher_name,
+        section: x.section
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -362,16 +365,17 @@ export class ExampleDataSource extends DataSource<ManageRoster> {
           .slice()
           .filter((manageRoster: ManageRoster) => {
             const searchStr = (
-              manageRoster.rosterID +
-              manageRoster.major +
-              manageRoster.year_level +
-              manageRoster.class_Section +
-              manageRoster.subjectCode +
-              manageRoster.TeacherID_Number +
-              manageRoster.class_Start +
-              manageRoster.class_End +
-              manageRoster.class_Day
-
+              manageRoster.id +
+              manageRoster.schedule_id +
+              manageRoster.subject_name +
+              manageRoster.subject_major +
+              manageRoster.subject_type +
+              manageRoster.class_days +
+              manageRoster.class_start +
+              manageRoster.class_end +
+              manageRoster.teacher_id +
+              manageRoster.teacher_name +
+              manageRoster.section 
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -399,34 +403,39 @@ export class ExampleDataSource extends DataSource<ManageRoster> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case 'rosterID':
-          [propertyA, propertyB] = [a.rosterID, b.rosterID];
+        case 'id':
+          [propertyA, propertyB] = [a.id, b.id];
           break;
-        case 'major':
-          [propertyA, propertyB] = [a.major, b.major];
+        case 'schedule_id':
+          [propertyA, propertyB] = [a.schedule_id, b.schedule_id];
           break;
-        case 'year_level':
-          [propertyA, propertyB] = [a.year_level, b.year_level];
+        case 'subject_name':
+          [propertyA, propertyB] = [a.subject_name, b.subject_name];
           break;
-        case 'class_Section':
-          [propertyA, propertyB] = [a.class_Section, b.class_Section];
+        case 'subject_major':
+          [propertyA, propertyB] = [a.subject_major, b.subject_major];
           break;
-        case 'subjectCode':
-          [propertyA, propertyB] = [a.subjectCode, b.subjectCode];
+        case 'subject_type':
+          [propertyA, propertyB] = [a.subject_type, b.subject_type];
           break;
-        case 'TeacherID_Number':
-          [propertyA, propertyB] = [a.TeacherID_Number, b.TeacherID_Number];
+        case 'class_days':
+          [propertyA, propertyB] = [a.class_days, b.class_days];
           break;
-        case 'class_Start':
-          [propertyA, propertyB] = [a.class_Start, b.class_Start];
+        case 'class_start':
+          [propertyA, propertyB] = [a.class_start, b.class_start];
           break;
-        case 'class_End':
-          [propertyA, propertyB] = [a.class_End, b.class_End];
+        case 'class_end':
+          [propertyA, propertyB] = [a.class_end, b.class_end];
           break;
-        case 'class_Day':
-          [propertyA, propertyB] = [a.class_Day, b.class_Day];
+        case 'teacher_id':
+          [propertyA, propertyB] = [a.teacher_id, b.teacher_id];
           break;
-        
+        case 'teacher_name':
+          [propertyA, propertyB] = [a.teacher_name, b.teacher_name];
+          break;
+        case 'section':
+          [propertyA, propertyB] = [a.section, b.section];
+          break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

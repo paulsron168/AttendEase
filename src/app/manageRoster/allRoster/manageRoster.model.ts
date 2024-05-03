@@ -2,30 +2,32 @@ import { formatDate } from '@angular/common';
 
 export class ManageRoster {
   //img: string;
-  rosterID: number;
-  classRoster_ID: number;
-  major: string;
-  year_level: string;
-  subjectCode: string;
-  TeacherID_Number: string;
-  class_Start: string;
-  class_End: string;
-  class_Day: string;
-  class_Section: any;
+  id: number;
+  schedule_id: number;
+  subject_name: string;
+  subject_major: string;
+  subject_type: string;
+  class_days: string;
+  class_start: string;
+  class_end: string;
+  teacher_id: number;
+  teacher_name: string;
+  section: string;
   
   constructor(manageRoster: ManageRoster) {
     {
-      this.rosterID = manageRoster.rosterID || this.getRandomID();
-      //this.img = students.img || 'assets/images/user/user1.jpg';
-      this.classRoster_ID = typeof manageRoster.classRoster_ID  === 'number' ?manageRoster.classRoster_ID : 0; // Default to 0 if not a number
-      this.major = manageRoster.major || '';
-      this.year_level = manageRoster.year_level || '';
-      this.subjectCode = manageRoster.subjectCode || '';
-      this.TeacherID_Number = manageRoster.TeacherID_Number || '';
-      this.class_Start =  manageRoster.class_Start || '';
-      this. class_End = manageRoster. class_End || '';
-      this.class_Day = manageRoster.class_Day || '';
-     
+      this.id = manageRoster.id;
+      this.schedule_id = manageRoster.schedule_id;
+      this.subject_name = manageRoster.subject_name;
+      this.subject_major = manageRoster.subject_major;
+      this.subject_type = manageRoster.subject_type;
+      this.class_days = manageRoster.class_days;
+      this.class_start = manageRoster.class_start;
+      this.class_end = manageRoster.class_end;
+      this.teacher_id = manageRoster.teacher_id;
+      this.teacher_name = manageRoster.teacher_name;
+      this.section = manageRoster.section;
+
     }
   }
 

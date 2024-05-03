@@ -13,7 +13,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { FeatherModule } from 'angular-feather';
 import { allIcons } from 'angular-feather/icons';
- 
+import { FormatTimePipe } from './custom_pipe/format-time.pipe';
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -37,6 +37,8 @@ export const appConfig: ApplicationConfig = {
                 },
             })
         ),
+        
+        { provide: FormatTimePipe, useClass: FormatTimePipe },
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
         { provide: DateAdapter, useClass: MomentDateAdapter },
         {

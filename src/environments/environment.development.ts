@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:4200',
+  apiUrl: 'http://192.168.1.163:5005',
   ImagesPath: '/assets/images/uploaded/'
 };
 

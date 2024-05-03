@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { BehaviorSubject} from 'rxjs';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { AllAttendance} from './attendance.model';
+import { environment } from 'environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttendanceService extends UnsubscribeOnDestroyAdapter {
-  private readonly API_ATTENDANCE_URL = 'http://localhost:5005/attendance';
+  private readonly API_ATTENDANCE_URL = environment.apiUrl + '/attendance';
   
   
   isTblLoading = true;

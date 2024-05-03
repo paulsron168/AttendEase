@@ -23,7 +23,14 @@
               </ul>
             </div>
             <div class="right">
-              <ul class="tbl-export-btn">
+              <ul class="tbl-export-btn"> 
+                <li class="tbl-header-btn">
+                  <div class="m-l-10" matTooltip="ADD">
+                    <button mat-mini-fab color="primary" (click)="addNew()">
+                      <mat-icon class="col-white">add</mat-icon>
+                    </button>
+                  </div>
+                </li>
                 <li class="tbl-header-btn">
                   <div class="m-l-10" matTooltip="REFRESH">
                     <button mat-mini-fab color="primary" (click)="refresh()">
@@ -75,72 +82,64 @@
 
                 <!--ID-->
                 <ng-container matColumnDef="rosterID">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>#</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span
-                      class="mobile-label">ID:</span>{{row.rosterID}}</mat-cell>
+                      class="mobile-label">ID:</span>{{row.id}}</mat-cell>
                 </ng-container>
 
                 <!--Class Roster ID Number-->
-                <ng-container matColumnDef="classRoster_ID">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Roster ID</mat-header-cell>
+                <ng-container matColumnDef="subject_name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subject Name</mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span
-                      class="mobile-label">Class Roster ID:</span>{{row.classRoster_ID}}</mat-cell>
+                      class="mobile-label">Subject Name:</span>{{row.subject_name}}</mat-cell>
                 </ng-container>
 
                 <!--Class Roster Major-->
-                <ng-container matColumnDef="major">
+                <ng-container matColumnDef="subject_major">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Major</mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span
-                      class="mobile-label">Major:</span>{{row.major}}</mat-cell>
+                      class="mobile-label">Major:</span>{{row.subject_major}}</mat-cell>
                 </ng-container>
 
                 <!-- Class Roster Year Level-->
-                <ng-container matColumnDef="year_level">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Year Level</mat-header-cell>
+                <ng-container matColumnDef="subject_type">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subject Type</mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span
-                      class="mobile-label">Year Level:</span>{{row.year_level}}</mat-cell>
+                      class="mobile-label">Type:</span>{{row.subject_type}}</mat-cell>
                 </ng-container>
 
                 <!--Class Roster Section-->
-                <ng-container matColumnDef="class_Section">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Section</mat-header-cell>
+                <ng-container matColumnDef="class_days">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Days</mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span
-                      class="mobile-label">Class Section:</span>{{row.class_Section}}</mat-cell>
+                      class="mobile-label">Class Days:</span>{{row.class_days}}</mat-cell>
                 </ng-container>
 
                  <!--Class Roster Subject-->
-                 <ng-container matColumnDef="subjectCode">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subject Code</mat-header-cell>
-                 <mat-cell *matCellDef="let row"> <span class="mobile-label">Subject Code:</span>{{row.subjectCode}}</mat-cell>
+                 <ng-container matColumnDef="class_start">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Start</mat-header-cell>
+                 <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Start:</span>{{row.class_start}}</mat-cell>
                 </ng-container>
 
 
                 <!-- Class Roster Teacher ID Number-->
-                <ng-container matColumnDef="TeacherID_Number">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Teacher</mat-header-cell>
+                <ng-container matColumnDef="class_end">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class End</mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span
-                      class="mobile-label">Teacher:</span>{{row.TeacherID_Number}}</mat-cell>
+                      class="mobile-label">Class End:</span>{{row.class_end}}</mat-cell>
                 </ng-container>
 
                 <!--Class Roster Start & End Time-->
-                <ng-container matColumnDef="class_Start">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class Start</mat-header-cell>
-                  <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Start:</span>{{row.class_Start}}</mat-cell>
+                <ng-container matColumnDef="teacher_name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Teacher</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> <span class="mobile-label">Teacher:</span>{{row.teacher_name}}</mat-cell>
                 </ng-container>
     
-                <ng-container matColumnDef="class_End">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Class End</mat-header-cell>
-                  <mat-cell *matCellDef="let row"> <span class="mobile-label">Class End:</span>{{row.class_End}}</mat-cell>
+                <ng-container matColumnDef="section">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Section</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> <span class="mobile-label">Section:</span>{{row.section}}</mat-cell>
                 </ng-container>
 
-
-                <!--Class Roster Class Day -->
-                <ng-container matColumnDef="class_Day">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Class Day</mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <span class="mobile-label">Class Day:</span>{{row.class_Day}}
-                  </mat-cell>
-                </ng-container>
-                
                 <!-- actions -->
                 <ng-container matColumnDef="actions">
                   <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
