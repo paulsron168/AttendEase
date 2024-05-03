@@ -1,9 +1,9 @@
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose, MatDialog } from '@angular/material/dialog';
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit } from '@angular/core';
+import { CommonModule,formatDate } from '@angular/common';
 import { ManageRosterService } from '../../manageRoster.service';
 import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ManageRoster } from '../../manageRoster.model';
-import { formatDate } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,9 +13,10 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { UpdateDialogComponent } from '../update-dialog/update-dialog.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { TeachersService } from 'app/admin/teachers/allteachers/teachers.service';
+import { ClassScheduleService } from 'app/admin/classSchedule/allclassSchedule/classSchedule.service';
 
-
-export interface DialogData {
+export interface DialogData{
   id: number;
   action: string;
   manageRoster: ManageRoster;
@@ -26,6 +27,7 @@ export interface DialogData {
   styleUrls: ['./form-dialog.component.scss'],
   standalone: true,
   imports: [
+    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatDialogContent,
@@ -41,7 +43,7 @@ export interface DialogData {
     OwlNativeDateTimeModule
   ],
 })
-export class FormDialogComponent {
+export class FormDialogComponent implements OnInit {
   loading: boolean = false;
   action: string;
   dialogTitle: string;
@@ -51,6 +53,9 @@ export class FormDialogComponent {
   isReadOnly: boolean = true;
   private _dialogRef: MatDialogRef<UpdateDialogComponent> | undefined;
   paginator: any;
+
+  teacherList:any;
+  scheduleList:any;
 
   class_Day: string[] = [
     'Monday',
@@ -66,13 +71,16 @@ export class FormDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public manageRosterService: ManageRosterService,
     private fb: UntypedFormBuilder,
+    private teacherService: TeachersService,
+    private scheduleService: ClassScheduleService,
     private _dialog: MatDialog
 
   ) {
     // Set the defaults
+    console.log('data',data);
     this.action = data.action;
     if (this.action === 'edit') {
-      this.dialogTitle = data.manageRoster.rosterID + ' ' + data.manageRoster.classRoster_ID;
+      this.dialogTitle = 'Class Roster [' + data.manageRoster.id + ']';
       this.manageRoster = data.manageRoster;
     } else {
       this.dialogTitle = 'New Manage Class Roster';
@@ -85,6 +93,33 @@ export class FormDialogComponent {
     Validators.required,
     // Validators.email,
   ]);
+
+  ngOnInit():void{
+    this.initializeData();
+  }
+
+  initializeData(){
+    this.teacherService.getTeachers()
+    .subscribe(
+      response => {
+        this.teacherList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+
+    this.scheduleService.getSchedule()
+    .subscribe(
+      response => {
+        this.scheduleList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+  }
+
   getErrorMessage() {
     return this.formControl.hasError('required')
       ? 'Required field'
@@ -94,17 +129,8 @@ export class FormDialogComponent {
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      rosterID: [this.manageRoster.rosterID],
-      //img: [this.manageRoster.img],
-      classRoster_ID: [this.manageRoster.classRoster_ID],
-      major: [this.manageRoster.major],
-      year_level: [this.manageRoster.year_level],
-      class_Section: [this.manageRoster.class_Section],
-      subjectCode: [this.manageRoster.subjectCode],
-      TeacherID_Number: [this.manageRoster.TeacherID_Number],
-      class_Start: [this.manageRoster.class_Start],
-      class_End: [this.manageRoster.class_End],
-      class_Day: [this.manageRoster.class_Day],
+      schedule: [this.manageRoster.schedule_id],
+      teacher: [this.manageRoster.teacher_id],
     });
   }
   submit() {
@@ -113,13 +139,44 @@ export class FormDialogComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
-  updateManageRoster() {
-    if (this.manageRosterForm.valid && this.data && this.data.manageRoster) {
-      const updatedManageRoster: ManageRoster = this.manageRosterForm.value;
-      updatedManageRoster.classRoster_ID = this.data.manageRoster.classRoster_ID; // Corrected access
-      this.manageRosterService.updateManageRoster(this.data.manageRoster.classRoster_ID, updatedManageRoster).subscribe({
+
+  addRoster(){
+    if (this.manageRosterForm.valid) {
+      let q_data = {
+        created_by: "admin",
+        created_datetime: new Date(),
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        schedule_id: this.manageRosterForm.value.schedule,
+        teacher_id: this.manageRosterForm.value.teacher,
+      };
+      console.log(q_data);
+
+      this.manageRosterService.addRoster(q_data).subscribe({
         next: (val: any) => {
-          this.openSuccessDialog('Manage Class Roster information has been successfully Updated!');
+          this.openSuccessDialog('Roster has been successfully added!');
+          this.dialogRef.close(true);
+           //Reload the page
+          //window.location.reload();
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
+    }
+  }
+
+   updateManageRoster() {
+    if (this.manageRosterForm.valid && this.data && this.data.manageRoster) {
+      let q_data = {
+        updated_by: "admin",
+        updated_datetime: new Date(),
+        teacher_id: this.manageRosterForm.value.teacher,
+      };
+
+      this.manageRosterService.updateManageRoster(this.data.manageRoster.id, q_data).subscribe({
+        next: (val: any) => {
+          this.openSuccessDialog('Manage Roster information has been successfully Updated!');
           this.dialogRef.close(true);
           //Reload the page
           //window.location.reload();
@@ -129,7 +186,7 @@ export class FormDialogComponent {
         },
       });
     }
-  }
+   }
   openSuccessDialog(message: string): void {
     const dialogRef = this._dialog.open(UpdateDialogComponent, {
       width: '300px',

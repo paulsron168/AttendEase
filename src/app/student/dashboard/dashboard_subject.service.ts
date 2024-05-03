@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Allsubjects } from './dashboard_subject.model'
 import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { environment } from 'environments/environment.development';
 
 @Injectable({
   providedIn: 'root', 
@@ -10,7 +11,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 export class dashboardService extends UnsubscribeOnDestroyAdapter {
   
   
-  private readonly API_SUBJECT_URL = 'http://localhost:5005/subject';
+  private readonly API_SUBJECT_URL = environment.apiUrl + '/subject';
   
   
   isTblLoading = true;

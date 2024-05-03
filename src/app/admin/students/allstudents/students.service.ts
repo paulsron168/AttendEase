@@ -3,19 +3,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Students } from './students.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-
+import { environment } from 'environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
 export class StudentsService extends UnsubscribeOnDestroyAdapter {
   
-  private readonly SUBJECT_URL = 'http://localhost:5005/get_subject';
-  private readonly STUDENT_URL = 'http://localhost:5005/student';
-  private readonly SECTION_URL = 'http://localhost:5005/section';
-  private readonly ADD_STUDENT_URL = 'http://localhost:5005/add_student';
-  private readonly DEL_STUDENT_URL = 'http://localhost:5005/delete_student';
-  private readonly UPD_STUDENT_URL = 'http://localhost:5005/update_student';
-  private readonly UPLOAD_URL = 'http://localhost:5005/uploadProfilePicture';
+  private readonly SUBJECT_URL = environment.apiUrl + '/get_subject';
+  private readonly STUDENT_URL = environment.apiUrl + '/student';
+  private readonly SECTION_URL = environment.apiUrl + '/section';
+  private readonly ADD_STUDENT_URL = environment.apiUrl + '/add_student';
+  private readonly DEL_STUDENT_URL = environment.apiUrl + '/delete_student';
+  private readonly UPD_STUDENT_URL = environment.apiUrl + '/update_student';
+  private readonly UPLOAD_URL = environment.apiUrl + '/uploadProfilePicture';
   
   isTblLoading = true;
   dataChange: BehaviorSubject<Students[]> = new BehaviorSubject<Students[]>([]);

@@ -3,13 +3,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Allteachers } from './dashboard_teacher.model';
+import { environment } from 'environments/environment.development';
 
 @Injectable({
   providedIn: 'root', 
 })
 export class DashboardTeacherService extends UnsubscribeOnDestroyAdapter {
  
-  private readonly API_TEACHER_URL = 'http://localhost:5005/teacher';
+  private readonly API_TEACHER_URL = environment.apiUrl + '/teacher';
   
   
   isTblLoading = true;

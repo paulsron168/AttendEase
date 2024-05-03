@@ -3,14 +3,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import {ManageRoster } from './manageRoster.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-
+import { environment } from 'environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
 export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   
-  private readonly API_URL = 'http://localhost:5005/manageRoster';
-  private readonly ADD_ROSTER_URL = 'http://localhost:5005/addroster';
+  private readonly ROSTERED_URL = environment.apiUrl + '/rostered';
+  private readonly ADD_ROSTER_URL = environment.apiUrl + '/add_roster';
+  private readonly UPD_ROSTER_URL = environment.apiUrl + '/update_roster';
+  private readonly DEL_ROSTER_URL = environment.apiUrl + '/delete_roster';
+  
 
   isTblLoading = true;
   dataChange: BehaviorSubject<ManageRoster[]> = new BehaviorSubject<ManageRoster[]>([]);
@@ -30,7 +33,7 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   }
 
   getAllManageRoster(): void {
-    this.subs.sink = this.httpClient.get<ManageRoster[]>(this.API_URL).subscribe({
+    this.subs.sink = this.httpClient.get<ManageRoster[]>(this.ROSTERED_URL).subscribe({
       next: (data) => {
         this.isTblLoading = false;
        this.dataChange.next(data);
@@ -42,15 +45,17 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
  });
  }
 
-  
-
-  updateManageRoster(classRoster_ID: number, updatedManageRoster: any): Observable<any> {
-    const url = `${this.API_URL}/${classRoster_ID}`;
-    return this.httpClient.put(url, updatedManageRoster);
+  addRoster(rosterData: any): Observable<any> {
+    return this.httpClient.post<any>(this.ADD_ROSTER_URL, rosterData);
   }
 
-  deleteManageRoster(classRoster_ID: number): Observable<any> {
-    const url = `${this.API_URL}/${classRoster_ID}`;
+  updateManageRoster(roster_id: number, updatedManageRoster: any): Observable<any> {
+    const url = `${this.UPD_ROSTER_URL}/${roster_id}`;
+    return this.httpClient.put(url, updatedManageRoster);
+  }
+  
+  deleteManageRoster(roster_id: number): Observable<any> {
+    const url = `${this.DEL_ROSTER_URL}/${roster_id}`;
     return this.httpClient.delete(url);
   }
 

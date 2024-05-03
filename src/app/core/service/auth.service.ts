@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { Role } from '@core/models/role';
-
+import { environment } from 'environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +11,7 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  private readonly LOGIN_URL = 'http://localhost:5005/login';
+  private readonly LOGIN_URL = environment.apiUrl + '/login';
 
   private users = [
     {
