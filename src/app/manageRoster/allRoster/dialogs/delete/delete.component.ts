@@ -4,11 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { ManageRosterService } from '../../manageRoster.service';
 
 export interface DialogData {
-  rosterID: number;
-  classRoster_ID: number;
-  First_Name: string;
- 
-  
+  id: number;
+  subject_name: string;
+  teacher_name: string;
 }
 
 @Component({
@@ -35,23 +33,6 @@ export class DeleteDialogComponent {
     this.dialogRef.close();
   }
   confirmDelete(): void {
-    // const dialogRef = this.dialog.open(DeleteDialogComponent, {
-    //   data: this.data // Pass data to the dialog if needed
-    // });
-  
-    // dialogRef.afterClosed().subscribe((result: boolean) => {
-    //   if (result) {
-    //     this.manageRosterService.deleteManageRoster(this.data.classRoster_ID).subscribe({
-    //       next: (result: any) => {
-    //         console.log(result); // Handle the result as needed
-    //         this.dialogRef.close(); // Close the dialog after successful deletion
-    //       },
-    //       error: (error: any) => {
-    //         console.error(error); // Handle the error
-    //         // Optionally, you can display an error message to the user
-    //       },
-    //     });
-    //   }
-    // });
+   
   }
 }
