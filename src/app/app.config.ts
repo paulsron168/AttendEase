@@ -14,6 +14,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { FeatherModule } from 'angular-feather';
 import { allIcons } from 'angular-feather/icons';
 import { FormatTimePipe } from './custom_pipe/format-time.pipe';
+
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
