@@ -3,20 +3,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Teachers } from './teachers.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { environment } from 'environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeachersService extends UnsubscribeOnDestroyAdapter {
   
-  private readonly CNT_TEACHER_URL = 'http://localhost:5005/count_teacher';
-  private readonly CNT_STUDENT_URL = 'http://localhost:5005/count_student';
+  private readonly CNT_TEACHER_URL = environment.apiUrl + '/count_teacher';
+  private readonly CNT_STUDENT_URL = environment.apiUrl + '/count_student';
 
-  private readonly TEACHER_URL = 'http://localhost:5005/teacher';
-  private readonly ADD_TEACHER_URL = 'http://localhost:5005/add_teacher';
-  private readonly UPD_TEACHER_URL = 'http://localhost:5005/update_teacher';
-  private readonly DEL_TEACHER_URL = 'http://localhost:5005/delete_teacher';
-  private readonly UPLOAD_URL = 'http://localhost:5005/uploadProfilePicture';
+  private readonly TEACHER_URL = environment.apiUrl + '/teacher';
+  private readonly ADD_TEACHER_URL = environment.apiUrl + '/add_teacher';
+  private readonly UPD_TEACHER_URL = environment.apiUrl + '/update_teacher';
+  private readonly DEL_TEACHER_URL = environment.apiUrl + '/delete_teacher';
+  private readonly UPLOAD_URL = environment.apiUrl + '/uploadProfilePicture';
 
   isTblLoading = true;
   dataChange: BehaviorSubject<Teachers[]> = new BehaviorSubject<Teachers[]>([]);
@@ -64,6 +65,10 @@ export class TeachersService extends UnsubscribeOnDestroyAdapter {
    // });
  // }
 
+  getTeachers(){
+    const url = `${this.TEACHER_URL}`;
+    return this.httpClient.get(url);
+  }
   updateTeacher(id: number, updatedTeacher: any): Observable<any> {
     const url = `${this.UPD_TEACHER_URL}/${id}`;
     return this.httpClient.put(url, updatedTeacher);

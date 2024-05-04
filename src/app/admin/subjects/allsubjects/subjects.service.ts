@@ -3,13 +3,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Allsubjects } from './allsubjects.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-
+import { environment } from 'environments/environment.development';
 @Injectable({
   providedIn: 'root', 
 })
 export class SubjectsService extends UnsubscribeOnDestroyAdapter {
-  private readonly API_URL = 'http://localhost:5005/subject';
-  private readonly ADD_SUBJECT_URL = 'http://localhost:5005/addsubjects';
+  private readonly API_URL = environment.apiUrl + '/subject';
+  private readonly ADD_SUBJECT_URL = environment.apiUrl + '/addsubjects';
   
   isTblLoading = true;
   dataChange: BehaviorSubject<Allsubjects[]> = new BehaviorSubject<Allsubjects[]>(

@@ -49,20 +49,7 @@ export const ROUTES: RouteInfo[] = [
         badgeClass: '',
         role: [''],
         submenu: [],
-      },
-      
-      {
-        path: '/manageRoster/add-roster',
-        title: 'Add Class Roster',
-        iconType: '',
-        icon: '',
-        class: 'ml-menu',
-        groupTitle: false,
-        badge: '',
-        badgeClass: '',
-        role: [''],
-        submenu: [],
-      },
+      }
     ],
   },
   {

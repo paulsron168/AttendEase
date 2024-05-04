@@ -3,16 +3,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ClassSchedule } from './classSchedule.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-
+import { environment } from 'environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
 export class ClassScheduleService extends UnsubscribeOnDestroyAdapter {
 
-  private readonly SCHEDULE_URL = 'http://localhost:5005/class_schedule';
-  private readonly ADD_SCHEDULE_URL = 'http://localhost:5005/add_schedule';
-  private readonly UPD_SCHEDULE_URL = 'http://localhost:5005/update_schedule';
-  private readonly DEL_SCHEDULE_URL = 'http://localhost:5005/delete_schedule';
+  private readonly SCHEDULE_FOR_ROSTER_URL = environment.apiUrl + '/schedule_roster';
+  private readonly SCHEDULE_URL = environment.apiUrl + '/class_schedule';
+  private readonly ADD_SCHEDULE_URL = environment.apiUrl + '/add_schedule';
+  private readonly UPD_SCHEDULE_URL = environment.apiUrl + '/update_schedule';
+  private readonly DEL_SCHEDULE_URL = environment.apiUrl + '/delete_schedule';
 
   isTblLoading = true;
   dataChange: BehaviorSubject<ClassSchedule[]> = new BehaviorSubject<ClassSchedule[]>([]);
@@ -45,7 +46,12 @@ export class ClassScheduleService extends UnsubscribeOnDestroyAdapter {
     });
   }
 
- //---- Add  Class Schedule ----//
+  //---- GET  Class Schedule ----//
+  getSchedule(): Observable<any> {
+    return this.httpClient.get<any>(this.SCHEDULE_FOR_ROSTER_URL);
+  }
+  
+  //---- Add  Class Schedule ----//
   addClassSchedule(classScheduleData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_SCHEDULE_URL, classScheduleData);
   }
