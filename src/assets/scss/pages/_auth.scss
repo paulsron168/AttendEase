@@ -59,14 +59,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 10rem;
-  margin-left: 10rem;
-  width: 40rem;
-  height: 70%;
+  margin-top: 5rem; /* Reduced margin for smaller screens */
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
+  max-width: 40rem; /* Limit maximum width */
+  width: 90%; /* Take 90% of the available width */
+  height: 80%; /* Adjust height */
   border: 1px solid #3F51B5; /* Add border */
   border-radius: 10px; /* Optional: Add border radius for rounded corners */
   padding: 20px; /* Optional: Add padding for better visual appearance */
 }
+
 .auth-signup-text {
   font-size: 18px;
   color: #000;
@@ -87,6 +90,7 @@
 }
 .login-title {
   margin-bottom: 20px;
+  text-align: center;
 }
 .social-login-title {
   font-size: 15px;
@@ -113,6 +117,10 @@
 }
 .welcome-msg {
   font-weight: 500;
+  font-family: "Schoolbell", cursive;
+  font-style: normal;
+  text-align: center;
+
 }
 .social-icon {
   text-align: center;

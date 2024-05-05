@@ -1,52 +1,46 @@
 <div class="auth-container">
   <div class="row auth-main">
-    <div class="col-sm-6 px-0 d-none d-sm-block">
-      <div class="left-img" style="background-image: url(assets/images/pages/bg-01.png);">
+    <div class="col-md-6 px-0">
+      <div class="left-img d-none d-md-block" style="background-image: url(assets/images/pages/bg-01.png);">
       </div>
     </div>
-    <div class="col-sm-6 auth-form-section">
+    <div class="col-md-6 auth-form-section">
       <div class="form-section">
         <div class="auth-wrapper">
-          <h2 class="welcome-msg"> AttendEase Web App </h2>
-          <div class="d-flex justify-content-between lbl-alert mb-3">
-          </div>
-          <h2 class="login-title">Sign in</h2>
+          <h2 class="welcome-msg">
+            <img src="assets/images/logo.png" alt="" />
+            AttendEase Web App
+          </h2>
+          <h4 class="login-title">Sign in</h4>
           <form class="validate-form" [formGroup]="authForm" (ngSubmit)="onSubmit()">
-            <div class="row">
-              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Username</mat-label>
-                  <input matInput formControlName="username" />
-                  <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-                  <mat-error *ngIf="authForm.get('username')?.hasError('required')">
-                    Username is required
-                  </mat-error>
-                </mat-form-field>
-              </div>
+            <div class="form-group">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username" />
+                <mat-icon class="material-icons-outlined color-icon" matSuffix>face</mat-icon>
+                <mat-error *ngIf="authForm.get('username')?.hasError('required')">Username is required</mat-error>
+              </mat-form-field>
             </div>
-            <div class="row">
-              <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
-                <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Password</mat-label>
-                  <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-                  <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="hide = !hide">
-                    {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                  <mat-error *ngIf="authForm.get('password')?.hasError('required')">
-                    Password is required
-                  </mat-error>
-                </mat-form-field>
-              </div>
+            <div class="form-group">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                <mat-icon class="material-icons-outlined pwd-toggle" matSuffix (click)="hide = !hide">
+                  {{hide ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+                <mat-error *ngIf="authForm.get('password')?.hasError('required')">Password is required</mat-error>
+              </mat-form-field>
             </div>
-            <div class="d-flex justify-content-between align-items-center mb-5">
+            <div class="form-group d-flex justify-content-between align-items-center mb-3">
               <a class="txt1" routerLink="/authentication/forgot-password">Forgot Password?</a>
             </div>
             <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
               {{ error }}
             </div>
-            <div class="container-auth-form-btn">
+            <div class="form-group">
               <div style="text-align:center">
-                <button mat-raised-button color="primary" [class.auth-spinner]="loading" [disabled]="loading"
-                  class="auth-form-btn" [disabled]="!authForm.valid " type="submit">Login</button>
+                <button mat-raised-button color="primary" [class.auth-spinner]="loading"
+                  [disabled]="loading || !authForm.valid" class="auth-form-btn" type="submit">Login</button>
               </div>
             </div>
           </form>
