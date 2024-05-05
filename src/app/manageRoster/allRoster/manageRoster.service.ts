@@ -13,6 +13,10 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   private readonly ADD_ROSTER_URL = environment.apiUrl + '/add_roster';
   private readonly UPD_ROSTER_URL = environment.apiUrl + '/update_roster';
   private readonly DEL_ROSTER_URL = environment.apiUrl + '/delete_roster';
+  private readonly ADD_ROSTER_PIN_URL = environment.apiUrl + '/add_roster_pin';
+  private readonly ADD_ROSTER_PIN_ALERTS_URL = environment.apiUrl + '/add_roster_pin_alerts';
+  private readonly GET_ROSTER_PIN_ALERTS_PERSECTION_URL = environment.apiUrl + '/roster_pin_alerts_per_section';
+
   
 
   isTblLoading = true;
@@ -61,5 +65,18 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
 
   addManageRoster(manageRosterData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_ROSTER_URL, manageRosterData);
+  }
+
+  addRosterPin(manageRosterData: any): Observable<any> {
+    return this.httpClient.post<any>(this.ADD_ROSTER_PIN_URL, manageRosterData);
+  }
+
+  addRosterPinAlerts(manageRosterData: any): Observable<any> {
+    return this.httpClient.post<any>(this.ADD_ROSTER_PIN_ALERTS_URL, manageRosterData);
+  }
+
+  getRosterPinAlertsPerSection(roster_pin_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_ALERTS_PERSECTION_URL}/${roster_pin_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
   }
 }

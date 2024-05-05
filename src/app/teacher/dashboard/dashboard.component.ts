@@ -38,6 +38,7 @@ import { Allclass } from './dashboard.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { DashboardClassService } from './dashboard.service';
 import { SafeUrl } from '@angular/platform-browser';
+import { AuthService } from '@core';
 
 export type chartOptions = {
   series: ApexAxisChartSeries;
@@ -128,7 +129,9 @@ export class DashboardComponent implements OnInit {
   dates: number[] = [];
   //----------------------------------------------------------------------------
 
-  constructor(private DashboardClassService: DashboardClassService) {
+  constructor(
+    private DashboardClassService: DashboardClassService,
+    private authService: AuthService,) {
     this.generateDates();
  
   }
@@ -165,7 +168,12 @@ export class DashboardComponent implements OnInit {
 
   }
 
-
+  //naenae
+  getFullName(): string {
+    const currentUser = this.authService.currentUserValue;
+    return currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'User Full Name';
+  }
+  
   generateDates() {
     const firstDayOfMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1).getDay();
     const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
