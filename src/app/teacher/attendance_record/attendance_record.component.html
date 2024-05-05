@@ -1,33 +1,82 @@
-<section class="content">
-  <div class="content-block">
-    <div class="block-header">
-      <!-- breadcrumb -->
-      <app-breadcrumb [title]="'Chat'" [items]="['Home']" [active_item]="'Chat'"></app-breadcrumb>
-    </div>
-    <div class="row">
-
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-        <div class="card">
-          <div class="body">
-
-            <div class="body">
-              <div class="generate">
-                <input type="text" [value]="code[0]" readonly />
-                <input type="text" [value]="code[1]" readonly />
-                <input type="text" [value]="code[2]" readonly />
-                <input type="text" [value]="code[3]" readonly />
-              </div>
-              <div>
-                <button color= "primary" (click)="generateCode()">Generate</button>
-                <button color= "primary" (click)="sendNotification()">Send</button>
-              </div>
-            </div>
-
-
-          </div>
-        </div>
-      </div>
-
-    </div>
+<div class="cctv-modal-container ">
+  <div class="app-spinner" *ngIf="loading">
+    <mat-spinner></mat-spinner>
   </div>
-</section>
+  <div mat-dialog-content *ngIf="!loading">
+      <div class="confirm-title">Attendance Record</div>
+      <mat-divider></mat-divider>
+  </div>
+
+  <div mat-dialog-content class="confirm-body" *ngIf="!loading">
+    <div class="body overflow-auto">
+      <div class="responsive_table">
+  
+        <table mat-table [dataSource]="select_source" matSort class="mat-cell advance-table">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
+             
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
+             
+            </mat-cell>
+          </ng-container>
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.alert_id}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="student_id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Student</mat-header-cell>
+           <mat-cell *matCellDef="let row"> <span class="mobile-label">Student ID:</span><img src={{row.student_id}} width="30px;" height="30px"></mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="student_name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Student Name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> <span class="mobile-label">Student Name:</span>{{row.student_name}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="id_number">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID Number</mat-header-cell>
+            <mat-cell *matCellDef="let row"><span class="mobile-label">ID Number:</span>{{row.id_number}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="is_present">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Attendance</mat-header-cell>
+            <mat-cell *matCellDef="let row"><span class="mobile-label">Attendance:</span>{{row.is_present == 2 ? 'Late': row.is_present == 1 ? 'Present' : 'Absent'}}
+            </mat-cell>
+          </ng-container>
+          
+          <ng-container matColumnDef="is_present_datetime">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Updated Datetime</mat-header-cell>
+            <mat-cell *matCellDef="let row"><span class="mobile-label">Updated Datetime:</span>{{row.is_present_datetime | date:'shortTime'}}
+            </mat-cell>
+          </ng-container>
+          <!-- actions -->
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+          <mat-row *matRowDef="let row; columns: displayedColumns;"
+            [style.cursor]="'pointer'" matRipple>
+          </mat-row>
+        </table>
+      
+        <mat-paginator #paginator [length]="select_source.filteredData.length" [pageIndex]="0" [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+      </div>
+    </div>
+      <mat-divider></mat-divider>
+      <div mat-dialog-actions class="confirm-buttons">
+          <button 
+          mat-raised-button 
+          class="close-button" style="background-color: #90A4AE; color: #ffffff">Close</button>
+          
+      </div>
+  </div> 
+  
+
+</div>

@@ -17,69 +17,33 @@
           </div>
           <div class="body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-4" *ngFor="let roster of scheduleList">
                 <div class="card border-apply">
                   <div class="m-b-20">
                     <div class="contact-grid">
                       <div class="profile-header l-bg-purple-dark">
                         <br>
-                          <h6>TPC 328</h6>
-                          <h4>Personnel Administration</h4>
-                          <span>TTH - 01:00 PM - 02:30 PM </span>
+                          <h6>SECTION: {{roster.section}}</h6>
+                          <h4>{{roster.subject_name}}</h4>
+                          <span>[{{roster.class_days}}] {{roster.class_start}} - {{roster.class_end}} </span>
                         <!--<div class="name-center">General Manager</div>-->
                       </div>
-                   
+                 
                       <br>
+                      <span><b>Last Attendance:</b> {{roster.last_attendance_datetime | date:'medium' }} </span>
+                      <span style="margin-left:30px"><b>PIN:</b> {{roster.last_attendance_pin }} </span>
+                      <span style="margin-left:30px"><b>Present:</b>  32 </span>  <span style="margin-left:10px"> <b>Absent:</b> 2 </span> 
                       <br>
                       <br>
                       <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" (click)="PA()">Attendance</button>
+                        <!-- <button mat-raised-button color="primary" [disabled]="!roster.class_days.includes(dayOfWeek) || (roster.last_attendance_datetime | date:'longDate') == (currentDate | date:'longDate')" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button> -->
+                        <button mat-raised-button color="primary" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button>
+                        <span style="margin-left:30px"></span>
+                        <button mat-raised-button color="accent" (click)="current_attendance(roster.last_attendance_id)">Attendance Record</button>
                       </div>
                     <!-- <div class="profile-userbuttons">
                         <button mat-flat-button color="primary" (click)="openAttendanceDialog()">Attendance</button>
                       </div>--> 
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header bg-cyan">
-                        <br>
-                        <h6>FL 2 </h6>
-                        <h4>Foreign Language 2</h4>
-                        <span>MW - 02:30 PM - 04:00 PM </span>
-                      </div>
-               
-                      <br>
-                      <br>
-                      <br>
-                      <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" (click)="FOLA()">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header bg-dark">
-                        <br>
-                        <h6>TCC 326</h6>
-                        <h4>Programming II</h4>
-                        <span>MW - 08:30 AM - 12:00 AM</span>
-                      </div>
-                  
-                      <br>
-                      <br>
-                      <br>
-                      <div class="profile-userbuttons">
-                        <button mat-flat-button color="primary">Attendance</button>
-                      </div>
                     </div>
                   </div>
                 </div>

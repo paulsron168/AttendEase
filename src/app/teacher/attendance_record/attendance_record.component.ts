@@ -1,30 +1,94 @@
-import { Component } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose, MatDialog } from '@angular/material/dialog';
+import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource,MatTableModule  } from '@angular/material/table';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
+
+export interface DialogData{
+  roster_pin_id: number;
+  action: string;
+}
+
 @Component({
   selector: 'app-attendance_record',
   templateUrl: './attendance_record.component.html',
   styleUrls: ['./attendance_record.component.scss'],
   standalone: true,
   imports: [
-    BreadcrumbComponent,
     NgScrollbar,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+    MatButtonModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatTableModule
   ],
 })
-export class Attendance_Record_Component {
+export class Attendance_Record_Component implements OnInit {
   code: string[] = ['', '', '', ''];
   apiUrl = 'http://localhost:3000';
   showCode: boolean = false;
+  loading:boolean = false;
+  select_source:any;
+  roster_pin_id:any;
+  
+  displayedColumns = [
+    'select',
+    'student_id',
+    'student_name',
+    'id_number',
+    'is_present',
+    'is_present_datetime',
+    'id'
+  ];
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private rosterService:ManageRosterService) {
+    this.roster_pin_id = data.roster_pin_id
     // constructor
+  }
+
+  ngOnInit(): void {
+  
+    this.initializeData();
+  }
+
+  initializeData(){
+    let q_data = {
+      roster_pin_id: this.roster_pin_id
+    }
+    this.rosterService.getRosterPinAlertsPerSection(this.roster_pin_id,q_data)
+    .subscribe(
+      response => {
+        console.log('roster_pin_id',this.roster_pin_id);
+        console.log('getRosterPinAlertsPerSection response',response);
+        this.select_source = new MatTableDataSource(response);
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
   }
 
   generateCode(): void {

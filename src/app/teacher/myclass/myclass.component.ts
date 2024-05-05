@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -10,7 +11,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterLink } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
-//import { Allsubjects } from './my-projects.model';
+import { TodayService } from '../today/today.service';
+import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
+import { Attendance_Record_Component } from '../attendance_record/attendance_record.component';
+import { Direction } from '@angular/cdk/bidi';
+import { Moment } from 'moment';
+import { AuthService } from '@core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -27,26 +33,42 @@ import Swal from 'sweetalert2';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
-export class MyClassComponent {
-  //subjects: Allsubjects[] = [];
-  constructor() {
+export class MyClassComponent implements OnInit{
+
+  scheduleList: any;
+  dayOfWeek:any;
+  currentDate:any;
+  roster_pin_id_new:any;
+  constructor(
+    public dialog: MatDialog,
+    public authService:AuthService,
+    private todayService:TodayService,
+    private rosterService:ManageRosterService) {
     // constructor
   }
- PA() {
-     // Function to generate a random 4-digit OTP
-  function generateOTP() {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-  }
+  
+ PA(roster_id:any,section_id:any) {
 
-  const otp = generateOTP(); // Generate OTP
+  // Function to generate a random 4-digit OTP
+  function generateOTP(length:any) {
+    // return Math.floor(1000 + Math.random() * 9000).toString();
+    let result = '';
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+  
+  let otp_generated = generateOTP(8);
 
   Swal.fire({
     title: 'Your OTP for attendance',
     html: `
-      <input type="text" id="otp1" maxlength="1" size="1" readonly value="${otp[0]}">
-      <input type="text" id="otp2" maxlength="1" size="1" readonly value="${otp[1]}">
-      <input type="text" id="otp3" maxlength="1" size="1" readonly value="${otp[2]}">
-      <input type="text" id="otp4" maxlength="1" size="1" readonly value="${otp[3]}">
+      <h1 style="color:blue">${otp_generated}</h1>
     `,
     showCancelButton: true,
     confirmButtonText: 'send',
@@ -54,23 +76,70 @@ export class MyClassComponent {
     preConfirm: () => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          const isValid = true; // Placeholder for validation result
-          if (isValid) {
           
-          }
+          let q_data = {
+            created_by: "admin",
+            created_datetime: this.formatDate(new Date()),
+            updated_by: "admin",
+            updated_datetime: this.formatDate(new Date()),
+            roster_id: roster_id,
+            roster_date: this.formatDate(new Date()),
+            pin: otp_generated,
+            is_pin_available: 1
+          };
+
+          this.rosterService.addRosterPin(q_data).subscribe({
+            next: (val: any) => {
+              this.roster_pin_id_new = val.insertId;
+            },
+            error: (err: any) => {
+              console.error(err);
+            },
+          });
         }, 1000);
+
+        setTimeout(() => {
+
+          let q_data = {};
+          this.todayService.getStudentsPerSection(section_id,q_data).subscribe({
+            next: (val: any) => {
+                let s_data:any = [];
+                val.forEach((value:any)=>{
+                  let e_data = {
+                    created_by: "admin",
+                    created_datetime: this.formatDate(new Date()),
+                    updated_by: "admin",
+                    updated_datetime: this.formatDate(new Date()),
+                    roster_id: roster_id,
+                    roster_pin_id: this.roster_pin_id_new,
+                    student_id: value.id
+                  };
+
+                  this.rosterService.addRosterPinAlerts(e_data).subscribe({
+                    next: (val: any) => {
+                      
+                    },
+                    error: (err: any) => {
+                      console.error(err);
+                    },
+                  });
+                }); 
+
+                this.initializeData();
+                Swal.fire({
+                  title: 'Send Successfully',
+                  icon: 'success',
+                  text: 'Your attendance has been successfully send.',
+                });
+            },
+            error: (err: any) => {
+              console.error(err);
+            },
+          });
+        }, 2000);
       });
     },
-    allowOutsideClick: () => !Swal.isLoading(),
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire({
-        title: 'Send Successfully',
-        icon: 'success',
-        text: 'Your attendance has been successfully send.',
-      });
-    }
-  });
+  })
 }
   
 //end of modal
@@ -118,7 +187,59 @@ FOLA(){
 
 //END OF MODAL
   ngOnInit() {
-    //this.getAllSubjects();
+    this.initializeData();
+    const now = new Date();
+    // get the current day of the week
+    const daysOfWeek = [
+      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+    ];
+    this.dayOfWeek = daysOfWeek[now.getDay()];
+    this.currentDate = now;
+  }
+
+  initializeData(){
+
+    const currentUser = this.authService.currentUserValue;
+
+    let q_data = {};
+
+    this.todayService.getTeacherClass(currentUser.id,q_data)
+    .subscribe(
+      response => {
+        this.scheduleList = response;
+        console.log('getTeacherClass',response);
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+  }
+
+
+  formatDate(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds;
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
+  }
+
+  current_attendance(roster_pin_id:any){
+    let tempDirection: Direction;
+
+    const dialogRef = this.dialog.open(Attendance_Record_Component, {
+      width: "1000px",
+      height: "700px",
+      data: {
+        roster_pin_id: roster_pin_id,
+        action: 'add',
+      }
+    });
+   
   }
 
   /*getAllSubjects(): void {
