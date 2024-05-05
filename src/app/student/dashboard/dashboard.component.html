@@ -11,7 +11,7 @@
           <div class="body">
             <div class="row align-items-center">
               <div class="col-md-4">
-                <img src="assets/images/pages/wcb.jpg" alt="" class="w-100">
+                <img src="assets/images/pages/welcome.png" alt="" class="w-100">
               </div>
               <div class="col-md-8">
                 <h4 class="font-18 font-b-500 mb-2">
@@ -49,25 +49,142 @@
         <!--END GEOLOCATION-->
 
     <!--CALENDAR-->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-        <div class="card card-statistic-2">
-          <div class="card-calendar">
-            <div class="card-header">
-              <h2 class="p">
-                {{ currentDate | date:'EEEE'}}
-                <br>
-                {{ currentDate | date:'MMMM d, yyyy'}}
-              </h2>
+
+      
+      <!--END CALENDAR-->
+      <!--todaysclass-->
+      <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <div class="card">
+            <div class="header">
+              <h2>Tanan Teacher With Time and room</h2>
+              <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <mat-icon>add_circle_outline</mat-icon>
+                  <span>Add</span>
+                </button>
+                <button mat-menu-item disabled>
+                  <mat-icon>delete_outline</mat-icon>
+                  <span>Delete</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>refresh</mat-icon>
+                  <span>Refresh</span>
+                </button>
+              </mat-menu>
             </div>
-            <div class="calendar-body">
-              <div class="month-navigation">
-                <button (click)="previousMonth()">◀</button>
-                <span>{{ currentMonth }}</span>
-                <button (click)="nextMonth()">▶</button>
-              </div>
-              <div class="days">
-                <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
+            <div class="body">
+              <ng-scrollbar style="height: 380px" visibility="hover">
+                <div class="recent-comment">
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user4.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading col-green">Rosalina Plaza</h6>
+                      <p>TPC 326 Industrial Organization and Management</p>
+                      <p class="text-muted">07:00 PM - 08:30 PM	M W	12</p>
+                    </div>
+                  </div>
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user6.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-primary col-indigo">Van 	Dexter 	Lachica</h6>
+                      <p>TCC 325	Networking</p>
+                      <p class="text-muted">02:30 PM - 06:00 PM	T TH	COMLAB2</p>
+                    </div>
+                  </div>
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user7.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-danger col-cyan">Mary 	Steizel 	Arabon</h6>
+                      <p>Study Group	Comm. 2 - Oral Communication</p>
+                      <div class="text-muted">01:00 PM - 02:30 PM
+                      SAT	7</div>
+                    </div>
+                  </div>
+                  <div class="notice-board no-border">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user3.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-info col-orange">Nonito Odjinar</h6>
+                      <p>TCC 326	Programming 2</p>
+                      <div class="text-muted">08:30 AM - 12:00 PM	M W	COMLAB1</div>
+                    </div>
+                  </div>
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user9.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-primary col-red">Lindo 	C. 	Estrera</h6>
+                      <p>TPC 329	Technology Research 2 (Thesis/Research Paper/Project)</p>
+                      <p class="text-muted">09:00 AM - 12:00 PM	SAT	2</p>
+                    </div>
+                  </div>
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user8.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-primary col-green">Christel 	Igot 	Nunez</h6>
+                      <p>TCE 2	Research Statistics</p>
+                      <p class="text-muted">09:00 AM - 10:30 AM	M W	2</p>
+                    </div>
+                  </div>
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user8.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-primary col-red">Christel 	Igot 	Nunez</h6>
+                      <p>TCE 2	Research Statistics</p>
+                      <p class="text-muted">09:00 AM - 10:30 AM	M W	2</p>
+                    </div>
+                  </div>
+                  <div class="notice-board">
+                    <div class="table-img">
+                      <img class="notice-object" src="assets/images/user/user3.jpg" alt="...">
+                    </div>
+                    <div class="notice-body">
+                      <h6 class="notice-heading color-primary col-indigo">Nonito Odjinar</h6>
+                      <p>ITS 1120 	TCC 225 	Graphics Design & Multimedia</p>
+                      <p class="text-muted">07:00 AM - 08:00 AM
+                        10:30 AM - 12:00 PM	THU
+                        FRI	COMLAB1</p>
+                    </div>
+                  </div>
+                </div>
+              </ng-scrollbar>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="header">
+              <h2>Calendar</h2>
+            </div>
+            <div class="header" >
+            <h2 class="p">{{ currentDate | date:'EEEE MMMM d, yyyy'}}</h2>
+            <br>
+          </div>
+              <div class="tableBody">
+                <div class="month-navigation">
+                  <button (click)="previousMonth()">◀</button>
+                  <span>{{ currentMonth }}</span>
+                  <button (click)="nextMonth()">▶</button>
+                </div>
+                <div class="days">
+                  <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
+                </div>
               </div>
               <div class="dates">
                 <div *ngFor="let date of dates" class="date"
@@ -76,137 +193,76 @@
                   {{ date !== -1 ? date : '' }}
                 </div>
               </div>
-            </div>
           </div>
         </div>
-      </div>
-      <!--END CALENDAR-->
-      <!--todaysclass-->
-      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
-        <div class="card">
-          <div class="header">
-            <span>Today's Class:</span> &nbsp;&nbsp;
-
-            <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-
-              <button mat-menu-item>
-                <mat-icon>refresh</mat-icon>
-                <span>Refresh</span>
-              </button>
-            </mat-menu>
-          </div>
-          <div class="body">
-
-           <!--Added-->
-            <!--<table class="table table-hover dashboard-task-infos text-center">
-              <div *ngFor="let class of class">
-                {{ class.description }}
-                {{ class.classStart_Time }}
-                {{ class.classEnd_Time }}
-                {{ class.class_Section }}
-                {{ class.class_Day}}
-              </div>
-            </table>-->
-
-
-        <div *ngFor="let cls of class">
-          <div *ngIf="cls.class_Day === (currentDate | date:'EEEE')">
-            <ng-container *ngIf="class.length > 0; else noClasses">
-              <tr *ngFor="let class of class">
-                {{ class.class_Day }}
-                {{ class.classStart_Time }}
-                {{ class.class_Section }}
-                {{ class.description }}
-              </tr>
-              </ng-container>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <div class="card">
+            <div class="header">
+              <h2>Today's Class Class of the student will reflect Here</h2>
             </div>
-        </div>
-          <ng-template #noClasses>
-            <tr>
-              <td colspan="4"> No class for Today </td>
-            </tr>
-          </ng-template>
-
-          <!--<ng-container *ngIf="filteredClasses.length > 0; else noClasses">
-            <tr *ngFor="let cls of filteredClasses">
-              <td>{{ cls.class_Day }}</td>
-              <td>{{ cls.classStart_Time }}</td>
-              <td>{{ cls.class_Section }}</td>
-              <td>{{ cls.description }}</td>
-            </tr>
-          </ng-container>
-          <ng-template #noClasses>
-            <tr>
-              <td colspan="4"> No class for Today </td>
-            </tr>
-          </ng-template>-->
-
-          </div>
-        </div>
-      </div>
-
-      <!------------------------------------------------------------teacherlist-------------------------------------------------------->
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-        <div class="card">
-          <div class="header">
-            <span>List of Teachers</span>
-            <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-
-              <button mat-menu-item>
-                <mat-icon>refresh</mat-icon>
-                <span>Refresh</span>
-              </button>
-            </mat-menu>
-          </div>
-
-
-          <!-- <div class="table-img">
-              <img class="notice-object" src="assets/images/user/user4.jpg" alt="...">
-            </div>-->
-          <div *ngFor="let teacher of teachers">
-            <div class="notice-board">
-              <div class="table-img">
-                <img class="notice-object" [src]="teacher.uploadimage" alt="Teacher Image">
+            <div class="body">
+              <div class="totalEarning">
+                <h2>$90,808</h2>
               </div>
-              <div class="notice-body">
-                <div>
-                  <ul>
-                    <!--<h6 class="notice-heading" [ngClass]="{'col-green': i % 2 == 0, 'col-blue': i % 2 != 0}">-->
-                    <h6 class="notice-heading" [style.color]="teacher.color">
-                      {{ teacher.First_Name }} {{ teacher.Middle_Name }} {{ teacher.Last_Name }}
-                    </h6>
-                  </ul>
-                </div>
+              <div class="tab-pane body" id="skills">
+                <ul class="list-unstyled">
+                  <li>
+                    <div class="mb-2">
+                      <span class="progress-label">envato.com</span>
+                      <span class="float-end progress-percent label label-info m-b-5">17%</span>
+                    </div>
+                    <div class="progress skill-progress m-b-20 w-100">
+                      <div class="progress-bar l-bg-green width-per-45" role="progressbar" aria-valuenow="45"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="mb-2">
+                      <span class="float-start progress-label">google.com</span>
+                      <span class="float-end progress-percent label label-danger m-b-5">27%</span>
+                    </div>
+                    <div class="progress skill-progress m-b-20 w-100">
+                      <div class="progress-bar l-bg-purple width-per-27" role="progressbar" aria-valuenow="27"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="mb-2">
+                      <span class="float-start progress-label">yahoo.com</span>
+                      <span class="float-end progress-percent label label-primary m-b-5">25%</span>
+                    </div>
+                    <div class="progress skill-progress m-b-20 w-100">
+                      <div class="progress-bar l-bg-orange width-per-25" role="progressbar" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="mb-2">
+                      <span class="float-start progress-label">store</span>
+                      <span class="float-end progress-percent label label-success m-b-5">18%</span>
+                    </div>
+                    <div class="progress skill-progress m-b-20 w-100">
+                      <div class="progress-bar l-bg-cyan width-per-18" role="progressbar" aria-valuenow="18"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="mb-2">
+                      <span class="float-start progress-label">Others</span>
+                      <span class="float-end progress-percent label label-warning m-b-5">13%</span>
+                    </div>
+                    <div class="progress skill-progress m-b-20 w-100">
+                      <div class="progress-bar l-bg-red width-per-13" role="progressbar" aria-valuenow="13"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
-            <!--
-            <div class="card-body">
-            <ul class="teacher-list">
-              <li *ngFor="let classItem of filteredClasses">
-                <img src="{{ teacher.uploadimage}}" alt="Teacher Profile Picture">
-                <div>
-                  <ul>
-                    <li *ngFor="let teacher of teachers">
-                      <div class="teacher-info">
-                        <img [src]="teacher.uploadimage" alt="Image" class="teacher-image">
-                        <span>{{ teacher.First_Name }} {{ teacher.Middle_Name }} {{ teacher.Last_Name }}</span>
-                      </div>
-                    </li>
-                  </ul>
-
-                </div>
-             </li>
-            </ul>-->
           </div>
         </div>
       </div>
       <!--teacher end-->
     </div>
-  </div>
+ 
 </section>
