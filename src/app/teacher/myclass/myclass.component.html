@@ -32,12 +32,13 @@
                       <br>
                       <span><b>Last Attendance:</b> {{roster.last_attendance_datetime | date:'medium' }} </span>
                       <span style="margin-left:30px"><b>PIN:</b> {{roster.last_attendance_pin }} </span>
-                      <span style="margin-left:30px"><b>Present:</b>  32 </span>  <span style="margin-left:10px"> <b>Absent:</b> 2 </span> 
+                      <br>
+                      <span style="margin-left:30px"><b>Present:</b>  {{roster.count_present + roster.count_late }} </span>  <span style="margin-left:10px"> <b>Absent:</b> {{roster.count_absent }} </span> 
                       <br>
                       <br>
                       <div class="profile-userbuttons">
-                        <!-- <button mat-raised-button color="primary" [disabled]="!roster.class_days.includes(dayOfWeek) || (roster.last_attendance_datetime | date:'longDate') == (currentDate | date:'longDate')" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button> -->
-                        <button mat-raised-button color="primary" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button>
+                        <button mat-raised-button color="primary" [disabled]="!roster.class_days.includes(dayOfWeek) || (roster.last_attendance_datetime | date:'longDate') == (currentDate | date:'longDate')" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button>
+                        <!-- <button mat-raised-button color="primary" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button> -->
                         <span style="margin-left:30px"></span>
                         <button mat-raised-button color="accent" (click)="current_attendance(roster.last_attendance_id)">Attendance Record</button>
                       </div>

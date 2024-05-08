@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { NgClass } from '@angular/common';
 import { CommonModule } from '@angular/common'
 import { TeachersService } from 'app/admin/teachers/allteachers/teachers.service';
+import { AuthService } from '@core';
 
 
 
@@ -57,7 +58,8 @@ export class MainComponent implements OnInit {
 
 
   constructor(
-    public teacherService:TeachersService
+    public teacherService:TeachersService,
+    public authService:AuthService
   ) {
     this.generateDates();
 
@@ -87,6 +89,11 @@ export class MainComponent implements OnInit {
         console.error('Error getting section', error);
       }
     );
+  }
+
+  getFullName(): string {
+    const currentUser = this.authService.currentUserValue;
+    return currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'User Full Name';
   }
 
   generateDates() {

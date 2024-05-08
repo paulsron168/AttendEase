@@ -20,7 +20,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { Direction } from '@angular/cdk/bidi';
 import { MatDialog } from '@angular/material/dialog';
 import { FormDialogComponent } from './form-dialog/form-dialog.component';
-
+import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
+import { AuthService } from '@core';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
+import { Attendance_Record_Component } from '../attendance_record/attendance_record.component';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-today',
   templateUrl: './today.component.html',
@@ -35,7 +41,10 @@ import { FormDialogComponent } from './form-dialog/form-dialog.component';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    FormsModule,
+    MatButtonModule,
+    CommonModule
   ],
 })
 export class TodayComponent
@@ -47,8 +56,9 @@ export class TodayComponent
   constructor(
     public httpClient: HttpClient,
     public todayService: TodayService,
-    //added
-    public dialog: MatDialog
+    private rosterService:ManageRosterService,
+    public dialog: MatDialog,
+    private authService:AuthService
     //end
   ) {
     super();
@@ -149,20 +159,25 @@ export class TodayComponent
   filterToggle = false;
 
   displayedColumns = [
-    'img',
-    'name',
-    'student_id',
-    'time_in',
-    'code',
-    'email',
-    'status',
+    'roster_id',
+    'subject',
+    'class_start',
+    'class_end',
+    'roster_id',
+    'roster_date',
+    'pin',
+    'section',
+    'id',
+    'modal',
   ];
 
+  arrayData:any;
   exampleDatabase?: TodayService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Today>(true, []);
   id?: number;
   today?: Today;
+  searchKey:string="";
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -179,19 +194,44 @@ export class TodayComponent
     console.log(row);
   }
 
+  applyFilter(){
+    this.arrayData.filter = this.searchKey.trim().toLowerCase();
+  }
+
+  current_attendance(roster_pin_id:any){
+    let tempDirection: Direction;
+
+    const dialogRef = this.dialog.open(Attendance_Record_Component, {
+      width: "1000px",
+      height: "700px",
+      data: {
+        roster_pin_id: roster_pin_id,
+        action: 'add',
+      }
+    });
+    
+    dialogRef.afterClosed().subscribe((_result: any) => {
+      this.loadData();
+    });
+  }
+
   public loadData() {
-    this.exampleDatabase = new TodayService(this.httpClient);
-    this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
-      this.paginator,
-      this.sort
-    );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
+
+    const currentUser = this.authService.currentUserValue;
+
+    let q_data = {
+      id: currentUser.id
+    }
+
+    this.rosterService.getRosterPinPerTeacherToday(currentUser.id,q_data)
+    .subscribe(
+      response => {
+        this.arrayData = new MatTableDataSource(response);
+        this.arrayData.sort = this.sort;
+        this.arrayData.paginator = this.paginator;
+      },
+      error => {
+        console.error('Error getting section', error);
       }
     );
   }
@@ -214,7 +254,7 @@ export class ExampleDataSource extends DataSource<Today> {
   ) {
     super();
     // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
+    // this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<Today[]> {
@@ -225,7 +265,7 @@ export class ExampleDataSource extends DataSource<Today> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getAllTodays();
+    // this.exampleDatabase.getAllTodays();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
@@ -233,12 +273,12 @@ export class ExampleDataSource extends DataSource<Today> {
           .slice()
           .filter((today: Today) => {
             const searchStr = (
-              today.name +
-              today.student_id +
-              today.time_in +
-              today.code +
-              today.email +
-              today.status
+              today.id +
+              today.updated_by +
+              today.updated_datetime +
+              today.roster_id +
+              today.roster_date +
+              today.pin 
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -269,20 +309,20 @@ export class ExampleDataSource extends DataSource<Today> {
         case 'id':
           [propertyA, propertyB] = [a.id, b.id];
           break;
-        case 'name':
-          [propertyA, propertyB] = [a.name, b.name];
+        case 'updated_by':
+          [propertyA, propertyB] = [a.updated_by, b.updated_by];
           break;
-        case 'student_id':
-          [propertyA, propertyB] = [a.student_id, b.student_id];
+        case 'updated_datetime':
+          [propertyA, propertyB] = [a.updated_datetime, b.updated_datetime];
           break;
-        case 'time_in':
-          [propertyA, propertyB] = [a.time_in, b.time_in];
+        case 'roster_id':
+          [propertyA, propertyB] = [a.roster_id, b.roster_id];
           break;
-        case 'email':
-          [propertyA, propertyB] = [a.email, b.email];
+        case 'roster_date':
+          [propertyA, propertyB] = [a.roster_date, b.roster_date];
           break;
-        case 'status':
-          [propertyA, propertyB] = [a.status, b.status];
+        case 'pin':
+          [propertyA, propertyB] = [a.pin, b.pin];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

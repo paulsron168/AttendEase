@@ -21,14 +21,14 @@
                       </li>
                       <li class="tbl-search-box">
                         <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                        <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                        <input (keyup)="applyFilter()" [(ngModel)]="searchKey" placeholder="Search" type="text" #filter class="browser-default search-field"
                           aria-label="Search box">
                       </li>
                     </ul>
                   </div>
                   <div class="right">
                     <ul class="tbl-export-btn">
-                      <li class="tbl-header-btn">
+                      <!-- <li class="tbl-header-btn">
                         <div class="m-l-10" matTooltip="ADD">
                           
                             <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="openDialog()">
@@ -36,14 +36,14 @@
                           </button>
                       
                         </div>
-                      </li>
-                      <li class="tbl-header-btn">
+                      </li> -->
+                      <!-- <li class="tbl-header-btn">
                         <div class="m-l-10" matTooltip="REFRESH">
                           <button mat-mini-fab color="primary" (click)="refresh()">
                             <mat-icon class="col-white">refresh</mat-icon>
                           </button>
                         </div>
-                      </li>
+                      </li> -->
                     </ul>
                    </div>
                 </div>
@@ -51,99 +51,78 @@
 
                 <div class="body overflow-auto">
                   <div class="responsive_table">
-                    <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                    <table mat-table [dataSource]="arrayData" matSort class="mat-cell advance-table">
                       <!-- ID Column -->
                       <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>ID
                         </mat-header-cell>
                         <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                       </ng-container>
-                      <ng-container matColumnDef="img">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'"> Image
+                      <ng-container matColumnDef="subject">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Subject
                         </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
-                            class="mobile-label">Image:</span> <img [src]="row.img" />
+                        <mat-cell *matCellDef="let row"><span class="mobile-label">Subject:</span> {{row.subject_name}}
                         </mat-cell>
                       </ng-container>
-                      <ng-container matColumnDef="name">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Name
+                      <ng-container matColumnDef="class_start">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Updated Datetime
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let row"><span class="mobile-label">Name:</span> {{row.name}}
+                        <mat-cell *matCellDef="let row"><span class="mobile-label">Updated Datetime</span> {{row.class_start }}
                         </mat-cell>
                       </ng-container>
-                      <ng-container matColumnDef="student_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Student ID
+                      <ng-container matColumnDef="class_end">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Updated Datetime
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let row"><span class="mobile-label">Student ID:</span> {{row.student_id}}
+                        <mat-cell *matCellDef="let row"><span class="mobile-label">Updated Datetime</span> {{row.class_end }}
                         </mat-cell>
                       </ng-container>
-                      <ng-container matColumnDef="time_in">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Time In
+                      <ng-container matColumnDef="roster_id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Roster ID
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Time In:</span>{{row.time_in}}
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Roster ID:</span>{{row.roster_id}}
                         </mat-cell>
                       </ng-container>
-                      <ng-container matColumnDef="code">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> OTP Code
+                      <ng-container matColumnDef="roster_date">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Roster Date
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> <span class="mobile-label">OTP Code:</span>{{row.code}}
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Roster Date:</span>{{row.roster_date | date:'longDate'}}
                         </mat-cell>
                       </ng-container>
-                      <ng-container matColumnDef="email">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Email
+                      <ng-container matColumnDef="pin">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>PIN
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Email:</span>{{row.email}}
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">PIN:</span>{{row.pin}}
                         </mat-cell>
                       </ng-container>
-
-
-
-
-
-                      <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                      <ng-container matColumnDef="section">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Section
                         </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let row">
-                          <span class="mobile-label">Status:</span>
-                          @if (row.status==='present') {
-                          <div>
-                            <span class="badge badge-pill badge-primary col-green">
-                              {{row.status}}</span>
-                          </div>
-                          }
-                          @if (row.status==='absent') {
-                          <div>
-                            <span class="badge badge-pill badge-primary col-red">
-                              {{row.status}}</span>
-                          </div>
-                          }
-                          @if (row.status==='late') {
-                          <div>
-                            <span class="badge badge-pill badge-primary col-orange">
-                              {{row.status}}</span>
-                          </div>
-                          }
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Section:</span>{{row.section}}
                         </mat-cell>
                       </ng-container>
-
+                      <ng-container matColumnDef="modal">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Action
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Action:</span>
+                          <button mat-raised-button color="accent" (click)="current_attendance(row.id)">Attendance Record</button>
+                        </mat-cell>
+                      </ng-container>
                       <mat-header-row *matHeaderRowDef="displayedColumns">
                       </mat-header-row>
                       <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
                       </mat-row>
                     </table>
                     <!-- Loading spinner -->
-                    @if (exampleDatabase?.isTblLoading) {
-                    <div class="tbl-spinner">
+                    <!-- <div class="tbl-spinner">
                       <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                       </mat-progress-spinner>
                     </div>
-                    }
-                    @if (!exampleDatabase?.isTblLoading) {
-                    <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                    
+                  <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                       No results
-                    </div>
-                    }
-                    <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                    </div> -->
+                      
+                    <mat-paginator #paginator [length]="arrayData.filteredData.length" [pageIndex]="0" [pageSize]="10"
                       [pageSizeOptions]="[5, 10, 25, 100]">
                     </mat-paginator>
                   </div>

@@ -51,8 +51,24 @@
           </ng-container>
           
           <ng-container matColumnDef="is_present_datetime">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Updated Datetime</mat-header-cell>
-            <mat-cell *matCellDef="let row"><span class="mobile-label">Updated Datetime:</span>{{row.is_present_datetime | date:'shortTime'}}
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Updated Attenance Datetime</mat-header-cell>
+            <mat-cell *matCellDef="let row"><span class="mobile-label">Updated Attendance Datetime:</span>{{row.is_present_datetime | date:'medium'}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="is_present_update_display_name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Updated Attenance By</mat-header-cell>
+            <mat-cell *matCellDef="let row"><span class="mobile-label">Updated Attendance By:</span>{{row.is_present_update_display_name}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
+            <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+              <button mat-icon-button color="accent"  (click)="editAttendance(row.alert_id)" 
+                class="tbl-action-btn" matTooltip="Edit" >
+                <app-feather-icons [icon]="'edit'"   [class]="'tbl-fav-edit'"></app-feather-icons>
+              </button>
             </mat-cell>
           </ng-container>
           <!-- actions -->
@@ -71,10 +87,7 @@
     </div>
       <mat-divider></mat-divider>
       <div mat-dialog-actions class="confirm-buttons">
-          <button 
-          mat-raised-button 
-          class="close-button" style="background-color: #90A4AE; color: #ffffff">Close</button>
-          
+          <button mat-raised-button class="close-button" (click)="close()">Close</button>
       </div>
   </div> 
   
