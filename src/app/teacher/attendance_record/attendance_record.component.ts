@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource,MatTableModule  } from '@angular/material/table';
+import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
+import { EditAttendanceComponent } from '../edit-attendance/edit-attendance.component';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
@@ -40,7 +42,8 @@ export interface DialogData{
     MatSortModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    FeatherIconsComponent
   ],
 })
 export class Attendance_Record_Component implements OnInit {
@@ -58,13 +61,17 @@ export class Attendance_Record_Component implements OnInit {
     'id_number',
     'is_present',
     'is_present_datetime',
-    'id'
+    'is_present_update_display_name',
+    'id',
+    'actions'
   ];
 
   constructor(
+    public dialogRef: MatDialogRef<Attendance_Record_Component>,
     private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private rosterService:ManageRosterService) {
+    private rosterService:ManageRosterService,
+    private dialog:MatDialog) {
     this.roster_pin_id = data.roster_pin_id
     // constructor
   }
@@ -81,8 +88,6 @@ export class Attendance_Record_Component implements OnInit {
     this.rosterService.getRosterPinAlertsPerSection(this.roster_pin_id,q_data)
     .subscribe(
       response => {
-        console.log('roster_pin_id',this.roster_pin_id);
-        console.log('getRosterPinAlertsPerSection response',response);
         this.select_source = new MatTableDataSource(response);
       },
       error => {
@@ -96,6 +101,22 @@ export class Attendance_Record_Component implements OnInit {
       this.code[i] = this.generateRandomDigit();
     }
     this.showCode = true;
+  }
+
+  editAttendance(alert_id:any){
+    const dialogRef = this.dialog.open(EditAttendanceComponent, {
+      width: "400px",
+      height: "300px",
+      data: {
+        alert_id: alert_id,
+        action: 'edit',
+      }
+    });
+    
+    dialogRef.afterClosed().subscribe((_result: any) => {
+      this.initializeData();
+    });
+    
   }
 
   async checkLocationAndSend(): Promise<void> {
@@ -162,4 +183,9 @@ export class Attendance_Record_Component implements OnInit {
   showErrorMessage(): void {
     alert('Error! Your connection is poor. Please try again.');
   }
+
+  close(){
+    this.dialogRef.close();
+  }
+
 }

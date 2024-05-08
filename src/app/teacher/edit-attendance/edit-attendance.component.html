@@ -1,0 +1,39 @@
+<div class="cctv-modal-container ">
+    <div class="app-spinner" *ngIf="loading">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div mat-dialog-content *ngIf="!loading">
+        <div class="confirm-title">Attendance Record</div>
+        <mat-divider></mat-divider>
+    </div>
+  
+    <div mat-dialog-content class="confirm-body" *ngIf="!loading">
+      <div class="body overflow-auto">
+        <div class="responsive_table">
+          <form [formGroup]="docForm">
+            <div class="row attendance">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Attendance</mat-label>
+                <mat-select formControlName="attendance" required>
+                    <mat-option *ngFor="let attend of attendanceList" [value]="attend.id">{{attend.value}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="docForm.get('attendance')?.hasError('required')">
+                    Attendance is Required
+                </mat-error>
+                </mat-form-field>
+            </div>
+          
+            <br><br>
+          </form>
+        </div>
+      </div>
+        <mat-divider></mat-divider>
+        <div mat-dialog-actions class="confirm-buttons">
+          <button type="button" mat-raised-button color="warn" (click)="close()">Cancel</button>
+          <button class="btn-space" mat-raised-button color="primary"
+          [disabled]="!docForm.valid" (click)="submit_change()">Submit</button>
+        </div>
+    </div> 
+    
+  
+  </div>

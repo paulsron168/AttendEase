@@ -35,7 +35,9 @@ import Swal from 'sweetalert2';
 
 export class MyClassComponent implements OnInit{
 
+  schedules:any;
   scheduleList: any;
+  studentList: any;
   dayOfWeek:any;
   currentDate:any;
   roster_pin_id_new:any;
@@ -47,7 +49,7 @@ export class MyClassComponent implements OnInit{
     // constructor
   }
   
- PA(roster_id:any,section_id:any) {
+  PA(roster_id:any,section_id:any) {
 
   // Function to generate a random 4-digit OTP
   function generateOTP(length:any) {
@@ -140,52 +142,52 @@ export class MyClassComponent implements OnInit{
       });
     },
   })
-}
-  
-//end of modal
-//ANOTHER MODAL
-FOLA(){
-  // Function to generate a random 4-digit OTP
-  function generateOTP() {
-    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
+    
+  //end of modal
+  //ANOTHER MODAL
+  FOLA(){
+    // Function to generate a random 4-digit OTP
+    function generateOTP() {
+      return Math.floor(1000 + Math.random() * 9000).toString();
+    }
+
+    const otp = generateOTP(); // Generate OTP
+
+    Swal.fire({
+      title: 'Your OTP for attendance',
+      html: `
+        <input type="text" id="otp1" maxlength="1" size="1" readonly value="${otp[0]}">
+        <input type="text" id="otp2" maxlength="1" size="1" readonly value="${otp[1]}">
+        <input type="text" id="otp3" maxlength="1" size="1" readonly value="${otp[2]}">
+        <input type="text" id="otp4" maxlength="1" size="1" readonly value="${otp[3]}">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'send',
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const isValid = true; // Placeholder for validation result
+            if (isValid) {
+            
+            }
+          }, 1000);
+        });
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Send Successfully',
+          icon: 'success',
+          text: 'Your attendance has been successfully send.',
+        });
+      }
+    });
   }
 
-  const otp = generateOTP(); // Generate OTP
-
-  Swal.fire({
-    title: 'Your OTP for attendance',
-    html: `
-      <input type="text" id="otp1" maxlength="1" size="1" readonly value="${otp[0]}">
-      <input type="text" id="otp2" maxlength="1" size="1" readonly value="${otp[1]}">
-      <input type="text" id="otp3" maxlength="1" size="1" readonly value="${otp[2]}">
-      <input type="text" id="otp4" maxlength="1" size="1" readonly value="${otp[3]}">
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'send',
-    showLoaderOnConfirm: true,
-    preConfirm: () => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          const isValid = true; // Placeholder for validation result
-          if (isValid) {
-          
-          }
-        }, 1000);
-      });
-    },
-    allowOutsideClick: () => !Swal.isLoading(),
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire({
-        title: 'Send Successfully',
-        icon: 'success',
-        text: 'Your attendance has been successfully send.',
-      });
-    }
-  });
-}
-
-//END OF MODAL
+  //END OF MODAL
   ngOnInit() {
     this.initializeData();
     const now = new Date();
@@ -202,12 +204,65 @@ FOLA(){
     const currentUser = this.authService.currentUserValue;
 
     let q_data = {};
+    
+    this.todayService.getStudentsPerTeacher(currentUser.id,q_data)
+    .subscribe(
+      response => {
+        this.studentList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
 
     this.todayService.getTeacherClass(currentUser.id,q_data)
     .subscribe(
       response => {
-        this.scheduleList = response;
-        console.log('getTeacherClass',response);
+        this.schedules = response;
+        this.scheduleList = [];
+        this.schedules.forEach((sched:any) => {
+
+          var present = 0;
+          var late = 0;
+          var absent = 0
+    
+          this.studentList.forEach((stud:any) => {
+            if(sched.id == stud.roster_id){
+              if(stud.is_present == 0){
+                absent++;
+              } else if(stud.is_present == 1){
+                present++;
+              } else if(stud.is_present == 2){
+                late++;
+              }
+            }
+          });
+
+          let s_data = {
+            id:sched.id,
+            schedule_id:sched.schedule_id,
+            section:sched.section,
+            section_id:sched.section_id,
+            subject_major:sched.subject_major,
+            subject_name:sched.subject_name,
+            subject_type:sched.subject_type,
+            subject_units:sched.subject_units,
+            teacher_id:sched.teacher_id,
+            teacher_name:sched.teacher_name,
+            class_days:sched.class_days,
+            class_end:sched.class_end,
+            class_start:sched.class_start,
+            last_attendance_datetime:sched.last_attendance_datetime,
+            last_attendance_id:sched.last_attendance_id,
+            last_attendance_pin:sched.last_attendance_pin,
+            count_present: present,
+            count_late: late,
+            count_absent: absent
+          }
+          
+          this.scheduleList.push(s_data);
+        });
+
       },
       error => {
         console.error('Error getting section', error);
@@ -239,7 +294,10 @@ FOLA(){
         action: 'add',
       }
     });
-   
+    
+    dialogRef.afterClosed().subscribe((_result: any) => {
+      this.initializeData();
+    });
   }
 
   /*getAllSubjects(): void {

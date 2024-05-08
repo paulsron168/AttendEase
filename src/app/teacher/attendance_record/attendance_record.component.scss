@@ -1,3 +1,7 @@
+.responsive_table{
+    min-height: 580px;
+    max-height: 580px;
+}
 .app-spinner{
   padding: 250px 0px 0px 420px;
 }
@@ -50,6 +54,10 @@ button {
         padding: 10px 0;
     }
     .confirm-buttons {
+        padding:5px 10px 0px 0px;
+        display:flex;
+        flex-direction: row-reverse;
+
         button {
             font-weight: 700; 
             font-size:17px; 
