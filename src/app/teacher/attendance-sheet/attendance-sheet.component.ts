@@ -1,17 +1,33 @@
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { DataSource } from '@angular/cdk/collections';
+import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { SelectionModel } from '@angular/cdk/collections';
+import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRippleModule } from '@angular/material/core';
+import { NgClass } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
-import { TableElement, TableExportUtil } from '@shared';
-import { formatDate } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { Direction } from '@angular/cdk/bidi';
+import { MatDialog } from '@angular/material/dialog';
+import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
+import { AuthService } from '@core';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
+import { Attendance_Record_Component } from '../attendance_record/attendance_record.component';
+import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import * as XLSX from 'xlsx';
-
+import { TodayService } from '../today/today.service';
+import { FormDialogComponent } from '../today/form-dialog/form-dialog.component';
+import { Today } from '../today/today.model';
 
 @Component({
   selector: 'app-attendance-sheet',
@@ -20,93 +36,305 @@ import * as XLSX from 'xlsx';
   standalone: true,
   imports: [
     BreadcrumbComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatButtonModule,
+    MatTableModule,
+    MatSortModule,
+    NgClass,
+    MatRippleModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
     MatSelectModule,
-    MatOptionModule,
-    CommonModule,
+    MatIconModule,
+    FormsModule,
+    MatButtonModule,
+    CommonModule
    
 
   ],
 })
-export class AttendanceSheetComponent {
-  attendanceForm: UntypedFormGroup;
-  dataSource: any;
- 
+export class AttendanceSheetComponent
+extends UnsubscribeOnDestroyAdapter
+implements OnInit {
+name: any;
+manual: any;
 
+constructor(
+  public httpClient: HttpClient,
+  public todayService: TodayService,
+  private rosterService:ManageRosterService,
+  public dialog: MatDialog,
+  private authService:AuthService
+  //end
+) {
+  super();
+}
+//added
+openDialog(): void {
+  // Open the dialog and pass necessary data
+  const dialogRef = this.dialog.open(FormDialogComponent, {
+    data: { name: this.name, manual: this.manual }
+  });
+  //END
 
-  // Define the attendance records
-  
+  // Handle dialog closed event if needed
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+  });
+}
 
-  subjects = [
-    { value: 'programming-0', viewValue: 'Programming 2' },
-    { value: 'networking-1', viewValue: 'Networking 2' },
-    { value: 'fola-2', viewValue: 'FoLa 2' },
-    { value: 'SAD', viewValue: 'SAD' }
-  ];
+refresh() {
+  this.loadData();
+}
 
-  levels = [
-    { value: '0', viewValue: 'First Year' },
-    { value: '1', viewValue: 'Second Year' },
-    { value: '2', viewValue: 'Third Year' },  
-  ];
-
-  sections = [
-    { value: '0', viewValue: 'A' },
-    { value: '1', viewValue: 'B' },
-    { value: '2', viewValue: 'C' },
-    { value: '3', viewValue: 'D' },  
-  ];
-
- majors = [
-    { value: '0', viewValue: 'Computer Technology' },
-    { value: '1', viewValue: 'Electronic Technology' },
-     
-  ];
-
-  constructor() {
-    this.attendanceForm = new UntypedFormGroup({
-      fromDate: new UntypedFormControl(),
-      toDate: new UntypedFormControl(),
-    });
+/* addNew() {
+  let tempDirection: Direction;
+  if (localStorage.getItem('isRtl') === 'true') {
+    tempDirection = 'rtl';
+  } else {
+    tempDirection = 'ltr';
   }
+  const dialogRef = this.dialog.open(FormDialogComponent, {
+    data: { name: this.name, manual: this.manual },
+    direction: tempDirection,
+  });
+  this.subs.sink = dialogRef.afterClosed().subscribe((result: number) => {
+    if (result === 1) {
+      // After dialog is closed we're doing frontend updates
+      // For add we're just pushing a new row inside DataServicex
+      this.exampleDatabase?.dataChange.value.unshift(
+        this.todayService.getDialogData()
+      );
+      this.refreshTable();
+      this.showNotification(
+        'snackbar-success',
+        'Successfully Save...!!!',
+        'bottom',
+        'center'
+      );
+    }
+  });
+}*/
 
-  // export table data in excel file
-  exportToExcel() {
-    const element = document.getElementById('attendanceTable');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
-    // Iterate over each cell in the worksheet
-    for (const cellAddress in ws) {
-      if (ws.hasOwnProperty(cellAddress)) {
-          const cell = ws[cellAddress];
-
-           // Log the cell address and its value to the console
-           console.log('Cell Address:', cellAddress);
-           console.log('Cell Value:', cell);
-
-          // Check if the cell contains an icon and update its value accordingly
-          if (cell && cell.t === 's') {
-              const cellValue = cell.v as string;
-
-              if (cellValue.includes('<span class="far fa-check-circle text-success"></span>')) {
-                  ws[cellAddress] = { t: 's', v: 'Present' }; // Replace the icon with 'Present'
-              } else if (cellValue.includes('<span class="far fa-times-circle text-danger"></span>')) {
-                  ws[cellAddress] = { t: 's', v: 'Absent' }; // Replace the icon with 'Absent'
-              }
-          }
+editCall(row: Today) {
+  this.id = row.id;
+  let tempDirection: Direction;
+  if (localStorage.getItem('isRtl') === 'true') {
+    tempDirection = 'rtl';
+  } else {
+    tempDirection = 'ltr';
+  }
+  const dialogRef = this.dialog.open(FormDialogComponent, {
+    data: {
+      today: row,
+      action: 'edit',
+    },
+    direction: tempDirection,
+  });
+  this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+    if (result === 1) {
+      // When using an edit things are little different, firstly we find record inside DataService by id
+      const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
+        (x) => x.id === this.id
+      );
+      // Then you update that record using data from dialogData (values you enetered)
+      if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
+        this.exampleDatabase.dataChange.value[foundIndex] =
+          this.todayService.getDialogData();
+        // And lastly refresh table
+        this.refreshTable();
+        this.showNotification(
+          'black',
+          'Edit Record Successfully...!!!',
+          'bottom',
+          'center'
+        );
       }
+    }
+  });
+}
+
+showNotification(arg0: string, arg1: string, arg2: string, arg3: string) {
+  throw new Error('Method not implemented.');
+}
+
+refreshTable() {
+  throw new Error('Method not implemented.');
+}
+
+filterToggle = false;
+
+displayedColumns = [
+  'roster_id',
+  'subject',
+  'class_start',
+  'class_end',
+  'roster_id',
+  'roster_date',
+  'pin',
+  'section',
+  'id',
+  'modal',
+];
+
+
+arrayData:any;
+exampleDatabase?: TodayService;
+dataSource!: ExampleDataSource;
+selection = new SelectionModel<Today>(true, []);
+id?: number;
+today?: Today;
+searchKey:string="";
+
+@ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+@ViewChild(MatSort, { static: true }) sort!: MatSort;
+@ViewChild('filter', { static: true }) filter!: ElementRef;
+@ViewChild(MatMenuTrigger)
+contextMenu?: MatMenuTrigger;
+contextMenuPosition = { x: '0px', y: '0px' };
+
+ngOnInit() {
+  this.loadData();
+}
+
+toggleStar(row: Today) {
+  console.log(row);
+}
+
+applyFilter(){
+  this.arrayData.filter = this.searchKey.trim().toLowerCase();
+}
+
+current_attendance(roster_pin_id:any){
+  let tempDirection: Direction;
+
+  const dialogRef = this.dialog.open(Attendance_Record_Component, {
+    width: "1000px",
+    height: "700px",
+    data: {
+      roster_pin_id: roster_pin_id,
+      action: 'add',
+    }
+  });
+  
+  dialogRef.afterClosed().subscribe((_result: any) => {
+    this.loadData();
+  });
+}
+
+public loadData() {
+
+  const currentUser = this.authService.currentUserValue;
+
+  let q_data = {
+    id: currentUser.id
   }
 
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Attendance Sheet');
-    XLSX.writeFile(wb, 'attendance_record.xlsx');
+  this.rosterService.getRosterPinPerTeacher(currentUser.id,q_data)
+  .subscribe(
+    response => {
+      this.arrayData = new MatTableDataSource(response);
+      this.arrayData.sort = this.sort;
+      this.arrayData.paginator = this.paginator;
+    },
+    error => {
+      console.error('Error getting section', error);
+    }
+  );
+}
+}
 
-    
+export class ExampleDataSource extends DataSource<Today> {
+filterChange = new BehaviorSubject('');
+get filter(): string {
+  return this.filterChange.value;
+}
+set filter(filter: string) {
+  this.filterChange.next(filter);
+}
+filteredData: Today[] = [];
+renderedData: Today[] = [];
+constructor(
+  public exampleDatabase: TodayService,
+  public paginator: MatPaginator,
+  public _sort: MatSort
+) {
+  super();
+  // Reset to the first page when the user changes the filter.
+  // this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
+}
+/** Connect function called by the table to retrieve one stream containing the data to render. */
+connect(): Observable<Today[]> {
+  // Listen for any changes in the base data, sorting, filtering, or pagination
+  const displayDataChanges = [
+    this.exampleDatabase.dataChange,
+    this._sort.sortChange,
+    this.filterChange,
+    this.paginator.page,
+  ];
+  // this.exampleDatabase.getAllTodays();
+  return merge(...displayDataChanges).pipe(
+    map(() => {
+      // Filter data
+      this.filteredData = this.exampleDatabase.data
+        .slice()
+        .filter((today: Today) => {
+          const searchStr = (
+            today.id +
+            today.updated_by +
+            today.updated_datetime +
+            today.roster_id +
+            today.roster_date +
+            today.pin 
+          ).toLowerCase();
+          return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+        });
+      // Sort filtered data
+      const sortedData = this.sortData(this.filteredData.slice());
+      // Grab the page's slice of the filtered sorted data.
+      const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+      this.renderedData = sortedData.splice(
+        startIndex,
+        this.paginator.pageSize
+      );
+      return this.renderedData;
+    })
+  );
+}
+disconnect() {
+  //disconnect
+}
+/** Returns a sorted copy of the database data. */
+sortData(data: Today[]): Today[] {
+  if (!this._sort.active || this._sort.direction === '') {
+    return data;
   }
-
-// Define the interface for attendance records
+  return data.sort((a, b) => {
+    let propertyA: number | string = '';
+    let propertyB: number | string = '';
+    switch (this._sort.active) {
+      case 'id':
+        [propertyA, propertyB] = [a.id, b.id];
+        break;
+      case 'updated_by':
+        [propertyA, propertyB] = [a.updated_by, b.updated_by];
+        break;
+      case 'updated_datetime':
+        [propertyA, propertyB] = [a.updated_datetime, b.updated_datetime];
+        break;
+      case 'roster_id':
+        [propertyA, propertyB] = [a.roster_id, b.roster_id];
+        break;
+      case 'roster_date':
+        [propertyA, propertyB] = [a.roster_date, b.roster_date];
+        break;
+      case 'pin':
+        [propertyA, propertyB] = [a.pin, b.pin];
+        break;
+    }
+    const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+    const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+    return (
+      (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
+    );
+  });
+}
 }

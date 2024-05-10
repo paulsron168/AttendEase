@@ -1,3 +1,10 @@
+.responsive_table{
+    min-height: 580px;
+    max-height: 580px;
+}
+.app-spinner{
+  padding: 250px 0px 0px 420px;
+}
 .generate{
 place-content: center;
 }
@@ -25,3 +32,108 @@ button {
     margin-right: 10px;
     font-size: 16px;
   }
+
+  .cctv-modal-container {
+    font-family: Work Sans; 
+    
+
+    .confirm-title {
+        color: #163B47; 
+        font-weight: 500; 
+        font-size: 20px;
+        height:50px;
+        padding: 10px 10px 0 10px;
+    }
+    .confirm-body {
+        font-size: 16px;
+        font-weight: 500;
+        overflow: unset !important;
+    }
+
+    .confirm-body-input{
+        padding: 10px 0;
+    }
+    .confirm-buttons {
+        padding:5px 10px 0px 0px;
+        display:flex;
+        flex-direction: row-reverse;
+
+        button {
+            font-weight: 700; 
+            font-size:17px; 
+        }
+        .close-button {
+            background-color: #90A4AE; 
+            color: #ffffff;
+        }
+        .cancel-button {
+            background-color: #DE5959; 
+            color: #ffffff;
+        }
+        // .confirm-button { }
+    }
+
+
+    input{
+        border:solid 1px lightgray; 
+        height:34px ;
+        border-radius: 4px;
+        outline: none;
+        padding: 0 5px;
+        max-width: 100%;
+        width: 60px;
+        margin: 0 17px 10px;
+    }
+    input:focus{
+        border:solid 1px #2BB2D0;
+    }   
+    label{
+        font-size: 12px;
+        color:#5E7E88;
+    }
+    select{
+        border:solid 1px lightgray; 
+        font-size: 14px;
+        color:#5E7E88;
+        border-radius: 4px;
+        height: 35px;          
+        outline: none;
+        width: 100%;
+    }
+    .error{
+        color:red;
+    }
+    .error_input{
+        border:solid 1px red;
+    }
+    .normal-input{
+        border:solid 1px lightgray;  
+    }
+    .nornal{
+        color:#5E7E88;
+        border:solid 1px lightgray; 
+    }
+    .hide{
+        display: none;
+    }
+  
+    .show{
+        display: block;
+    }
+    
+  
+    .sub-label-text{
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+}
+
+.mat-dialog-content {
+    margin:0 !important;
+    padding: 0  !important;
+
+}
+
+.mat-dialog-actions {
+    padding: 11px 0;
+}

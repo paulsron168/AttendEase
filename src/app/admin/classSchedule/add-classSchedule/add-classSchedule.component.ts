@@ -97,14 +97,26 @@ export class AddClassScheduleComponent {
     return `${hour}:${minute}:00`; // Append seconds
   }
 
+    
+  formatDate(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds;
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
+  }
 
   onSubmit() {
     if (this.docForm.valid) {
       let q_data = {
         created_by: "admin",
-        created_datetime: new Date(),
+        created_datetime: this.formatDate(new Date()),
         updated_by: "admin",
-        updated_datetime: new Date(),
+        updated_datetime: this.formatDate(new Date()),
         class_days: this.docForm.value.class_days.join(', '),
         class_start: this.formatTime(this.docForm.value.value.class_start),
         class_end: this.formatTime(this.docForm.value.value.class_end),

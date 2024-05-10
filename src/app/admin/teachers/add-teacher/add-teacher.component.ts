@@ -79,6 +79,19 @@ export class AddTeacherComponent {
     });
   }
 
+  
+  formatDate(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds;
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
+  }
+
   onSubmit() {
     if (this.docForm.valid) {
 
@@ -116,9 +129,9 @@ export class AddTeacherComponent {
         let q_data = {
           id_number: this.docForm.value.id_number,
           created_by: "admin",
-          created_datetime: new Date(),
+          created_datetime: this.formatDate(new Date()),
           updated_by: "admin",
-          updated_datetime: new Date(),
+          updated_datetime: this.formatDate(new Date()),
           firstname: this.docForm.value.firstname,
           middlename: this.docForm.value.middlename,
           lastname: this.docForm.value.lastname,

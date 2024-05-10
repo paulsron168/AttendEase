@@ -140,13 +140,25 @@ export class FormDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  formatDate(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds;
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
+  }
+
   addRoster(){
     if (this.manageRosterForm.valid) {
       let q_data = {
         created_by: "admin",
-        created_datetime: new Date(),
+        created_datetime: this.formatDate(new Date()),
         updated_by: "admin",
-        updated_datetime: new Date(),
+        updated_datetime: this.formatDate(new Date()),
         schedule_id: this.manageRosterForm.value.schedule,
         teacher_id: this.manageRosterForm.value.teacher,
       };
@@ -170,7 +182,7 @@ export class FormDialogComponent implements OnInit {
     if (this.manageRosterForm.valid && this.data && this.data.manageRoster) {
       let q_data = {
         updated_by: "admin",
-        updated_datetime: new Date(),
+        updated_datetime: this.formatDate(new Date()),
         teacher_id: this.manageRosterForm.value.teacher,
       };
 

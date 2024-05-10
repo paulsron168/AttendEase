@@ -1,24 +1,21 @@
 export class Today {
   id: number;
-  img: string;
-  name: string;
-  time_in: string;
-  status: string;
-  student_id: string;
-  code: string;
-  email: string;
+  updated_by: string;
+  updated_datetime: string;
+  roster_id: string;
+  roster_date: string;
+  pin: string;
   
 
   constructor(today: Today) {
     {
-      this.id = today.id || this.getRandomID();
-      this.img = today.img || 'assets/images/user/usrbig1.jpg';
-      this.name = today.name || '';
-      this.student_id = today.student_id || '';
-      this.time_in = today.time_in || '';
-      this.code = today.code || '';
-      this.email = today.email || '';
-      this.status = today.status || '';
+      this.id = today.id;
+      // this.updated_by = today.img || 'assets/images/user/usrbig1.jpg';
+      this.updated_by = today.updated_by || '';
+      this.updated_datetime = today.updated_datetime || '';
+      this.roster_id = today.roster_id || '';
+      this.roster_date = today.roster_date || '';
+      this.pin = today.pin || '';
       
     }
   }

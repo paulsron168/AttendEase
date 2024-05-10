@@ -49,13 +49,27 @@
             <mat-form-field class="example-full-width" appearance="outline">
               <mat-label>Room</mat-label>
               <mat-select formControlName="class_room" required>
-                <mat-option [value]="'Lecture'">Lecture</mat-option>
-                <mat-option [value]="'Computer Laboratory'">
-                  Computer Laboratory
+                <mat-option [value]="'2'">2</mat-option>
+                <mat-option [value]="'3'">3</mat-option>
+                <mat-option [value]="'Computer Laboratory1'">
+                  Computer Laboratory1
                 </mat-option>
-                <mat-option [value]="'Electronic Laboratory'">
-                  Electronic Laboratory
+                <mat-option [value]="'Computer Laboratory2'">
+                  Computer Laboratory2
                 </mat-option>
+                <mat-option [value]="'6'">6</mat-option>
+                <mat-option [value]="'7'">7</mat-option>
+                <mat-option [value]="'AutoCad Laboratory'">
+                  AutoCad Laboratory
+                </mat-option>
+                <mat-option [value]="'Electronic Laboratory1'">
+                  Electronic Laboratory1
+                </mat-option>
+                <mat-option [value]="'Electronic Laboratory2'">
+                  Electronic Laboratory2
+                </mat-option>
+                <mat-option [value]="'11'">11</mat-option>
+                <mat-option [value]="'12'">12</mat-option>
               </mat-select>
               <mat-error *ngIf="classScheduleForm.get('class_room')?.hasError('required')">
                 Room is required

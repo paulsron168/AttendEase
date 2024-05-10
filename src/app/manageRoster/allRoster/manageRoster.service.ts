@@ -13,8 +13,13 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   private readonly ADD_ROSTER_URL = environment.apiUrl + '/add_roster';
   private readonly UPD_ROSTER_URL = environment.apiUrl + '/update_roster';
   private readonly DEL_ROSTER_URL = environment.apiUrl + '/delete_roster';
+  private readonly ADD_ROSTER_PIN_URL = environment.apiUrl + '/add_roster_pin';
+  private readonly ADD_ROSTER_PIN_ALERTS_URL = environment.apiUrl + '/add_roster_pin_alerts';
+  private readonly GET_ROSTER_PIN_ALERTS_PERSECTION_URL = environment.apiUrl + '/roster_pin_alerts_per_section';
+  private readonly GET_ROSTER_PIN_ALERTS_PER_ID_URL = environment.apiUrl + '/roster_pin_alerts_per_id';
+  private readonly GET_ROSTER_PIN_PER_TEACHER_URL = environment.apiUrl + '/roster_pin_per_teacher';
+  private readonly GET_ROSTER_PIN_PER_TEACHER_TODAY_URL = environment.apiUrl + '/roster_pin_per_teacher_today';
   
-
   isTblLoading = true;
   dataChange: BehaviorSubject<ManageRoster[]> = new BehaviorSubject<ManageRoster[]>([]);
   dialogData!: ManageRoster;
@@ -62,4 +67,35 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   addManageRoster(manageRosterData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_ROSTER_URL, manageRosterData);
   }
+
+  addRosterPin(manageRosterData: any): Observable<any> {
+    return this.httpClient.post<any>(this.ADD_ROSTER_PIN_URL, manageRosterData);
+  }
+
+  addRosterPinAlerts(manageRosterData: any): Observable<any> {
+    return this.httpClient.post<any>(this.ADD_ROSTER_PIN_ALERTS_URL, manageRosterData);
+  }
+
+  getRosterPinAlertsPerSection(roster_pin_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_ALERTS_PERSECTION_URL}/${roster_pin_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
+  
+  getRosterPinAlertsPerID(alert_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_ALERTS_PER_ID_URL}/${alert_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
+
+  getRosterPinPerTeacher(pin_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_PER_TEACHER_URL}/${pin_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
+
+  getRosterPinPerTeacherToday(pin_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_PER_TEACHER_TODAY_URL}/${pin_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
+
+
+  
 }
