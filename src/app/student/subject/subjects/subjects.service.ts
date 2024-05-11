@@ -11,7 +11,11 @@ export class MyProjectsService {
 
   private readonly API_SUBJECT_URL = environment.apiUrl + '/subject';
   private readonly API_ATTENDANCE_URL = environment.apiUrl + '/recordAttendance'; // Add your attendance API endpoint here
-
+  private readonly ROSTER_SCHED_PER_STUDENT_URL = environment.apiUrl + '/roster_schedule_per_student'; // Add your attendance API endpoint here
+  private readonly ROSTER_SCHED_PER_ROSTER_STUDENT_URL = environment.apiUrl + '/roster_pin_alerts_per_roster_student'; // Add your attendance API endpoint here
+  private readonly NOTIFICATION_STUDENT_URL = environment.apiUrl + '/notification_alerts_for_students'; // Add your attendance API endpoint here
+  private readonly UPD_NOTIFICATION_READ_URL = environment.apiUrl + '/update_read_notification_alerts'; // Add your attendance API endpoint here
+  
   constructor(private httpClient: HttpClient) { }
 
   // Existing method to fetch subjects
@@ -19,8 +23,28 @@ export class MyProjectsService {
     return this.httpClient.get<Allsubjects[]>(this.API_SUBJECT_URL);
   }
 
-  // New method to send attendance data to backend
-  recordAttendance(subjectId: string, attendanceData: any): Observable<any> {
-    return this.httpClient.post<any>(`${this.API_ATTENDANCE_URL}/${subjectId}`, attendanceData);
+  getStudentClass(id: number,data:any): Observable<any> {
+    const url = `${this.ROSTER_SCHED_PER_STUDENT_URL}/${id}`;
+    return this.httpClient.post(url,data);
   }
+
+  getRosterStudentClassAlerts(id: number,data:any): Observable<any> {
+    const url = `${this.ROSTER_SCHED_PER_ROSTER_STUDENT_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
+
+  getNotificationAlertsStudent(id: number,data:any): Observable<any> {
+    const url = `${this.NOTIFICATION_STUDENT_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
+  
+  updateReadStatusNotifAlert(id: number,data:any): Observable<any> {
+    const url = `${this.UPD_NOTIFICATION_READ_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
+
+  // // New method to send attendance data to backend
+  // recordAttendance(subjectId: string, attendanceData: any): Observable<any> {
+  //   return this.httpClient.post<any>(`${this.API_ATTENDANCE_URL}/${subjectId}`, attendanceData);
+  // }
 }

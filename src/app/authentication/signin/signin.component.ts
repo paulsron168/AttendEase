@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { User } from '../../core/models/user';
-
+import Swal from 'sweetalert2';
 @Component({
     selector: 'app-signin',
     templateUrl: './signin.component.html',
@@ -104,21 +104,34 @@ export class SigninComponent
       this.authService.login(this.f['username'].value, this.f['password'].value)
       .subscribe(
         (response: any) => {
-          setTimeout(() => {
-            let user = response[0];
-            const role = this.capitalizeFirstLetter(response[0]['user_type']);
+          if(response.length > 0){
+            setTimeout(() => {
+              let user = response[0];
+              const role = this.capitalizeFirstLetter(response[0]['user_type']);
 
-            if (role === Role.All || role === Role.Admin) {             
-              this.router.navigate(['admin/dashboard/main']);
-            } else if (role === Role.Teacher){
-              this.router.navigate(['/teacher/dashboard']);
-            } else if (role === Role.Student){
-              this.router.navigate(['/student/dashboard']);
-            } else {
-              this.router.navigate(['../authentication/signin']);
-            }
-            this.loading = false;
-          }, 1000);
+              if (role === Role.All || role === Role.Admin) {             
+                this.router.navigate(['admin/dashboard/main']);
+              } else if (role === Role.Teacher){
+                this.router.navigate(['/teacher/dashboard']);
+              } else if (role === Role.Student){
+                this.router.navigate(['/student/dashboard']);
+              } else {
+                this.router.navigate(['../authentication/signin']);
+              }
+              this.loading = false;
+            }, 1000);
+          } else{
+            Swal.fire({
+              title: 'Error',
+              icon: 'error',
+              text: 'Login failed.',
+              allowOutsideClick: false,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            });
+          }
 
           // Optionally, reset the form here
         },

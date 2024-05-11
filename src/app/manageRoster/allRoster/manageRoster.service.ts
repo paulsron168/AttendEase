@@ -14,6 +14,7 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   private readonly UPD_ROSTER_URL = environment.apiUrl + '/update_roster';
   private readonly DEL_ROSTER_URL = environment.apiUrl + '/delete_roster';
   private readonly ADD_ROSTER_PIN_URL = environment.apiUrl + '/add_roster_pin';
+  private readonly CHECK_ROSTER_PIN_URL = environment.apiUrl + '/check_roster_pin';
   private readonly ADD_ROSTER_PIN_ALERTS_URL = environment.apiUrl + '/add_roster_pin_alerts';
   private readonly GET_ROSTER_PIN_ALERTS_PERSECTION_URL = environment.apiUrl + '/roster_pin_alerts_per_section';
   private readonly GET_ROSTER_PIN_ALERTS_PER_ID_URL = environment.apiUrl + '/roster_pin_alerts_per_id';
@@ -96,6 +97,9 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
     return this.httpClient.post<any>(url, manageRosterData);
   }
 
-
+  checkRosterPin(manageRosterData:any): Observable<any> {
+    const url = `${this.CHECK_ROSTER_PIN_URL}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
   
 }

@@ -224,6 +224,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        &.nfc-black {
+          filter: invert(77%) sepia(4%) saturate(5247%) hue-rotate(85deg)
+            brightness(0%) contrast(100%);
+        }
         &.nfc-green {
           filter: invert(77%) sepia(4%) saturate(5247%) hue-rotate(85deg)
             brightness(88%) contrast(95%);

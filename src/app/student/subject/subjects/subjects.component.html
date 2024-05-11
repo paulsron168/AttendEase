@@ -17,166 +17,26 @@
           </div>
           <div class="body">
             <div class="row">
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header l-bg-purple-dark">
-                        <div class="user-name">TPC 328</div>
-                        <div class="name-center">Personnel Administration</div>
-                      </div>
-                      <img src="assets/images/user/usrbig1.jpg" class="user-img" alt="">
-                      <p>Eduardo Projemo</p>
-                      <p>TTH - 01:00 PM - 02:30 PM
-                        <br />Room 11
-                      </p>
-
-                      <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" (click)="PA()">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header bg-cyan">
-                        <div class="user-name">FL 2</div>
-                        <div class="name-center">Foreign Language 2</div>
-                      </div>
-                      <img src="assets/images/user/usrbig2.jpg" class="user-img" alt="">
-                      <p>Romel Oyao</p>
-                      <p>MW - 01:00 PM - 02:30 PM
-                        <br />Room 11
-                      </p>
-                      <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" (click)="FOLA()">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header bg-dark">
-                        <div class="user-name">FL 2</div>
-                        <div class="name-center">Foreign Language 2</div>
-                      </div>
-                      <img src="assets/images/user/usrbig3.jpg" class="user-img" alt="">
-                      <p>Nonito Odjinar</p>
-                      <p>MW - 09:00 AM - 12:00 PM
-                        <br />Computer Laboratory2
-                      </p>
-                      <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" (click)="prog()">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header l-bg-orange">
-                        <div class="user-name">TCC 325</div>
-                        <div class="name-center">Networking</div>
-                      </div>
-                      <img src="assets/images/user/usrbig4.jpg" class="user-img" alt="">
-                      <p>Van Dexter Lachica</p>
-                      <p>TTH - 2:30 PM - 6:00 PM
-                        <br />Computer Laboratory2
-                      </p>
-                      <div class="profile-userbuttons">
-                        <button mat-flat-button color="primary">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
+            
+              <div class="col-md-4" *ngFor="let roster of classList">
                 <div class="card border-apply">
                   <div class="m-b-20">
                     <div class="contact-grid">
                       <div class="profile-header l-bg-green">
-                        <div class="user-name">TPC 329</div>
-                        <div class="name-center">Technology Research 2</div>
+                        <div class="user-name">{{roster.subjectCode}}</div>
+                        <div class="name-center">{{roster.subject}}</div>
                       </div>
-                      <img src="assets/images/user/usrbig4.jpg" class="user-img" alt="">
-                      <p>Lindo C Estrera</p>
-                      <p>Saturday - 9:00 Am - 12:00 PM
-                        <br />Computer Laboratory2
+                      <img [src]="roster.teacher_profile" class="user-img" alt="">
+                      <p>{{roster.profile_picture}}</p>
+                      <p>{{roster.teacher_name}}</p>
+                      <p>{{roster.class_days}} - {{formatTime(roster.class_start)}} - {{formatTime(roster.class_end)}}
+                        <br />Room {{roster.class_room}}
                       </p>
+                      Attendance: {{roster.last_present == 2 ? 'Late' : roster.last_present == 1 ? 'Present' : 'Absent'}} 
+                    
                       <div class="profile-userbuttons">
-                        <button mat-flat-button color="primary">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-apply">
-                  <div class="m-b-20">
-                    <div class="contact-grid">
-                      <div class="profile-header l-bg-purple-dark">
-                        <div class="user-name">TCC 327</div>
-                        <div class="name-center">System Analysis and Design</div>
-                      </div>
-                      <img src="assets/images/user/usrbig4.jpg" class="user-img" alt="">
-                      <p>Van Dexter Lachica</p>
-                      <p>TTH - 2:30 PM - 6:00 PM
-                        <br />Computer Laboratory2
-                      </p>
-                      <div class="profile-userbuttons">
-                        <button mat-flat-button color="primary">Attendance</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="card border-apply">
-                    <div class="m-b-20">
-                      <div class="contact-grid">
-                        <div class="profile-header bg-indigo">
-                          <div class="user-name">TCC 326</div>
-                          <div class="name-center">Industrial Organization and Management</div>
-                        </div>
-                        <img src="assets/images/user/usrbig7.jpg" class="user-img" alt="">
-                        <p>Rosalina Plaza</p>
-                          <p>MW - 7:00 PM - 08: 30PM
-                            <br />Computer Laboratory2
-                          </p>
-                          <div class="profile-userbuttons">
-                            <button mat-flat-button color="primary">Attendance</button>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card border-apply">
-                    <div class="m-b-20">
-                      <div class="contact-grid">
-                        <div class="profile-header bg-brown">
-                          <div class="user-name">TCC 326</div>
-                          <div class="name-center">Shop Supervision and Apprenticeship Training</div>
-                        </div>
-                        <img src="assets/images/user/usrbig8.jpg" class="user-img" alt="">
-                        <p>Melgar Sario</p>
-                          <p>TTH - 7:00 PM - 08: 30PM
-                            <br />Computer Laboratory2
-                          </p>
-                        <div class="profile-userbuttons">
-                          <button mat-flat-button color="primary">Attendance</button>
-                        </div>
+                        <button mat-raised-button color="primary" [disabled]="(!checkerTime(roster.class_start,roster.class_end,roster.roster_id) || !roster.class_days.includes(dayOfWeek))" (click)="PA(roster.roster_id,roster.class_start)">Attendance</button>
+                        <!-- <button mat-raised-button color="primary" (click)="PA(roster.roster_id,roster.class_start)">Attendance</button> -->
                       </div>
                     </div>
                   </div>
