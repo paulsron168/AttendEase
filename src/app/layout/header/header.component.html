@@ -29,7 +29,7 @@
         <li class="nav-item btnNotification" ngbDropdown>
           <button mat-button [matMenuTriggerFor]="notificationMenu" class="nav-notification-icons">
             <app-feather-icons [icon]="'bell'" [class]="'header-icon'"></app-feather-icons>
-            <span class="label-count bg-orange"></span>
+            <span class="label-count bg-orange" *ngIf="count_unread > 0"></span>
           </button>
           <mat-menu #notificationMenu="matMenu" class="nfc-menu">
             <div class="nfc-header">
@@ -40,22 +40,23 @@
               <ng-scrollbar style="height: 350px" visibility="hover">
                 <div class="noti-list header-menu">
                   <div class="menu">
-                    @for (notification of notifications; track notification) {
-                    <button mat-menu-item onClick="return false;" [ngClass]="[notification.status]">
-                      <span class="table-img msg-user ">
-                        <i class="material-icons-outlined nfc-type-icon"
-                          [ngClass]="[notification.color]">{{notification.icon}}</i>
-                      </span>
-                      <span class="menu-info">
-                        <span class="menu-title">{{notification.message}}</span>
-                        <span class="menu-desc mt-2">
-                          <i class="material-icons">access_time</i> {{notification.time}}
+                    @for (notification of notifList; track notification) {
+                    <!-- <button mat-menu-item [ngClass]="[notification.status]" *ngIf="!check_trigger(notification.roster_date,notification.class_start,notification.class_end)" (click)="triggerDisable()"> -->
+                      <button mat-menu-item [ngClass]="[notification.status]" (click)="trigger(notification.alert_id,notification.roster_id,notification.is_read,notification.class_start,notification)">
+                        <span class="table-img msg-user ">
+                          <i class="material-icons-outlined nfc-type-icon"
+                            [ngClass]="[notification.color]">{{notification.icon}}</i>
                         </span>
-                      </span>
-                      <span class="nfc-close">
-                        <app-feather-icons [icon]="'x'" [class]="'user-menu-icons'"></app-feather-icons>
-                      </span>
-                    </button>
+                        <span class="menu-info">
+                          <span class="menu-title">{{notification.message}}</span>
+                          <span class="menu-desc mt-2">
+                            <i class="material-icons">access_time</i> {{notification.time}}
+                          </span>
+                        </span>
+                        <!-- <span class="nfc-close">
+                          <app-feather-icons [icon]="'x'" [class]="'user-menu-icons'"></app-feather-icons>
+                        </span> -->
+                      </button>
                     }
                   </div>
                 </div>
@@ -72,7 +73,7 @@
           <button mat-button [matMenuTriggerFor]="profilemenu">
             <div class="chip dropdown-toggle" ngbDropdownToggle class="">
               <span>{{userFullName}}</span>
-              <img src="{{userImg}}" class="user_img" width="32" height="32" alt="User">
+              <img src="{{userImg}}" class="user_img" width="45" height="32" alt="User">
             </div>
           </button>
           <mat-menu #profilemenu="matMenu" class="profile-menu">
