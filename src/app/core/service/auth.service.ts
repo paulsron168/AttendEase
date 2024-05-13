@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { Role } from '@core/models/role';
 import { environment } from 'environments/environment.development';
+import Swal from 'sweetalert2';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -73,30 +75,22 @@ export class AuthService {
     // return this.http.post<any>(this.LOGIN_URL, q_data);
     this.http.post<any>(this.LOGIN_URL,q_data).subscribe({
         next: (data) => {
-          console.log('user', data[0]);
-          let user = data[0];
-          let userstate = {
-            id: user.id,
-            img: user.profile_picture,
-            username: user.username,
-            password: user.password,
-            firstName: user.firstname,
-            lastName: user.lastname,
-            role: this.capitalizeFirstLetter(user.user_type),
-            token: 'admin-token',
-          };
-          
-          this.currentUserSubject.next(userstate);
-          localStorage.setItem('currentUser', JSON.stringify(userstate));
-          // return this.error('Username or password is correct');
-          // return this.ok({
-          //   id: user.id,
-          //   img: user.id,
-          //   username: user.username,
-          //   firstName: user.firstname,
-          //   lastName: user.lastname,
-          //   token: user.lastname,
-          // });
+          if(data.length > 0){
+            let user = data[0];
+            let userstate = {
+              id: user.id,
+              img: user.profile_picture,
+              username: user.username,
+              password: user.password,
+              firstName: user.firstname,
+              lastName: user.lastname,
+              role: this.capitalizeFirstLetter(user.user_type),
+              token: 'admin-token',
+            };
+            
+            this.currentUserSubject.next(userstate);
+            localStorage.setItem('currentUser', JSON.stringify(userstate));
+          }
         },
         error: (error: any) => {
           console.log(error.name + ' ' + error.message);

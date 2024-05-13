@@ -24,6 +24,7 @@ import { SuccessDialogComponent } from '../allteachers/dialogs/success-dialog/su
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { environment } from 'environments/environment.development';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-teacher',
@@ -149,13 +150,23 @@ export class AddTeacherComponent {
             response => {
               console.log('Teacher added successfully:', response);
               // Optionally, reset the form here
-              this.openSuccessDialog('Teacher information has been successfully Added!');
+              // this.openSuccessDialog('Teacher information has been successfully Added!');
               this.docForm.reset();
+              Swal.fire({
+                title: 'Added Successfully',
+                icon: 'success',
+                text: 'Teacher information has been successfully Added!',
+              });
               //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
 
             },
             error => {
               console.error('Error adding teacher:', error);
+              Swal.fire({
+                title: 'Error',
+                icon: 'error',
+                text: 'Error Adding Teacher',
+              });
               // Handle error
             }
           );

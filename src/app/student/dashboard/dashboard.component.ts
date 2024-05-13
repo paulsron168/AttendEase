@@ -61,8 +61,7 @@ export class DashboardComponent implements OnInit {
     zoomControl: true,
     scrollwheel: true,
     disableDoubleClickZoom: true,
-    maxZoom: 20,
-    minZoom: 15,
+
   };
   markers: any[] = [];
 
@@ -83,7 +82,9 @@ export class DashboardComponent implements OnInit {
   filteredClasses: any[] = [];
   todayTeacher: string = '';
   
-  
+  currentPosition:any;
+  lat:any;
+  lng:any;
   
   
 
@@ -112,7 +113,14 @@ export class DashboardComponent implements OnInit {
   }
   //end naenae
   
-  
+  showPosition(position:any) {
+    this.currentPosition = position;
+    console.log('this.position',position);
+    console.log('this.currentPosition',this.currentPosition);
+    console.log(
+    "Latitude: " + position.coords.latitude + "<br>" +
+    "Longitude: " + position.coords.longitude);
+  }
   
   ngOnInit() {
 
@@ -127,12 +135,29 @@ export class DashboardComponent implements OnInit {
     //angel
     //this.updateClass();
     //end
-
-     
+    // setTimeout(()=>{
     
+    // },1000);
+    if (navigator.geolocation) {
+      console.log('this.navigator.geolocation',navigator.geolocation);
 
+      navigator.geolocation.getCurrentPosition(position => {
+      console.log('this.position',position);
+
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
+      console.log("Geolocation is supported by this browser.");
+      console.log("this.lat",this.lat);
+      console.log("this.lng",this.lng);
+
+    } else { 
+      console.log("Geolocation is not supported by this browser.");
+    }
+    
     //location------------------------------------------------------
     navigator.geolocation.getCurrentPosition((position) => {
+      console.log('this.position',position);
       this.center = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
@@ -148,10 +173,11 @@ export class DashboardComponent implements OnInit {
         title: 'Marker title ' + (this.markers.length + 1),
         options: { animation: google.maps.Animation.BOUNCE },
       });
+      console.log('this.center',this.center);
     });
   }
 
- 
+
 
  /* filterClassesByDay(): void {
     const now = new Date();
