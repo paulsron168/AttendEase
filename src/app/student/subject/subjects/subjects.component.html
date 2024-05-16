@@ -9,9 +9,14 @@
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
           <div class="header">
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-10 col-sm-10">
               <h2>
                 <strong>Subject & Class Schedule</strong>
+              </h2>
+            </div>
+            <div class="col-xs-2 col-sm-2">
+              <h2>
+                <strong>Location Status: <span [ngStyle]="{'color': (onLocation==true ? 'green':'red')}">{{onLocation ? 'Inside' : 'Outside' }}</span> </strong>
               </h2>
             </div>
           </div>
@@ -35,7 +40,7 @@
                       Attendance: {{roster.last_present == 2 ? 'Late' : roster.last_present == 1 ? 'Present' : 'Absent'}} 
                     
                       <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" [disabled]="(!checkerTime(roster.class_start,roster.class_end,roster.roster_id) || !roster.class_days.includes(dayOfWeek))" (click)="PA(roster.roster_id,roster.class_start)">Attendance</button>
+                        <button mat-raised-button color="primary" [disabled]="(!checkerTime(roster.class_start,roster.class_end,roster.roster_id) || !roster.class_days.includes(dayOfWeek)) || !onLocation || roster.last_present_datetime != null" (click)="PA(roster.roster_id,roster.class_start)">Attendance</button>
                         <!-- <button mat-raised-button color="primary" (click)="PA(roster.roster_id,roster.class_start)">Attendance</button> -->
                       </div>
                     </div>

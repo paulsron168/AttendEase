@@ -290,6 +290,16 @@ export class HeaderComponent
       localStorage.setItem('collapsed_menu', 'true');
     }
   }
+  settings1(){
+    const userRole = this.authService.currentUserValue.role;
+    if (userRole === 'Admin') {
+      this.router.navigate(['/admin/settings']);
+    } else if (userRole === 'Student') {
+      this.router.navigate(['/student/settings']);
+    } else if (userRole === 'Teacher') {
+      this.router.navigate(['/teacher/settings']);
+    } 
+  }
   logout() {
     this.subs.sink = this.authService.logout().subscribe((res) => {
       if (!res.success) {
