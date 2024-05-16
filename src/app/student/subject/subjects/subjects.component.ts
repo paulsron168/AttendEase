@@ -37,13 +37,52 @@ export class MyProjectsComponent implements OnInit {
   subClassList:any;
   dayOfWeek:any;
   currentDate:any;
-
+  onLocation:boolean = false;
+  center!: google.maps.LatLngLiteral;
+  
   constructor(
     private myProjectsService: MyProjectsService,
     private manageRosterSVC: ManageRosterService,
     private authService:AuthService,
     private todayService:TodayService
     ) {}
+
+  insidePolygon(polygon:any,point:any) {    
+
+    let odd = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; i++) {
+        if (((polygon[i][1] > point[1]) !== (polygon[j][1] > point[1])) 
+            && (point[0] < ((polygon[j][0] - polygon[i][0]) * (point[1] - polygon[i][1]) / (polygon[j][1] - polygon[i][1]) + polygon[i][0]))) {
+            odd = !odd;
+        }
+        j = i;
+    }
+    if(odd == true){
+      this.onLocation = true;
+    }
+  };
+
+  setMap(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+      });
+
+      setTimeout(()=>{
+        var polygonss = [[ 10.332334, 123.934799 ], [ 10.332991, 123.935159 ], [ 10.332144, 123.935815 ], [ 10.331818, 123.935317 ]];
+        var pointss = [ this.center.lat, this.center.lng ]
+        this.insidePolygon(polygonss,pointss);
+
+      },100);
+
+    } else { 
+      console.log("Geolocation is not supported by this browser.");
+    }
+
+  }
     
  //start of modal
   PA(roster_id:any,class_start:any) {
@@ -133,6 +172,26 @@ export class MyProjectsComponent implements OnInit {
               this.todayService.updateAttendanceStudent(q_data)
               .subscribe(
                 response => {
+                    let w_data = {
+                      created_by: currentUser.firstName+' '+currentUser.lastName,
+                      created_datetime: this.formatDate(new Date()),
+                      updated_by: currentUser.firstName+' '+currentUser.lastName,
+                      updated_datetime: this.formatDate(new Date()),
+                      student_id: currentUser.id,
+                      roster_pin_id: roster_pin_id,
+                      remarks: currentUser.firstName+' '+currentUser.lastName + ' responded on his/her attendance',
+                    }
+                    
+                    this.myProjectsService.addResponseFromStudent(w_data)
+                    .subscribe(
+                      response => {
+                        console.log('added response from student');
+                      },
+                      error => {
+                        console.error('Error getting section', error);
+                      }
+                    );
+  
                     this.ngOnInit();
                     console.log('updateAttendance ',response);
                 },
@@ -160,6 +219,11 @@ export class MyProjectsComponent implements OnInit {
           title: 'Attendance Recorded',
           icon: 'success',
           text: 'Your attendance has been successfully recorded.',
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
         });
        
       }
@@ -265,6 +329,10 @@ export class MyProjectsComponent implements OnInit {
           title: 'Attendance Recorded',
           icon: 'success',
           text: 'Your attendance has been successfully recorded.',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
         });
 
       }
@@ -273,6 +341,7 @@ export class MyProjectsComponent implements OnInit {
   //END OF MODAL\
 
   ngOnInit() {
+    this.setMap();
     this.getAllSubjects();
     const now = new Date();
     // get the current day of the week
@@ -303,44 +372,46 @@ export class MyProjectsComponent implements OnInit {
         this.alertList = response;
         this.classList = [];
         this.subClassList.forEach((subclass:any)=>{
-        
+
+          var is_present = 0;
+          var is_present_datetime = "";
+          var is_present_update_display_name = "";
+
           this.alertList.forEach((alert:any)=>{
-
-            var is_present = 0;
-            var is_present_datetime = "";
-            var is_present_update_display_name = "";
-
             if(alert.roster_id == subclass.roster_id){
               is_present = alert.is_present;
               is_present_datetime = alert.is_present_datetime;
               is_present_update_display_name = alert.is_present_update_display_name;
             }
-            let s_data = {
-              user_id:subclass.user_id,
-              roster_id:subclass.roster_id,
-              schedule_id:subclass.schedule_id,
-              teacher_id:subclass.teacher_id,
-              teacher_profile:subclass.teacher_profile,
-              subject_id:subclass.subject_id,
-              subjectCode:subclass.subjectCode,
-              subject:subclass.subject,
-              id_number:subclass.id_number,
-              firstname:subclass.firstname,
-              middlename:subclass.middlename,
-              lastname:subclass.lastname,
-              class_days:subclass.class_days,
-              class_start:subclass.class_start,
-              class_end:subclass.class_end,
-              class_room:subclass.class_room,
-              last_present:is_present,
-              last_present_datetime:is_present_datetime,
-              last_present_update_display_name:is_present_update_display_name
-            }
-
-            this.classList.push(s_data);
+           
           });
-         console.log('classList',this.classList);
+
+          var s_data = {
+            user_id:subclass.user_id,
+            roster_id:subclass.roster_id,
+            schedule_id:subclass.schedule_id,
+            teacher_id:subclass.teacher_id,
+            teacher_profile:subclass.teacher_profile,
+            subject_id:subclass.subject_id,
+            subjectCode:subclass.subjectCode,
+            subject:subclass.subject,
+            id_number:subclass.id_number,
+            firstname:subclass.firstname,
+            middlename:subclass.middlename,
+            lastname:subclass.lastname,
+            class_days:subclass.class_days,
+            class_start:subclass.class_start,
+            class_end:subclass.class_end,
+            class_room:subclass.class_room,
+            last_present:is_present,
+            last_present_datetime:is_present_datetime,
+            last_present_update_display_name:is_present_update_display_name
+          }
+
+          this.classList.push(s_data);
+       
         });
+        console.log('classList',this.classList);
       },
       error => {
         console.error('Error getting section', error);
@@ -352,9 +423,6 @@ export class MyProjectsComponent implements OnInit {
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds;
     return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
@@ -408,6 +476,9 @@ export class MyProjectsComponent implements OnInit {
     var endHappyHourD = new Date();
     endHappyHourD.setHours(hours2,minutes2,seconds2); 
 
+    // console.log('console',currentD);
+    // console.log('startHappyHourD',startHappyHourD);
+    // console.log('endHappyHourD',endHappyHourD);
     if(currentD >= startHappyHourD && currentD < endHappyHourD ){
         return true;
     }else{

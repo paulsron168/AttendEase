@@ -158,9 +158,13 @@ export class FormDialogComponent implements OnInit {
     let [hour, minute] = hourMinute.split(':');
 
     // Convert hour to 24-hour format if PM
-    // if (ampm.toUpperCase() === 'PM') {
-    //     hour = (parseInt(hour, 10) + 12).toString(); // Add 12 hours for PM
-    // }
+    if (ampm.toUpperCase() === 'PM') {
+        hour = (parseInt(hour, 10) + 12).toString(); // Add 12 hours for PM
+    }
+
+    if (ampm.toUpperCase() === 'AM' && hour == '12') {
+      hour = '0';
+    }
 
     hour = hour.padStart(2, '0');
     minute = minute.padStart(2, '0');
@@ -172,9 +176,6 @@ export class FormDialogComponent implements OnInit {
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds;
     return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
@@ -194,7 +195,6 @@ export class FormDialogComponent implements OnInit {
         class_subject_id: this.classScheduleForm.value.class_subject,
         class_section_id: this.classScheduleForm.value.class_section,
       };
-      console.log(q_data);
 
       this.classScheduleService.addClassSchedule(q_data).subscribe({
         next: (val: any) => {
@@ -223,6 +223,7 @@ export class FormDialogComponent implements OnInit {
         class_subject_id: this.classScheduleForm.value.class_subject,
         class_section_id: this.classScheduleForm.value.class_section,
       };
+      console.log('q_data',q_data);
 
       this.classScheduleService.updateClassSchedule(this.data.classSchedule.id, q_data).subscribe({
         next: (val: any) => {

@@ -1,138 +1,139 @@
 <section class="content">
   <div class="content-block">
-    <div class="block-header">
-      <!-- breadcrumb -->
-      <app-breadcrumb [title]="'Settings'" [items]="['Home']" [active_item]="'Settings'">
-      </app-breadcrumb>
-    </div>
-    <div class="card">
-      <div class="header">
-        <h2>
-          <strong>Security</strong> Settings
-        </h2>
+    <form class="register-form m-4" [formGroup]="docForm">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Settings'" [items]="['Home']" [active_item]="'Settings'">
+        </app-breadcrumb>
       </div>
-      <div class="body">
-        <div class="example-container">
-          <mat-form-field class="example-full-width mb-3" appearance="outline">
-            <mat-label>Admin ID</mat-label>
-            <input matInput formControlName="admin_ID" required placeholder="admin_ID">
-            <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>assignment_ind</mat-icon>
-          </mat-form-field>
-          <mat-form-field class="example-full-width mb-3" appearance="outline">
-            <mat-label>Current Password</mat-label>
-            <input matInput formControlName="password" type="{{ hide ? 'password' : 'text' }}" required
-              placeholder=" Current Password">
-            <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="togglePasswordVisibility()">
-              {{ hide ? 'visibility_off' : 'visibility' }}
-            </mat-icon>
-            <mat-error *ngIf="docForm.get('password')?.hasError('required')">Current Password is required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="example-full-width mb-3" appearance="outline">
-            <mat-label>New Password</mat-label>
-            <input matInput formControlName="password" type="{{ hide ? 'password' : 'text' }}" required
-              placeholder="New Password">
-            <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="toggleNewPasswordVisibility()">
-              {{ hide ? 'visibility_off' : 'visibility' }}
-            </mat-icon>
-            <mat-error *ngIf="docForm.get('password')?.hasError('required')">New Password is required</mat-error>
-          </mat-form-field>
+      <div class="card">
+        <div class="header">
+          <h2>
+            <strong>Security</strong> Settings
+          </h2>
         </div>
-        <button mat-raised-button color="primary">Save</button>
+    
+        <div class="body">
+          <div class="example-container">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" readonly placeholder="Username">
+              <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>assignment_ind</mat-icon>
+            </mat-form-field>
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Current Password</mat-label>
+              <input matInput formControlName="old_password" type="{{ hide ? 'password' : 'text' }}" required
+                placeholder=" Current Password">
+              <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="togglePasswordVisibility()">
+                {{ hide ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
+              <mat-error *ngIf="docForm.get('old_password')?.hasError('required')">Current Password is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>New Password</mat-label>
+              <input matInput formControlName="new_password" type="{{ hide ? 'password' : 'text' }}" required
+                placeholder="New Password">
+              <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="toggleNewPasswordVisibility()">
+                {{ hide ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
+              <mat-error *ngIf="docForm.get('new_password')?.hasError('required')">New Password is required</mat-error>
+            </mat-form-field>
+          </div>
+          <button mat-raised-button color="primary" (click)="changePassword()">Save</button>
+        </div>
       </div>
-    </div>
-
-    <!------Account Settings------->
-    <div class="card">
-      <div class="header">
-        <h2>
-          <strong>Account</strong> Settings
-        </h2>
-      </div>
-      <div class="body">
-        <div class="row clearfix">
-          <div class="col-lg-4 col-md-12">
-            <div class="form-group">
-              <mat-form-field class="example-full-width mb-3" appearance="outline">
-                <mat-label>First Name</mat-label>
-                <input matInput formControlName="First_Name" required placeholder="First Name">
-                <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-                @if (docForm.get('First_Name')?.hasError('required')) {
-                <mat-error>
-                  First name is required
-                </mat-error>
-                }
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-12">
-            <div class="form-group">
-              <mat-form-field class="example-full-width mb-3" appearance="outline">
-                <mat-label>Middle Name</mat-label>
-                <input matInput formControlName="Middle_Name" required placeholder="Middle Name">
-                <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-                @if (docForm.get('Middle_Name')?.hasError('required')) {
-                <mat-error>
-                  Middle Name is required
-                </mat-error>
-                }
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-12">
-            <div class="form-group">
-              <mat-form-field class="example-full-width mb-3" appearance="outline">
-                <mat-label>Last Name</mat-label>
-                <input matInput formControlName="Last_Name" required placeholder="Last Name">
-                <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-                @if (docForm.get('Last_Name')?.hasError('required')) {
-                <mat-error>
-                  Last Name is required
-                </mat-error>
-                }
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-12">
+      <!------Account Settings------->
+      <div class="card">
+        <div class="header">
+          <h2>
+            <strong>Account</strong> Settings
+          </h2>
+        </div>
+        <div class="body">
+          <div class="row clearfix">
+            <div class="col-lg-4 col-md-12">
               <div class="form-group">
                 <mat-form-field class="example-full-width mb-3" appearance="outline">
-                  <mat-label>Email Address</mat-label>
-                  <input matInput formControlName="Email_Address" required placeholder="Email Address">
-                  <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
-                  @if (docForm.get('Email_Address')?.hasError('Email_Address') &&
-                  docForm.get('Email_Address')?.touched) {
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="First_Name" required placeholder="First Name">
+                  <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+                  @if (docForm.get('First_Name')?.hasError('required')) {
                   <mat-error>
-                    Please enter a valid email address
+                    First name is required
                   </mat-error>
                   }
                 </mat-form-field>
               </div>
             </div>
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-4 col-md-12">
               <div class="form-group">
                 <mat-form-field class="example-full-width mb-3" appearance="outline">
-                  <mat-label>Contact Number</mat-label>
-                  <input matInput formControlName="Contact_Number" required placeholder="Contact Number">
-                  <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
-                  @if (docForm.get('Contact_Number')?.hasError('required')) {
+                  <mat-label>Middle Name</mat-label>
+                  <input matInput formControlName="Middle_Name" required placeholder="Middle Name">
+                  <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+                  @if (docForm.get('Middle_Name')?.hasError('required')) {
                   <mat-error>
-                    Contact Number is required
+                    Middle Name is required
                   </mat-error>
                   }
                 </mat-form-field>
               </div>
             </div>
+            <div class="col-lg-4 col-md-12">
+              <div class="form-group">
+                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="Last_Name" required placeholder="Last Name">
+                  <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
+                  @if (docForm.get('Last_Name')?.hasError('required')) {
+                  <mat-error>
+                    Last Name is required
+                  </mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-md-12">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email Address</mat-label>
+                    <input matInput formControlName="Email_Address" required placeholder="Email Address">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
+                    @if (docForm.get('Email_Address')?.hasError('Email_Address') &&
+                    docForm.get('Email_Address')?.touched) {
+                    <mat-error>
+                      Please enter a valid email address
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-12">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Contact Number</mat-label>
+                    <input matInput formControlName="Contact_Number" required placeholder="Contact Number">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
+                    @if (docForm.get('Contact_Number')?.hasError('required')) {
+                    <mat-error>
+                      Contact Number is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+              <mat-label>Upload Image</mat-label>
+              <app-file-upload formControlName="uploadImg"></app-file-upload>
+            </div>
           </div>
-          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
-            <mat-label>Upload Image</mat-label>
-            <app-file-upload formControlName="uploadImg"></app-file-upload>
+          <div class="col-md-12">
+            <button mat-raised-button color="primary" (click)="updateAccount()">Save Changes</button>
           </div>
-        </div>
-        <div class="col-md-12">
-          <button mat-raised-button color="primary">Save Changes</button>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </section>

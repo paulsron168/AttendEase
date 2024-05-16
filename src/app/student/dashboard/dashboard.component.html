@@ -32,14 +32,25 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="header">
-                <h2>Your Location</h2>
+                <div class="col-xs-10 col-sm-10">
+                  <h2>
+                    <strong>Your Location</strong>
+                  </h2>
+                </div>
+                <div class="col-xs-2 col-sm-2">
+                  <h2>
+                    <strong>Location Status: <span [ngStyle]="{'color': (onLocation==true ? 'green':'red')}">{{onLocation ? 'Inside' : 'Outside' }}</span> </strong>
+                  </h2>
+                </div>
               </div>
               <div class="body">
                 <div class="location">
                   <google-map height="400px" width="auto" [zoom]="zoom" [center]="center" [options]="options">
+                    <map-polygon [paths]="vertices" />
                     <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"
                       [title]="marker.title" [options]="marker.options">
                     </map-marker>
+                 
                   </google-map>
                 </div>
               </div>
@@ -57,7 +68,7 @@
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <div class="card">
             <div class="header">
-              <h2>Tanan Teacher With Time and room</h2>
+              <h2>All Teachers With Time and Room - Scheduled for you</h2>
               <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
                 <mat-icon>more_vert</mat-icon>
               </button>
@@ -78,88 +89,15 @@
             </div>
             <div class="body">
               <ng-scrollbar style="height: 380px" visibility="hover">
-                <div class="recent-comment">
+                <div class="recent-comment" *ngFor="let teacher of classList">
                   <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user4.jpg" alt="...">
+                    <div class="table-img" >
+                      <img class="notice-object" [src]="teacher.teacher_profile" alt="..." width="50px" height="50px">
                     </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading col-green">Rosalina Plaza</h6>
-                      <p>TPC 326 Industrial Organization and Management</p>
-                      <p class="text-muted">07:00 PM - 08:30 PM	M W	12</p>
-                    </div>
-                  </div>
-                  <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user6.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-primary col-indigo">Van 	Dexter 	Lachica</h6>
-                      <p>TCC 325	Networking</p>
-                      <p class="text-muted">02:30 PM - 06:00 PM	T TH	COMLAB2</p>
-                    </div>
-                  </div>
-                  <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user7.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-danger col-cyan">Mary 	Steizel 	Arabon</h6>
-                      <p>Study Group	Comm. 2 - Oral Communication</p>
-                      <div class="text-muted">01:00 PM - 02:30 PM
-                      SAT	7</div>
-                    </div>
-                  </div>
-                  <div class="notice-board no-border">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user3.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-info col-orange">Nonito Odjinar</h6>
-                      <p>TCC 326	Programming 2</p>
-                      <div class="text-muted">08:30 AM - 12:00 PM	M W	COMLAB1</div>
-                    </div>
-                  </div>
-                  <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user9.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-primary col-red">Lindo 	C. 	Estrera</h6>
-                      <p>TPC 329	Technology Research 2 (Thesis/Research Paper/Project)</p>
-                      <p class="text-muted">09:00 AM - 12:00 PM	SAT	2</p>
-                    </div>
-                  </div>
-                  <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user8.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-primary col-green">Christel 	Igot 	Nunez</h6>
-                      <p>TCE 2	Research Statistics</p>
-                      <p class="text-muted">09:00 AM - 10:30 AM	M W	2</p>
-                    </div>
-                  </div>
-                  <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user8.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-primary col-red">Christel 	Igot 	Nunez</h6>
-                      <p>TCE 2	Research Statistics</p>
-                      <p class="text-muted">09:00 AM - 10:30 AM	M W	2</p>
-                    </div>
-                  </div>
-                  <div class="notice-board">
-                    <div class="table-img">
-                      <img class="notice-object" src="assets/images/user/user3.jpg" alt="...">
-                    </div>
-                    <div class="notice-body">
-                      <h6 class="notice-heading color-primary col-indigo">Nonito Odjinar</h6>
-                      <p>ITS 1120 	TCC 225 	Graphics Design & Multimedia</p>
-                      <p class="text-muted">07:00 AM - 08:00 AM
-                        10:30 AM - 12:00 PM	THU
-                        FRI	COMLAB1</p>
+                    <div class="notice-body" >
+                      <h6 class="notice-heading col-green">{{teacher.teacher_name}}</h6>
+                      <p>{{teacher.subject}}</p>
+                      <p class="text-muted">{{teacher.class_days + ' : ' + formatTimeOnly(teacher.class_start) + ' - '+ formatTimeOnly(teacher.class_end)}}</p>
                     </div>
                   </div>
                 </div>
@@ -173,28 +111,29 @@
               <h2>Calendar</h2>
             </div>
             <div class="header" >
-            <h2 class="p">{{ currentDate | date:'EEEE MMMM d, yyyy'}}</h2>
-            <br>
-          </div>
-              <div class="tableBody">
-                <div class="month-navigation">
-                  <button (click)="previousMonth()">◀</button>
-                  <span>{{ currentMonth }}</span>
-                  <button (click)="nextMonth()">▶</button>
-                </div>
-                <div class="days">
-                  <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
-                </div>
+              <h2 class="p">{{ currentDate | date:'EEEE MMMM d, yyyy'}}</h2>
+              <br>
+            </div>
+            <div class="body">
+              <div class="month-navigation">
+                <button (click)="previousMonth()">◀</button>
+                <span>{{ currentMonth }}</span>
+                <button (click)="nextMonth()">▶</button>
               </div>
-              <div class="dates">
+              <div class="days">
+                <div *ngFor="let day of daysOfWeek" class="day">{{ day }}</div>
+              </div>
+              <div class="dates m-t-15">
                 <div *ngFor="let date of dates" class="date"
                   [ngClass]="{ 'current-date': isCurrentDate(date), 'empty-date': date === -1 }"
                   (click)="handleDateClick(date)">
                   {{ date !== -1 ? date : '' }}
                 </div>
               </div>
+            </div>
           </div>
         </div>
+        
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <div class="card">
             <div class="header">

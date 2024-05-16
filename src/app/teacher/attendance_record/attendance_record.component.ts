@@ -88,6 +88,7 @@ export class Attendance_Record_Component implements OnInit {
     this.rosterService.getRosterPinAlertsPerSection(this.roster_pin_id,q_data)
     .subscribe(
       response => {
+        // console.log('response',response);
         this.select_source = new MatTableDataSource(response);
       },
       error => {

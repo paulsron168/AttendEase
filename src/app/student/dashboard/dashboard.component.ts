@@ -1,8 +1,33 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  CdkDropList,
+  CdkDrag,
+  CdkDragHandle,
+  CdkDragPlaceholder,
+} from '@angular/cdk/drag-drop';
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexDataLabels,
+  ApexTooltip,
+  ApexYAxis,
+  ApexPlotOptions,
+  ApexStroke,
+  ApexLegend,
+  ApexNonAxisChartSeries,
+  ApexFill,
+  ApexGrid,
+  ApexResponsive,
+  NgApexchartsModule,
+} from 'ng-apexcharts';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { CommonModule } from '@angular/common';
-import { GoogleMap } from '@angular/google-maps';
+import { GoogleMap,MapMarker,MapPolygon } from '@angular/google-maps';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { NgScrollbar } from 'ngx-scrollbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,22 +40,33 @@ import { Allclass } from './dashboard_class.model';
 import { DashboardClassService } from './dashboard_class.service';
 import { Allteachers } from './dashboard_teacher.model';
 import { DashboardTeacherService } from './dashboard-teacher.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { BrowserModule, DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { number } from 'echarts';
 import { SidebarComponent } from 'app/layout/sidebar/sidebar.component';
 import { AuthService } from '@core';
+import { MyProjectsService } from '../subject/subjects/subjects.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, BreadcrumbComponent, RouterLink, GoogleMap,
+  imports: [
+    CommonModule, 
+    BreadcrumbComponent, 
+    RouterLink, 
+    GoogleMap,
+    MapMarker,
+    MapPolygon,
     MatProgressBarModule,
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    NgScrollbar,],
+    NgScrollbar,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle
+   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardComponent implements OnInit {
@@ -39,14 +75,10 @@ export class DashboardComponent implements OnInit {
   //Added  
   currentDate: Date = new Date();
   currentDay: string = this.getDayOfWeek(this.currentDate);
-
-    
-  // Function to get the day of the week from a Date object
   getDayOfWeek(date: Date): string {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return daysOfWeek[date.getDay()];
   }
-//angel
 
   //Added
   subjects: Allsubjects[] = [];
@@ -54,7 +86,7 @@ export class DashboardComponent implements OnInit {
   teachers: Allteachers[] = [];
 
   //location------------------------------------
-  zoom = 12;
+  zoom = 18;
   center!: google.maps.LatLngLiteral;
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
@@ -64,7 +96,15 @@ export class DashboardComponent implements OnInit {
 
   };
   markers: any[] = [];
+  polygons: any[] = [];
 
+  
+  vertices: google.maps.LatLngLiteral[] = [
+    {lat: 10.332334, lng: 123.934799},
+    {lat: 10.332991, lng: 123.935159},
+    {lat: 10.332144, lng: 123.935815},
+    {lat: 10.331818, lng: 123.935317}
+  ];
   //--TODAY'S CLASS----------------------------------------------------------
 
   /*classes: any[] = [
@@ -81,15 +121,14 @@ export class DashboardComponent implements OnInit {
 
   filteredClasses: any[] = [];
   todayTeacher: string = '';
-  
+  onLocation:boolean = false;
   currentPosition:any;
   lat:any;
   lng:any;
-  
+  classList: any[] = [];
   
 
   //calendar-----------------------------------------------------------
-  CurrentDate: Date = new Date();
   currentMonth: string = this.currentDate.toLocaleDateString('en-PH', { month: 'long' });
   daysOfWeek: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   dates: number[] = [];
@@ -101,83 +140,100 @@ export class DashboardComponent implements OnInit {
     private DashboardService: dashboardService,
     private dashboardclassservice: DashboardClassService,
     private dashboardteacherservice: DashboardTeacherService,
-    //naenae
+    private myProjectsService: MyProjectsService,
     private authService: AuthService,
   ) {
-    
+    this.generateDates();
   }
-  //naenae
+
   getFullName(): string {
     const currentUser = this.authService.currentUserValue;
     return currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'User Full Name';
   }
-  //end naenae
+
+  insidePolygon(polygon:any,point:any) {    
+
+    let odd = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; i++) {
+        if (((polygon[i][1] > point[1]) !== (polygon[j][1] > point[1])) 
+            && (point[0] < ((polygon[j][0] - polygon[i][0]) * (point[1] - polygon[i][1]) / (polygon[j][1] - polygon[i][1]) + polygon[i][0]))) {
+            odd = !odd;
+        }
+        j = i;
+    }
+    if(odd == true){
+      this.onLocation = true;
+    }
+  };
   
-  showPosition(position:any) {
-    this.currentPosition = position;
-    console.log('this.position',position);
-    console.log('this.currentPosition',this.currentPosition);
-    console.log(
-    "Latitude: " + position.coords.latitude + "<br>" +
-    "Longitude: " + position.coords.longitude);
+  getTeachers(){
+    let s_data = {};
+    const currentUser = this.authService.currentUserValue;
+    this.myProjectsService.getStudentClass(currentUser.id,s_data)
+    .subscribe(
+      response => {
+        this.classList = response;
+      },
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
   }
   
-  ngOnInit() {
+  formatTimeOnly(time:any) {
+    var check = time.split(':');
+    var hours = check[0];
+    var minutes = check[1];
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes.slice(-2) + ' ' + ampm;
+    return strTime;
+  }
 
-    //this.filterClassesByDay();
+
+  ngOnInit() {
     this.generateDates();
     this.setTodayTeacher();
-    //Added  
-    //this.getAllSubjects();
-    this.getAllclass();
+    this.getTeachers();
     this.getAllteachers();
+    this.setMap();
+  }
 
-    //angel
-    //this.updateClass();
-    //end
-    // setTimeout(()=>{
-    
-    // },1000);
+  setMap(){
     if (navigator.geolocation) {
-      console.log('this.navigator.geolocation',navigator.geolocation);
-
-      navigator.geolocation.getCurrentPosition(position => {
-      console.log('this.position',position);
-
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
       });
-      console.log("Geolocation is supported by this browser.");
-      console.log("this.lat",this.lat);
-      console.log("this.lng",this.lng);
+
+      setTimeout(()=>{
+        this.markers.push({
+          position: {
+            lat: this.center.lat,
+            lng: this.center.lng,
+          },
+          label: {
+            color: 'red',
+          },
+          title: 'Marker title ' + (this.markers.length + 1),
+          options: { animation: google.maps.Animation.BOUNCE },
+        });
+
+        var polygonss = [[ 10.332334, 123.934799 ], [ 10.332991, 123.935159 ], [ 10.332144, 123.935815 ], [ 10.331818, 123.935317 ]];
+        var pointss = [ this.center.lat, this.center.lng ]
+        this.insidePolygon(polygonss,pointss);
+
+      },100);
 
     } else { 
       console.log("Geolocation is not supported by this browser.");
     }
-    
-    //location------------------------------------------------------
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log('this.position',position);
-      this.center = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      this.markers.push({
-        position: {
-          lat: this.center.lat + ((Math.random() - 0.5) * 2) / 10,
-          lng: this.center.lng + ((Math.random() - 0.5) * 2) / 10,
-        },
-        label: {
-          color: 'red',
-        },
-        title: 'Marker title ' + (this.markers.length + 1),
-        options: { animation: google.maps.Animation.BOUNCE },
-      });
-      console.log('this.center',this.center);
-    });
+
   }
-
-
 
  /* filterClassesByDay(): void {
     const now = new Date();
@@ -196,14 +252,14 @@ export class DashboardComponent implements OnInit {
   generateDates() {
     const firstDayOfMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1).getDay();
     const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
-    const daysInPrevMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0).getDate();
 
-    const daysBefore = Array.from({ length: firstDayOfMonth }, () => -1); // Filling with placeholders for empty days
+
+    const daysBefore = Array.from({ length: firstDayOfMonth }, () => -1); 
     const daysCurrentMonth = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
     const totalDays = daysBefore.length + daysCurrentMonth.length;
     const remainingDays = totalDays % 7 === 0 ? 0 : 7 - totalDays % 7;
-    const daysAfter = Array.from({ length: remainingDays }, (_, i) => -1); // Placeholder for empty days
+    const daysAfter = Array.from({ length: remainingDays }, (_, i) => -1);
 
     this.dates = [...daysBefore, ...daysCurrentMonth, ...daysAfter];
   }
