@@ -44,15 +44,16 @@ export class SettingsComponent implements OnInit{
   docForm: FormGroup;
   hide3 = true;
   agree3 = false;
-  hide: boolean = true;
+  hide1: boolean = true;
+  hide2: boolean = true;
   hideConformPassword: boolean = true;
 
   togglePasswordVisibility(): void {
-    this.hide = !this.hide;
+    this.hide1 = !this.hide1;
   }
 
   toggleNewPasswordVisibility(): void {
-    this.hide = !this.hide;
+    this.hide2 = !this.hide2;
   }
 
   constructor(private fb: FormBuilder, 
@@ -65,7 +66,7 @@ export class SettingsComponent implements OnInit{
       username: [''],
       old_password: ['', [Validators.required]],
       new_password: ['', [Validators.required]],
-      First_Name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      First_Name: ['', [Validators.required]],
       Middle_Name: ['', [Validators.required]],
       Last_Name: ['', [Validators.required]],
       Contact_Number: ['', [Validators.required]],
@@ -89,7 +90,7 @@ export class SettingsComponent implements OnInit{
             username: [response[0]['username']],
             old_password: [response[0]['password'], [Validators.required]],
             new_password: [response[0]['password'], [Validators.required]],
-            First_Name: [response[0]['firstname'], [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+            First_Name: [response[0]['firstname'], [Validators.required]],
             Middle_Name: [response[0]['middlename'], [Validators.required]],
             Last_Name: [response[0]['lastname'], [Validators.required]],
             Contact_Number: [response[0]['contact_number'], [Validators.required]],
@@ -158,7 +159,12 @@ export class SettingsComponent implements OnInit{
             Swal.fire({
               title: 'Update Account Successfully',
               icon: 'success',
-              text: "Login again to see your updated profile.",
+              text: "Please check the updated account data.",
+              allowOutsideClick: false,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
             });
           },
           error => {

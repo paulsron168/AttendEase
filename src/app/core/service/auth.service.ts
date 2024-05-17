@@ -15,39 +15,6 @@ export class AuthService {
 
   private readonly LOGIN_URL = environment.apiUrl + '/login';
 
-  private users = [
-    {
-      id: 1,
-      img: 'assets/images/user/admin.jpg',
-      username: 'admin@software.com',
-      password: 'admin@123',
-      firstName: 'Ellah',
-      lastName: 'Jones',
-      role: Role.Admin,
-      token: 'admin-token',
-    },
-    {
-      id: 2,
-      img: 'assets/images/user/employee.jpg',
-      username: 'teacher@software.com',
-      password: 'teacher@123',
-      firstName: 'Ashton',
-      lastName: 'Cox',
-      role: Role.Teacher,
-      token: 'employee-token',
-    },
-    {
-      id: 3,
-      img: 'assets/images/user/client.jpg',
-      username: 'client@software.com',
-      password: 'client@123',
-      firstName: 'Cara',
-      lastName: 'Stevens',
-      role: Role.Student,
-      token: 'client-token',
-    },
-  ];
-
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem('currentUser') || '{}')

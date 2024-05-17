@@ -33,10 +33,10 @@
                       </div>
                       <img [src]="roster.teacher_profile" class="user-img" alt="">
                       <p>{{roster.profile_picture}}</p>
-                      <p>{{roster.teacher_name}}</p>
-                      <p>{{roster.class_days}} - {{formatTime(roster.class_start)}} - {{formatTime(roster.class_end)}}
+                      <span class="teacher_name">{{roster.teacher_name}}</span><br>
+                      {{roster.class_days}} - {{formatTime(roster.class_start)}} - {{formatTime(roster.class_end)}}
                         <br />Room {{roster.class_room}}
-                      </p>
+                      
                       Attendance: {{roster.last_present == 2 ? 'Late' : roster.last_present == 1 ? 'Present' : 'Absent'}} 
                     
                       <div class="profile-userbuttons">

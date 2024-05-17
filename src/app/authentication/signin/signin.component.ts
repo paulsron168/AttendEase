@@ -65,14 +65,6 @@ export class SigninComponent
   get f() {
     return this.authForm.controls;
   }
-  // adminSet() {
-  //   this.authForm.get('username')?.setValue('admin@software.com');
-  //   this.authForm.get('password')?.setValue('admin@123');
-  // }
-  // teacherSet() {
-  //   this.authForm.get('username')?.setValue('teacher@software.com');
-  //   this.authForm.get('password')?.setValue('teacher@123');
-  // }
 
   error1(message: string) {
     return throwError(message);

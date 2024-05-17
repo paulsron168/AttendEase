@@ -52,7 +52,17 @@ export class MainComponent implements OnInit {
   currentMonth: string = this.currentDate.toLocaleDateString('en-PH', { month: 'long' });
   daysOfWeek: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   dates: number[] = [];
-
+  markers: any[] = [];
+  zoom = 17;
+  center!: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: true,
+    maxZoom: 20,
+    minZoom: 15,
+  };
   studentCount:number = 0;
   teacherCount:number = 0;
 
@@ -67,7 +77,38 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeData();
+    this.setMap();
   }
+
+  setMap(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: 10.294203,
+          lng: 123.950874,
+        };
+      });
+
+      setTimeout(()=>{
+        this.markers.push({
+          position: {
+            lat: this.center.lat,
+            lng: this.center.lng,
+          },
+          label: {
+            color: 'red',
+          },
+          title: 'Marker title ' + (this.markers.length + 1),
+          options: { animation: google.maps.Animation.BOUNCE },
+        });
+
+      },1000);
+
+    } else { 
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }
+
 
   initializeData(){
     this.teacherService.countStudent()
@@ -144,19 +185,5 @@ export class MainComponent implements OnInit {
   }
 
 
-
-  // basic map start
-  display?: google.maps.LatLngLiteral;
-  center: google.maps.LatLngLiteral = {
-    lat: 24,
-    lng: 12,
-  };
-  zoom = 4;
-  moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.center = event.latLng.toJSON();
-  }
-  move(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.display = event.latLng.toJSON();
-  }
 
 }

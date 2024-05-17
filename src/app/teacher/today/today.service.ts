@@ -18,6 +18,7 @@ export class TodayService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/today.json';
   private readonly TEACHER_CLASS_URL =  environment.apiUrl + '/teacher_class';
   private readonly STUDENTS_SECTION_URL =  environment.apiUrl + '/students_per_section';
+  private readonly STUDENTS_STUDENT_URL =  environment.apiUrl + '/students_per_student';
   private readonly STUDENTS_TEACHER_URL =  environment.apiUrl + '/students_per_teacher';
   private readonly UPD_ATTENDANCE_URL =  environment.apiUrl + '/update_roster_pin_alerts_attendance';
   private readonly UPD_ATTENDANCE_STUDENT_URL =  environment.apiUrl + '/update_roster_pin_alerts_attendance_student';
@@ -51,6 +52,11 @@ export class TodayService extends UnsubscribeOnDestroyAdapter {
 
   getTeacherClass(id: number,data:any): Observable<any> {
     const url = `${this.TEACHER_CLASS_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
+
+  getStudentsPerStudent(id: number,data:any): Observable<any> {
+    const url = `${this.STUDENTS_STUDENT_URL}/${id}`;
     return this.httpClient.post(url,data);
   }
 

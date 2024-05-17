@@ -14,7 +14,9 @@ export class MyProjectsService {
   private readonly ROSTER_SCHED_PER_STUDENT_URL = environment.apiUrl + '/roster_schedule_per_student'; 
   private readonly ROSTER_SCHED_PER_ROSTER_STUDENT_URL = environment.apiUrl + '/roster_pin_alerts_per_roster_student'; 
   private readonly NOTIFICATION_STUDENT_URL = environment.apiUrl + '/notification_alerts_for_students'; 
+  private readonly NOTIFICATION_TEACHER_URL = environment.apiUrl + '/notification_alerts_for_teachers'; 
   private readonly UPD_NOTIFICATION_READ_URL = environment.apiUrl + '/update_read_notification_alerts'; 
+  private readonly UPD_NOTIFICATION_TEACHER_READ_URL = environment.apiUrl + '/update_read_notification_teacher_alerts'; 
   private readonly ADD_RESPONSE_URL = environment.apiUrl + '/add_response_students_alerts'; 
   
   constructor(private httpClient: HttpClient) { }
@@ -38,11 +40,22 @@ export class MyProjectsService {
     const url = `${this.NOTIFICATION_STUDENT_URL}/${id}`;
     return this.httpClient.post(url,data);
   }
+
+  getNotificationAlertsTeacher(id: number,data:any): Observable<any> {
+    const url = `${this.NOTIFICATION_TEACHER_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
   
   updateReadStatusNotifAlert(id: number,data:any): Observable<any> {
     const url = `${this.UPD_NOTIFICATION_READ_URL}/${id}`;
     return this.httpClient.post(url,data);
   }
+
+  updateReadStatusNotifTeacherAlert(id: number,data:any): Observable<any> {
+    const url = `${this.UPD_NOTIFICATION_TEACHER_READ_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
+
 
   addResponseFromStudent(manageRosterData: any): Observable<any> {
     return this.httpClient.post<any>(this.ADD_RESPONSE_URL, manageRosterData);

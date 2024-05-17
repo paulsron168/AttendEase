@@ -36,8 +36,8 @@ export class DashboardClassService extends UnsubscribeOnDestroyAdapter {
 
   //---- Display Subject ----//
 
-  getAllclass(): Observable<Allclass[]> {
-    return this.httpClient.get<Allclass[]>(this.API_CLASS_URL);
-  }
+  // getAllclass(): Observable<Allclass[]> {
+  //   return this.httpClient.get<Allclass[]>(this.API_CLASS_URL);
+  // }
   
 }

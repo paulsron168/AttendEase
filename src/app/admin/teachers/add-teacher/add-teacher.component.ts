@@ -94,85 +94,90 @@ export class AddTeacherComponent {
   }
 
   onSubmit() {
+
+    
     if (this.docForm.valid) {
 
+      if(this.docForm.value.password != this.docForm.value.confirmPassword){
+        Swal.fire({
+          title: 'Mismatched Password',
+          icon: 'error',
+          text: 'Please check your password and try again.',
+        });
+      }else{
+        var fd = new FormData();
+        let filePath = "";
 
-      
-      var fd = new FormData();
-      var filestoUpload = this.docForm.value.uploadImg;
-      if (filestoUpload) {
-        let files_len = 1;
-        for (let index = 0; index < files_len; index++) {
-          fd.append("file", filestoUpload);
+        var filestoUpload = this.docForm.value.uploadImg;
+        if (filestoUpload) {
+          let files_len = 1;
+          for (let index = 0; index < files_len; index++) {
+            fd.append("file", filestoUpload);
+  
+          }
 
-        }
-      }
-
-      let filePath = "";
-
-      this.teacherService.uploadImage(fd)
-      .subscribe(
-        response => {
-          console.log(response);
-          filePath = environment.ImagesPath + response.filepath;
-          console.log('uploadedImagePath',filePath);
-
-          filePath = environment.ImagesPath + response[0]['filename'];
-          console.log('uploadedImagePath',filePath);
-        },
-        error => {
-          console.error(error);
-        }
-      );
-    
-      setTimeout(()=>{
-
-        let q_data = {
-          id_number: this.docForm.value.id_number,
-          created_by: "admin",
-          created_datetime: this.formatDate(new Date()),
-          updated_by: "admin",
-          updated_datetime: this.formatDate(new Date()),
-          firstname: this.docForm.value.firstname,
-          middlename: this.docForm.value.middlename,
-          lastname: this.docForm.value.lastname,
-          gender: this.docForm.value.gender,
-          contact_number: this.docForm.value.contact_number,
-          password: this.docForm.value.password, 
-          username:this.docForm.value.email_address,
-          email_address:this.docForm.value.email_address,
-          date_of_birth: this.docForm.value.date_of_birth,
-          profile_picture:filePath,
-        }
-
-        this.teacherService.addTeacher(q_data)
+          this.teacherService.uploadImage(fd)
           .subscribe(
             response => {
-              console.log('Teacher added successfully:', response);
-              // Optionally, reset the form here
-              // this.openSuccessDialog('Teacher information has been successfully Added!');
-              this.docForm.reset();
-              Swal.fire({
-                title: 'Added Successfully',
-                icon: 'success',
-                text: 'Teacher information has been successfully Added!',
-              });
-              //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
-
+              filePath = environment.ImagesPath + response[0]['filename'];
+              // console.log('uploadedImagePath',filePath);
             },
             error => {
-              console.error('Error adding teacher:', error);
-              Swal.fire({
-                title: 'Error',
-                icon: 'error',
-                text: 'Error Adding Teacher',
-              });
-              // Handle error
+              console.error(error);
             }
           );
-        },1000)
-
-
+        
+        }
+     
+        setTimeout(()=>{
+  
+          let q_data = {
+            id_number: this.docForm.value.id_number,
+            created_by: "admin",
+            created_datetime: this.formatDate(new Date()),
+            updated_by: "admin",
+            updated_datetime: this.formatDate(new Date()),
+            firstname: this.docForm.value.firstname,
+            middlename: this.docForm.value.middlename,
+            lastname: this.docForm.value.lastname,
+            gender: this.docForm.value.gender,
+            contact_number: this.docForm.value.contact_number,
+            password: this.docForm.value.password, 
+            username:this.docForm.value.email_address,
+            email_address:this.docForm.value.email_address,
+            date_of_birth: this.docForm.value.date_of_birth,
+            profile_picture:filePath,
+          }
+          console.log('q_data:', q_data);
+  
+          this.teacherService.addTeacher(q_data)
+            .subscribe(
+              response => {
+                console.log('Teacher added successfully:', response);
+                // Optionally, reset the form here
+                // this.openSuccessDialog('Teacher information has been successfully Added!');
+                this.docForm.reset();
+                Swal.fire({
+                  title: 'Added Successfully',
+                  icon: 'success',
+                  text: 'Teacher information has been successfully Added!',
+                });
+                //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
+  
+              },
+              error => {
+                console.error('Error adding teacher:', error);
+                Swal.fire({
+                  title: 'Error',
+                  icon: 'error',
+                  text: 'Error Adding Teacher',
+                });
+                // Handle error
+              }
+            );
+          },1000)
+  
+      }
    
     }
   }

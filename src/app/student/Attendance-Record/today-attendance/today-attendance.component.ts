@@ -15,6 +15,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { NgClass } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
+import { AuthService } from '@core';
 
 @Component({
   selector: 'app-today-attendance',
@@ -51,7 +52,8 @@ id?: number;
 today?: Today;
 constructor(
   public httpClient: HttpClient,
-  public todayService: TodayService
+  private todayService: TodayService,
+  private authService:AuthService
 ) {
   super();
 }
@@ -62,30 +64,43 @@ constructor(
 contextMenu?: MatMenuTrigger;
 contextMenuPosition = { x: '0px', y: '0px' };
 
-ngOnInit() {
-  this.loadData();
-}
-toggleStar(row: Today) {
-  console.log(row);
+  ngOnInit() {
+    this.loadData();
+  }
+  toggleStar(row: Today) {
+    console.log(row);
+  }
+
+  loadData() {
+    let s_data = {};
+    const currentUser = this.authService.currentUserValue;
+    // this.todayService.getStudentsPerStudent(currentUser.id,s_data)
+    // .subscribe(
+    //   response => {
+    //     console.log(response);
+    //     this.exampleDatabase = response;
+    //   },
+    //   error => {
+    //     console.error('Error getting section', error);
+    //   }
+    // );
+    this.exampleDatabase = new TodayService(this.httpClient);
+    this.dataSource = new ExampleDataSource(
+      this.exampleDatabase,
+      this.paginator,
+      this.sort
+    );
+    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
+      () => {
+        if (!this.dataSource) {
+          return;
+        }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      }
+    );
+  }
 }
 
-public loadData() {
-  this.exampleDatabase = new TodayService(this.httpClient);
-  this.dataSource = new ExampleDataSource(
-    this.exampleDatabase,
-    this.paginator,
-    this.sort
-  );
-  this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-    () => {
-      if (!this.dataSource) {
-        return;
-      }
-      this.dataSource.filter = this.filter.nativeElement.value;
-    }
-  );
-}
-}
 export class ExampleDataSource extends DataSource<Today> {
 filterChange = new BehaviorSubject('');
 get filter(): string {
