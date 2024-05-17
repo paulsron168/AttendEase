@@ -22,6 +22,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FeatherModule } from 'angular-feather';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { MyProjectsService } from 'app/student/subject/subjects/subjects.service';
+import { SettingsService } from 'app/student/settings/settings.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -55,6 +57,7 @@ export class SidebarComponent
     private renderer: Renderer2,
     public elementRef: ElementRef,
     private authService: AuthService,
+    private settingServices: SettingsService,
     private router: Router
   ) {
     super();
@@ -91,12 +94,24 @@ export class SidebarComponent
   }
   ngOnInit() {
     if (this.authService.currentUserValue) {
-      const userRole = this.authService.currentUserValue.role;
-      this.userFullName =
-        this.authService.currentUserValue.firstName +
-        ' ' +
-        this.authService.currentUserValue.lastName;
+
+      this.userFullName = this.authService.currentUserValue.firstName + ' ' + this.authService.currentUserValue.lastName;
       this.userImg = this.authService.currentUserValue.img;
+      const userRole = this.authService.currentUserValue.role;
+
+      let s_data = {};
+
+      this.settingServices.getMyAccountData(this.authService.currentUserValue.id,s_data)
+      .subscribe(
+        response => {
+          var user = response[0];
+          this.userFullName = user.firstname + ' ' + user.lastname;
+          this.userImg = user.profile_picture;
+        },
+        error => {
+          console.error('Error getting section', error);
+        }
+      );
 
       this.sidebarItems = ROUTES.filter(
         (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1

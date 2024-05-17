@@ -77,11 +77,11 @@
             <h4>School Map</h4>
           </div>
           <div class="card-body">
-            <google-map height="500px" width="100%" [center]="center" [zoom]="zoom" (mapClick)="moveMap($event)"
-              (mapMousemove)="move($event)">
+            <google-map height="550px" width="auto" [zoom]="zoom" [center]="center" [options]="options">
+              <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"
+                [title]="marker.title" [options]="marker.options">
+              </map-marker>
             </google-map>
-            <div>Latitude: {{display?.lat}}</div>
-            <div>Longitude: {{display?.lng}}</div>
           </div>
         </div>
       </div>

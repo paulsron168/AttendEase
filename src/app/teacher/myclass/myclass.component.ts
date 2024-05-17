@@ -199,6 +199,19 @@ export class MyClassComponent implements OnInit{
     this.currentDate = now;
   }
 
+  convertDateTOTimeAMPM(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    seconds = seconds < 10 ? '0'+seconds : seconds;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+
   initializeData(){
 
     const currentUser = this.authService.currentUserValue;
@@ -227,7 +240,7 @@ export class MyClassComponent implements OnInit{
           var absent = 0
     
           this.studentList.forEach((stud:any) => {
-            if(sched.id == stud.roster_id){
+            if(sched.id == stud.roster_id && sched.last_attendance_id == stud.roster_pin_id){
               if(stud.is_present == 0){
                 absent++;
               } else if(stud.is_present == 1){

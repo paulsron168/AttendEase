@@ -72,9 +72,16 @@ export class MyProjectsComponent implements OnInit {
       });
 
       setTimeout(()=>{
-        var polygonss = [[ 10.332334, 123.934799 ], [ 10.332991, 123.935159 ], [ 10.332144, 123.935815 ], [ 10.331818, 123.935317 ]];
+        var polygon1 = [[ 10.332334, 123.934799 ], [ 10.332991, 123.935159 ], [ 10.332144, 123.935815 ], [ 10.331818, 123.935317 ]]; // mandaue foam
+        var polygon2 = [[ 10.332215, 123.922561 ], [ 10.330837, 123.922217 ], [ 10.330166, 123.923927 ], [ 10.331336, 123.924265 ]]; // mandaue hiway
+        var polygon3 = [[ 10.283007, 123.984853 ], [ 10.283947, 123.986119 ], [ 10.283034, 123.986945 ], [ 10.282152, 123.985502 ]]; //subdivision
+        var polygon4 = [[ 10.294203, 123.950874 ], [ 10.294246, 123.951150 ], [ 10.294129, 123.951159 ], [ 10.294103, 123.950891 ], [ 10.294200, 123.950861 ]]; //school
         var pointss = [ this.center.lat, this.center.lng ]
-        this.insidePolygon(polygonss,pointss);
+
+        this.insidePolygon(polygon1,pointss);
+        this.insidePolygon(polygon2,pointss);
+        this.insidePolygon(polygon3,pointss);
+        this.insidePolygon(polygon4,pointss);
 
       },100);
 
@@ -391,6 +398,7 @@ export class MyProjectsComponent implements OnInit {
             roster_id:subclass.roster_id,
             schedule_id:subclass.schedule_id,
             teacher_id:subclass.teacher_id,
+            teacher_name:subclass.teacher_name,
             teacher_profile:subclass.teacher_profile,
             subject_id:subclass.subject_id,
             subjectCode:subclass.subjectCode,

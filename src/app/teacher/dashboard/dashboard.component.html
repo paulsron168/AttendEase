@@ -90,24 +90,20 @@
         <div class="header">
             <h2>Today's Class</h2>
         </div>
-        <br>
         <div class="body">
-            <table class="table dashboard-task-infos text-center">
-                <ng-container *ngIf="class.length > 0; else noClasses">
-                    <tr *ngFor="let cls of class">
-                        <td>{{ cls.subject }}</td>
-                        <td>{{ cls.classStart_Time }}</td>
-                        <td>{{ cls.classEnd_Time }}</td>
-                        <td>{{ cls.class_Section }}</td>
-                        <td>{{ cls.class_Day }}</td>
-                        <td>{{ cls.subject_room }}</td>
-                    </tr>
-                </ng-container>
-            </table>
+          <ng-scrollbar class="classList" visibility="hover" *ngIf="class.length > 0; else noClasses">
+            <div class="recent-comment" *ngFor="let cls of class">
+              <div class="notice-board">
+                <div class="notice-body" >
+                  <h6 class="notice-heading col-green">{{cls.subject_name}} {{cls.section}}</h6>
+                  <p>{{cls.subject_major}} - {{cls.subject_type}}</p>
+                  <p class="text-muted">{{cls.class_days + ' : ' + cls.class_start + ' - '+ cls.class_end}}</p>
+                </div>
+              </div>
+            </div>
+          </ng-scrollbar>
             <ng-template #noClasses>
-                <tr>
-                    <td colspan="6">No class for today</td>
-                </tr>
+              <span style="text-align: center;">No class for today</span>
             </ng-template>
         </div>
     </div>

@@ -23,6 +23,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessDialogComponent } from '../allstudents/dialogs/success-dialog/success-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { environment } from 'environments/environment.development';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-student',
@@ -109,73 +110,74 @@ export class AddStudentComponent implements OnInit{
   onSubmit() {
     if (this.docForm.valid) {
 
-      var fd = new FormData();
-      var filestoUpload = this.docForm.value.uploadImg;
-      if (filestoUpload) {
-        let files_len = 1;
-        for (let index = 0; index < files_len; index++) {
-          fd.append("file", filestoUpload);
+      if(this.docForm.value.password != this.docForm.value.confirmPassword){
+        Swal.fire({
+          title: 'Mismatched Password',
+          icon: 'error',
+          text: 'Please check your password and try again.',
+        });
+      }else{
 
-        }
-      }
+        var fd = new FormData();
+        let filePath = "";
 
-      let filePath = "";
-
-      this.studentService.uploadImage(fd)
-      .subscribe(
-        response => {
-          console.log(response);
-          filePath = environment.ImagesPath + response.filepath;
-          console.log('uploadedImagePath',filePath);
-
-          filePath = environment.ImagesPath + response[0]['filename'];
-          console.log('uploadedImagePath',filePath);
-        },
-        error => {
-          console.error(error);
-        }
-      );
-    
-      setTimeout(()=>{
-     
-      console.log('uploadedImagePath2',filePath);
-
-      let q_data = {
-        id_number: this.docForm.value.id_number,
-        created_by: "admin",
-        created_datetime: this.formatDate(new Date()),
-        updated_by: "admin",
-        updated_datetime: this.formatDate(new Date()),
-        firstname: this.docForm.value.firstname,
-        middlename: this.docForm.value.middlename,
-        lastname: this.docForm.value.lastname,
-        gender: this.docForm.value.gender,
-        contact_number: this.docForm.value.contact_number,
-        password: this.docForm.value.password, 
-        username:this.docForm.value.email_address,
-        email_address:this.docForm.value.email_address,
-        date_of_birth: this.docForm.value.date_of_birth,
-        student_class_section: this.docForm.value.class_section,
-        profile_picture:filePath,
-      }
-
-      this.studentService.addStudent(q_data)
-        .subscribe(
-          response => {
-            console.log('Student added successfully:', response);
-            // Optionally, reset the form here
-            this.openSuccessDialog('Student information has been successfully Added!');
-            this.docForm.reset();
-            //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
-
-          },
-          error => {
-            console.error('Error adding student:', error);
-            // Handle error
+        var filestoUpload = this.docForm.value.uploadImg;
+        if (filestoUpload) {
+          let files_len = 1;
+          for (let index = 0; index < files_len; index++) {
+            fd.append("file", filestoUpload);
           }
-        );
-      },1000)
 
+          this.studentService.uploadImage(fd)
+          .subscribe(
+            response => {
+              filePath = environment.ImagesPath + response[0]['filename'];
+              console.log('uploadedImagePath',filePath);
+            },
+            error => {
+              console.error(error);
+            }
+          );
+        }
+
+        setTimeout(()=>{
+
+        let q_data = {
+          id_number: this.docForm.value.id_number,
+          created_by: "admin",
+          created_datetime: this.formatDate(new Date()),
+          updated_by: "admin",
+          updated_datetime: this.formatDate(new Date()),
+          firstname: this.docForm.value.firstname,
+          middlename: this.docForm.value.middlename,
+          lastname: this.docForm.value.lastname,
+          gender: this.docForm.value.gender,
+          contact_number: this.docForm.value.contact_number,
+          password: this.docForm.value.password, 
+          username:this.docForm.value.email_address,
+          email_address:this.docForm.value.email_address,
+          date_of_birth: this.docForm.value.date_of_birth,
+          student_class_section: this.docForm.value.class_section,
+          profile_picture:filePath,
+        }
+
+        this.studentService.addStudent(q_data)
+          .subscribe(
+            response => {
+              console.log('Student added successfully:', response);
+              // Optionally, reset the form here
+              this.openSuccessDialog('Student information has been successfully Added!');
+              this.docForm.reset();
+              //this.showNotification('snackbar-success', 'Add Record Successfully...!!!');
+
+            },
+            error => {
+              console.error('Error adding student:', error);
+              // Handle error
+            }
+          );
+        },1000)
+      }
     }
   }
 

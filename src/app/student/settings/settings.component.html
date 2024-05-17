@@ -22,19 +22,19 @@
             </mat-form-field>
             <mat-form-field class="example-full-width mb-3" appearance="outline">
               <mat-label>Current Password</mat-label>
-              <input matInput formControlName="old_password" type="{{ hide ? 'password' : 'text' }}" required
+              <input matInput formControlName="old_password" type="{{ hide1 ? 'password' : 'text' }}" required
                 placeholder=" Current Password">
               <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="togglePasswordVisibility()">
-                {{ hide ? 'visibility_off' : 'visibility' }}
+                {{ hide1 ? 'visibility_off' : 'visibility' }}
               </mat-icon>
               <mat-error *ngIf="docForm.get('old_password')?.hasError('required')">Current Password is required</mat-error>
             </mat-form-field>
             <mat-form-field class="example-full-width mb-3" appearance="outline">
               <mat-label>New Password</mat-label>
-              <input matInput formControlName="new_password" type="{{ hide ? 'password' : 'text' }}" required
+              <input matInput formControlName="new_password" type="{{ hide2 ? 'password' : 'text' }}" required
                 placeholder="New Password">
               <mat-icon class="material-icons-outlined pwd-toggle p-3" matSuffix (click)="toggleNewPasswordVisibility()">
-                {{ hide ? 'visibility_off' : 'visibility' }}
+                {{ hide2 ? 'visibility_off' : 'visibility' }}
               </mat-icon>
               <mat-error *ngIf="docForm.get('new_password')?.hasError('required')">New Password is required</mat-error>
             </mat-form-field>

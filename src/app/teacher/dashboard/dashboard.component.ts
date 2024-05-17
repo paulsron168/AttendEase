@@ -39,6 +39,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { DashboardClassService } from './dashboard.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { AuthService } from '@core';
+import { TodayService } from '../today/today.service';
 
 export type chartOptions = {
   series: ApexAxisChartSeries;
@@ -100,13 +101,8 @@ export class DashboardComponent implements OnInit {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return daysOfWeek[date.getDay()];
   }
-
-
-
-  class: Allclass[] = [];
+  class: any[] = [];
   //todaysClasses: any[] = [];
- 
-
   //location----------------------------------
   zoom = 12
   center!: google.maps.LatLngLiteral;
@@ -121,51 +117,123 @@ export class DashboardComponent implements OnInit {
   markers: any[] = [];
 
   //-------------------------------------------------------------
-
+  currentUser:any;
   //calendar-----------------------------------------------------------
 
   currentMonth: string = this.currentDate.toLocaleDateString('en-PH', { month: 'long' });
   daysOfWeek: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   dates: number[] = [];
+  studentList:any[] = [];
+  cnt_absent:number = 0;
+  cnt_present:number = 0;
+  cnt_late:number = 0;
+  cnt_total:number = 0;
+  absent_percentage:number = 0;
+  present_percentage:number = 0;
+  late_percentage:number = 0;
   //----------------------------------------------------------------------------
 
   constructor(
     private DashboardClassService: DashboardClassService,
-    private authService: AuthService,) {
+    private authService: AuthService,
+    private todayService:TodayService) {
     this.generateDates();
  
   }
   ngOnInit() {
 
+    this.setMap();
     this.chart2();
-    this.getAllclass();
+    this.initializeData();
+  }
 
+  initializeData(){
 
+    let q_data = {};
+    this.currentUser = this.authService.currentUserValue;
 
-
-
-    //location---------------------------------------------------------------
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.center = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-    });
-    this.markers.push({
-      position: {
-        lat: this.center.lat + ((Math.random() - 0.5) * 2) / 10,
-        lng: this.center.lng + ((Math.random() - 0.5) * 2) / 10,
+    this.todayService.getTeacherClass(this.currentUser.id,q_data)
+    .subscribe(
+      response => {
+        var classes = response;
+        console.log('classes',classes);
+        classes.forEach((row:any) =>{
+            if(row.class_days.includes(this.currentDay)){
+              let s_data = {
+                subject_name: row.subject_name,
+                subject_major: row.subject_major,
+                class_start: row.class_start,
+                class_end: row.class_end,
+                section: row.section,
+                class_days: row.class_days,
+                subject_type: row.subject_type
+              };
+              this.class.push(s_data);
+            }
+         
+          }
+        );
+          console.log('this.class',this.class);
+          
+      
       },
-      label: {
-        color: 'red',
-        text: 'My Location ',
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
 
+    this.todayService.getStudentsPerTeacher(this.currentUser.id,q_data)
+    .subscribe(
+      response => {
+        this.studentList = response;
+        this.studentList.forEach((row:any)=>{
+          if(row.is_present == 0){
+            this.cnt_absent++;
+          } else if(row.is_present == 1){
+            this.cnt_present++;
+          } else if(row.is_present == 2){
+            this.cnt_late++;
+          } 
+          this.cnt_total++;
+        });
+
+        this.absent_percentage = (this.cnt_absent / this.cnt_total) * 100;
+        this.present_percentage = (this.cnt_present / this.cnt_total) * 100;
+        this.late_percentage = (this.cnt_late / this.cnt_total) * 100;
       },
-      title: 'Marker title ' + (this.markers.length + 1),
-      options: { animation: google.maps.Animation.BOUNCE },
-    });
-    //end--location------------------------------------------------------
+      error => {
+        console.error('Error getting section', error);
+      }
+    );
+  }
 
+  setMap(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+      });
+
+      setTimeout(()=>{
+        this.markers.push({
+          position: {
+            lat: this.center.lat,
+            lng: this.center.lng,
+          },
+          label: {
+            color: 'red',
+          },
+          title: 'Marker title ' + (this.markers.length + 1),
+          options: { animation: google.maps.Animation.BOUNCE },
+        });
+
+      },1000);
+
+    } else { 
+      console.log("Geolocation is not supported by this browser.");
+    }
   }
 
   //naenae
@@ -222,47 +290,34 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
-
-
-  // TODO end
-
-  
-  getAllclass(): void {
-    
-    this.DashboardClassService.getAllclass().subscribe((data: Allclass[]) => {
-      this.class = data;
-   
-      //this.class = this.class.filter(cls => cls.class_Day === this.currentDay);    
-    });
-  }
-
-
-
   //CHART------------------------------------------------------------------------
 
   private chart2() {
-    this.radialChartOptions = {
-      radialseries: [44, 55, 67],
-      chart: {
-        height: 250,
-        type: 'radialBar',
-      },
-      plotOptions: {
-        radialBar: {
-          dataLabels: {
-            name: {
-              fontSize: '22px',
-            },
-            value: {
-              fontSize: '18px',
-            },
 
+    setTimeout(()=>{
+      this.radialChartOptions = {
+        radialseries: [+this.absent_percentage.toFixed(0),+this.present_percentage.toFixed(0), +this.late_percentage.toFixed(0)],
+        chart: {
+          height: 250,
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            dataLabels: {
+              name: {
+                fontSize: '22px',
+              },
+              value: {
+                fontSize: '18px',
+              },
+  
+            },
           },
         },
-      },
-      labels: ['Absent', 'Present', 'Late'],
-    };
+        labels: ['Absent', 'Present', 'Late'],
+      };
+    },1000);
+   
   }
   //END CHART--------------------------------------------------------
 

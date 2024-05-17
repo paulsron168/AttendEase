@@ -37,8 +37,9 @@
                       <br>
                       <br>
                       <div class="profile-userbuttons">
-                        <button mat-raised-button color="primary" [disabled]="!roster.class_days.includes(dayOfWeek) || (roster.last_attendance_datetime | date:'longDate') == (currentDate | date:'longDate')" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button>
+                        <button mat-raised-button color="primary" [disabled]="!roster.class_days.includes(dayOfWeek) || (roster.last_attendance_datetime | date:'longDate') == (currentDate | date:'longDate') || roster.class_end < convertDateTOTimeAMPM(currentDate)" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button>
                         <!-- <button mat-raised-button color="primary" (click)="PA(roster.id,roster.section_id)">Generate Attendance PIN</button> -->
+                        
                         <span style="margin-left:30px"></span>
                         <button mat-raised-button color="accent" (click)="current_attendance(roster.last_attendance_id)">Attendance Record</button>
                       </div>
