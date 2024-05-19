@@ -1,94 +1,95 @@
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { TodayService as TodayService2 } from 'app/teacher/today/today.service';
+import { HttpClient } from '@angular/common/http';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { DataSource } from '@angular/cdk/collections';
+import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { SelectionModel } from '@angular/cdk/collections';
+import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRippleModule } from '@angular/material/core';
+import { NgClass } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
-import { TableElement, TableExportUtil } from '@shared';
-import { formatDate } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
-import { CommonModule } from '@angular/common';
-import * as XLSX from 'xlsx';
+import { AuthService } from '@core';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-attendance-report',
   templateUrl: './attendance-report.component.html',
-  styleUrl: './attendance-report.component.scss',
-  standalone: true,
+  styleUrl: './attendance-report.component.scss',  
+  standalone:true,
   imports: [
     BreadcrumbComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatOptionModule,
-    CommonModule,
-   
+    MatTableModule,
+    MatSortModule,
+    NgClass,
+    MatRippleModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    DatePipe
   ],
 })
 
-export class AttendanceReportComponent  {
-  attendanceForm: UntypedFormGroup;
-  dataSource: any;
+export class AttendanceReportComponent  extends UnsubscribeOnDestroyAdapter
+implements OnInit
+{
+filterToggle = false;
+displayedColumns = [
+  'img',
+  'name',
+  'time_in',
+  'subject',
+  'date',
+  'status',
   
-  
-  
-  // Define the attendance records
-  
-  
-  subjects = [
-    { value: 'programming-0', viewValue: 'Programming 2' },
-    { value: 'networking-1', viewValue: 'Networking 2' },
-    { value: 'fola-2', viewValue: 'FoLa 2' },
-    { value: 'SAD', viewValue: 'SAD' }
-  ];
-  
-  constructor() {
-    this.attendanceForm = new UntypedFormGroup({
-      fromDate: new UntypedFormControl(),
-      toDate: new UntypedFormControl(),
-    });
+];
+studentAttendance:any;
+dataSource2!: any;
+loading:boolean = false;
+id?: number;
+constructor(
+  public httpClient: HttpClient,
+  private todayService2: TodayService2,
+  private authService:AuthService
+) {
+  super();
+}
+@ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+@ViewChild(MatSort, { static: true }) sort!: MatSort;
+@ViewChild('filter', { static: true }) filter!: ElementRef;
+@ViewChild(MatMenuTrigger)
+contextMenu?: MatMenuTrigger;
+contextMenuPosition = { x: '0px', y: '0px' };
+
+  ngOnInit() {
+    this.loadData();
   }
-  
-  // export table data in excel file
-  exportToExcel() {
-    const element = document.getElementById('attendanceTable');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
-    // Iterate over each cell in the worksheet
-    for (const cellAddress in ws) {
-      if (ws.hasOwnProperty(cellAddress)) {
-          const cell = ws[cellAddress];
-  
-           // Log the cell address and its value to the console
-           console.log('Cell Address:', cellAddress);
-           console.log('Cell Value:', cell);
-  
-          // Check if the cell contains an icon and update its value accordingly
-          if (cell && cell.t === 's') {
-              const cellValue = cell.v as string;
-  
-              if (cellValue.includes('<span class="far fa-check-circle text-success"></span>')) {
-                  ws[cellAddress] = { t: 's', v: 'Present' }; // Replace the icon with 'Present'
-              } else if (cellValue.includes('<span class="far fa-times-circle text-danger"></span>')) {
-                  ws[cellAddress] = { t: 's', v: 'Absent' }; // Replace the icon with 'Absent'
-              }
-          }
+  // toggleStar(row: Today) {
+  //   console.log(row);
+  // }
+
+  loadData() {
+
+    this.loading = true;
+    let s_data = {};
+    const currentUser = this.authService.currentUserValue;
+    this.todayService2.getStudentsPerStudent(currentUser.id,s_data)
+    .subscribe(
+      response => {
+        this.studentAttendance = response;
+        this.dataSource2 = this.studentAttendance;
+        this.dataSource2.paginator = this.paginator;
+        this.dataSource2.sort = this.sort;
+
+        this.loading = false;
+      },
+      error => {
+        console.error('Error getting section', error);
       }
+    );
   }
-  
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Attendance Sheet');
-    XLSX.writeFile(wb, 'attendance_record.xlsx');
-  
-    
-  }
-  
-  // Define the interface for attendance records
-  }
-  
+}

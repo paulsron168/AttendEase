@@ -1,182 +1,129 @@
 <section class="content">
     <div class="content-block">
-        <div class="block-header">
-            <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Attendance Report'" [items]="['Attendance Record']" [active_item]="'Attendance Report'">
-            </app-breadcrumb>
-        </div>
-        <div class="row clearfix">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Attendance List'" [items]="['Attendance Record']" [active_item]="'Attendance List'">
+        </app-breadcrumb>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tabbable-line">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="header">
-                        <h2></h2>
+                  <div class="materialTableHeader">
+                    <div class="left">
+                      <ul class="header-buttons-left ms-0">
+                        <li class="tbl-title">
+                          <h2>Attendance</h2>
+                        </li>
+                        <!--<li class="tbl-search-box">
+                          <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                          <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                            aria-label="Search box">
+                          </li>-->
+                        </ul>
+                      </div>
                     </div>
                     <div class="body overflow-auto">
-                        <div class="example-container">
-                            <form [formGroup]="attendanceForm">
-                                <div class="row">
-                                    <div class="col-md-3" style="margin-right: 15px;">
-                                        <mat-form-field class="example-full-width" appearance="outline" style="width: 260px;">
-                                            <mat-label>Choose start date</mat-label>
-                                            <input matInput [matDatepicker]="picker" formControlName="fromDate">
-                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                            <mat-datepicker #picker></mat-datepicker>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-3" style="margin-right: 15px;">
-                                        <mat-form-field class="example-full-width" appearance="outline" style="width: 260px;">
-                                            <mat-label>Choose end date</mat-label>
-                                            <input matInput [matDatepicker]="picker2" formControlName="toDate">
-                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                            <mat-datepicker #picker2></mat-datepicker>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-3" style="margin-right: 15px;">
-                                    <mat-form-field class="example-full-width" appearance="outline" appearance="outline" style="width: 250px;">
-                                        <mat-select placeholder="Subject">
-                                          <mat-option *ngFor="let subject of subjects" [value]="subject">
-                                            {{ subject.viewValue }}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-1" style="margin-right: 25px; margin-top: 10px;" >
-                                        <button mat-raised-button color="primary" class="small-button" style="width: 100px;">Search</button>
-                                    </div>
-                                <div class="col-1" style="margin-top: 10px;">
-                                    <div class="export-button" matTooltip="XLSX">
-                                        <img src="assets/images/icons/xlsx.png" alt="" (click)="exportToExcel()" />
-                                      </div>
-                                    </div>
-                                </div>
-                            </form>
+                      <div class="responsive_table">
+                        <table mat-table [dataSource]="dataSource2" matSort class="mat-cell advance-table">
+                          <!-- ID Column -->
+                          <ng-container matColumnDef="id">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+                          </ng-container>
+                          <ng-container matColumnDef="img">
+                            <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'"> Image
+                            </mat-header-cell>
+                            <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
+                            class="mobile-label">Image:</span> <img [src]="row.student_profile" />
+                          </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>Name
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let row"><span class="mobile-label">Name:</span> {{row.student_name}}
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="time_in">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Time In
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Time In:</span>{{row.is_present_datetime | date:'shortTime'}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="subject">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Subject
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row"> <span class="mobile-label">Subject:</span>{{row.subject_name}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Date
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <span class="mobile-label">Date:</span>{{row.roster_date | date:"longDate"}}</mat-cell>
+                    </ng-container>
+                    
+                  <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                    </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let row">
+                      <span class="mobile-label">Status:</span>
+                      @if (row.is_present==1) {
+                        <div>
+                          <span class="badge badge-pill badge-primary col-green">
+                          Present</span>
                         </div>
-                        <table table id="attendanceTable" class="table table-bordered border-bottom">
-                            <thead>
-                                <tr role="row">
-                                    <th class="border-bottom-0">
-                                        Student Name</th>
-                                    <th class="border-bottom-0 cell-dimention">1</th>
-                                    <th class="border-bottom-0 cell-dimention">2</th>
-                                    <th class="border-bottom-0 cell-dimention">3</th>
-                                    <th class="border-bottom-0 cell-dimention">4</th>
-                                    <th class="border-bottom-0 cell-dimention">5</th>
-                                    <th class="border-bottom-0 cell-dimention">6</th>
-                                    <th class="border-bottom-0 cell-dimention">7</th>
-                                    <th class="border-bottom-0 cell-dimention">8</th>
-                                    <th class="border-bottom-0 cell-dimention">9</th>
-                                    <th class="border-bottom-0 cell-dimention">10</th>
-                                    <th class="border-bottom-0 cell-dimention">11</th>
-                                    <th class="border-bottom-0 cell-dimention">12</th>
-                                    <th class="border-bottom-0 cell-dimention">13</th>
-                                    <th class="border-bottom-0 cell-dimention">14</th>
-                                    <th class="border-bottom-0 cell-dimention">15</th>
-                                    <th class="border-bottom-0 cell-dimention">16</th>
-                                    <th class="border-bottom-0 cell-dimention">17</th>
-                                    <th class="border-bottom-0 cell-dimention">18</th>
-                                    <th class="border-bottom-0 cell-dimention">19</th>
-                                    <th class="border-bottom-0 cell-dimention">20</th>
-                                    <th class="border-bottom-0 cell-dimention">21</th>
-                                    <th class="border-bottom-0 cell-dimention">22</th>
-                                    <th class="border-bottom-0 cell-dimention">23</th>
-                                    <th class="border-bottom-0 cell-dimention">24</th>
-                                    <th class="border-bottom-0 cell-dimention">25</th>
-                                    <th class="border-bottom-0 cell-dimention">26</th>
-                                    <th class="border-bottom-0 cell-dimention">27</th>
-                                    <th class="border-bottom-0 cell-dimention">28</th>
-                                    <th class="border-bottom-0 cell-dimention">29</th>
-                                    <th class="border-bottom-0 cell-dimention">30</th>
-                                    <th class="border-bottom-0 cell-dimention">31</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <!--  <tr *ngFor="let record of attendanceData"> 
-                                  <td>{{ record.studentName }}</td>
-                                   Display attendance status for each day 
-                                  <td *ngFor="let status of record.attendanceStatus">
-                                    <span [ngClass]="{'far fa-check-circle text-success': status === 'present', 'far fa-times-circle text-danger': status === 'absent'}"></span>
-                                  </td>
-                                </tr>-->
-                              </tbody>
-                              
-                            <!--<tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex"> <span class="attnd-user"> <img alt="image"
-                                                    class="msr-2 rounded-circle"
-                                                    src="assets/images/user/usrbig1.png"></span>
-                                            <div class="mt-sm-2">
-                                                <h6>Leah Jean</h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span></td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span></td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-times-circle text-danger"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                    <td class="attendance-icon"><span class="far fa-check-circle text-success"></span>
-                                    </td>
-                                </tr>
-                            </tbody> -->
-                        </table>
-  
-                    </div>
+                      }
+                      @if (row.is_present==0) {
+                        <div>
+                          <span class="badge badge-pill badge-primary col-red">
+                          Absent</span>
+                        </div>
+                      }
+                      @if (row.is_present==2) {
+                        <div>
+                          <span class="badge badge-pill badge-primary col-orange">
+                          Late</span>
+                        </div>
+                      }
+                    </mat-cell>
+                  </ng-container>
+                  
+                <mat-header-row *matHeaderRowDef="displayedColumns">
+                </mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+                </mat-row>
+              </table>
+              <!-- Loading spinner -->
+              @if (loading) {
+                <div class="tbl-spinner">
+                  <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                  </mat-progress-spinner>
                 </div>
+              }
+              @if (!loading) {
+                <div class="no-results"
+                  [style.display]="dataSource2.length === 0 ? '' : 'none'">
+                  No results
+                </div>
+              }
+              @if (!loading) {
+                <mat-paginator #paginator [length]="dataSource2.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+                </mat-paginator>
+              }
+             
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+  </div>
+  </div>
+  </div>
   </section>
+  
