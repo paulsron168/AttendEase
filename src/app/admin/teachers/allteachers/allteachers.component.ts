@@ -32,6 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { Teachers } from './teachers.model';
 import { DDialogComponent } from './dialogs/d-dialog/d-dialog.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-allteachers',
@@ -91,6 +92,7 @@ export class AllteachersComponent
   ) {
     super();
   }
+
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -195,14 +197,6 @@ export class AllteachersComponent
               this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
               // Refresh the table
               this.refreshTable();
-              // Show success notification
-              //this.showNotification(
-                //'snackbar-danger',
-                //'Delete Record Successfully...!!!',
-                //'bottom',
-                //'center'
-              //);
-
               const dialogRef = this.dialog.open(DDialogComponent, {
                 width: '270px',
                 data: {
@@ -241,21 +235,30 @@ export class AllteachersComponent
   removeSelectedRows() {
     const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
-      const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
+      this.teachersService.deleteTeacher(item.id).subscribe(
+        () => {
+          
+        },
+        (error) => {
+          // Handle error if deletion fails
+          console.error('Error deleting record:', error);
+        }
       );
-      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.dataChange.value.splice(index, 1);
-
-      this.refreshTable();
-      this.selection = new SelectionModel<Teachers>(true, []);
     });
-    this.showNotification(
-      'snackbar-danger',
-      totalSelect + ' Record Delete Successfully...!!!',
-      'bottom',
-      'center'
-    );
+
+    setTimeout(()=>{
+      Swal.fire({
+        title: 'Deleted Rows',
+        icon: 'success',
+        text: 'You were able to delete the teachers.',
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    },1000);
+
   }
   public loadData() {
     this.exampleDatabase = new TeachersService(this.httpClient);

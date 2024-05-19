@@ -401,7 +401,7 @@ export const ROUTES: RouteInfo[] = [
       },
       {
         path: '/student/Attendance/Attendance_Report',
-        title: 'Attendance Report',
+        title: 'Attendance List',
         iconType: '',
         icon: '',
         class: 'ml-menu',

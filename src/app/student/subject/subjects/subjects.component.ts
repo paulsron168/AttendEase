@@ -93,148 +93,161 @@ export class MyProjectsComponent implements OnInit {
     
  //start of modal
   PA(roster_id:any,class_start:any) {
-    Swal.fire({
-      title: 'Enter OTP for attendance',
-      input: 'text',
-      inputAttributes: {
-        autocapitalize: 'off',
-        maxLength: '8', // Convert maxLength to a string
-      },
-      inputValidator: (value) => {
-        if (!value || value.length !== 8 ) {
-          return 'Please enter a valid 8-digit OTP.';
-        }      
-        // Return undefined when the input is valid
-        return undefined;
-      },
-      showCancelButton: true,
-      confirmButtonText: 'Submit',
-      showLoaderOnConfirm: true,
-      preConfirm: (otp) => {
-        // You can perform your OTP validation here
-        return new Promise((resolve, reject) => {
-          // Placeholder function for OTP validation
-          var isValid = true; 
-          var roster_pin_id = 0; 
 
-          let q_data = {
-            pin: otp,
-            roster_date: this.formatDateOnly(new Date()),
-            roster_id:roster_id
-          };
-          // console.log(' checkRosterPin q_data',q_data);
-          this.manageRosterSVC.checkRosterPin(q_data)
-          .subscribe(
-            response => {
-              if(response.length == '0'){
-                isValid = false;
-              } else{
-                roster_pin_id = response[0].id
-              }
-            },
-            error => {
-              console.error('Error getting section', error);
-            }
-          );
+    if(this.onLocation == true){
+      Swal.fire({
+        title: 'Enter OTP for attendance',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+          maxLength: '8', // Convert maxLength to a string
+        },
+        inputValidator: (value) => {
+          if (!value || value.length !== 8 ) {
+            return 'Please enter a valid 8-digit OTP.';
+          }      
+          // Return undefined when the input is valid
+          return undefined;
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        showLoaderOnConfirm: true,
+        preConfirm: (otp) => {
+          // You can perform your OTP validation here
+          return new Promise((resolve, reject) => {
+            // Placeholder function for OTP validation
+            var isValid = true; 
+            var roster_pin_id = 0; 
   
-          setTimeout(() => {
-            // Placeholder for validation result
-            if (isValid) {
-              const currentUser = this.authService.currentUserValue;
-
-              const e = new Date();
-              // e.setHours(3);
-              // e.setMinutes(41);
-              // e.setSeconds(1);
-              const d = new Date();
-              var is_present_variable = 0;
-              var check = class_start.split(':');
-              d.setHours(check[0]);
-              d.setMinutes(check[1]);
-              d.setSeconds(check[2]);
-    
-              var diff_time = (e.getTime()-d.getTime())/1000/60;
-              if(diff_time <= 5){
-                is_present_variable = 1;
-              } else if(diff_time > 5 && diff_time <= 15){
-                is_present_variable = 2;
-              }
-          
-              // console.log('now_date',new Date().getTime());
-              // console.log('class_start',d.getTime());
-              // console.log('diff_time',diff_time);
-              // console.log('is_present_variable',is_present_variable);
-
-              let q_data = {
-                student_id: currentUser.id,
-                roster_pin_id: roster_pin_id,
-                updated_by: currentUser.firstName+' '+currentUser.lastName,
-                updated_datetime: this.formatDate(new Date()),
-                is_present: is_present_variable,
-                is_present_datetime: this.formatDate(new Date()),
-                is_present_update_display_name: currentUser.firstName+' '+currentUser.lastName,
-              }
-              // console.log(' updateAttendance q_data',q_data);
-
-              this.todayService.updateAttendanceStudent(q_data)
-              .subscribe(
-                response => {
-                    let w_data = {
-                      created_by: currentUser.firstName+' '+currentUser.lastName,
-                      created_datetime: this.formatDate(new Date()),
-                      updated_by: currentUser.firstName+' '+currentUser.lastName,
-                      updated_datetime: this.formatDate(new Date()),
-                      student_id: currentUser.id,
-                      roster_pin_id: roster_pin_id,
-                      remarks: currentUser.firstName+' '+currentUser.lastName + ' responded on his/her attendance',
-                    }
-                    
-                    this.myProjectsService.addResponseFromStudent(w_data)
-                    .subscribe(
-                      response => {
-                        console.log('added response from student');
-                      },
-                      error => {
-                        console.error('Error getting section', error);
-                      }
-                    );
-  
-                    this.ngOnInit();
-                    console.log('updateAttendance ',response);
-                },
-                error => {
-                  console.error('Error getting Alerts', error);
+            let q_data = {
+              pin: otp,
+              roster_date: this.formatDateOnly(new Date()),
+              roster_id:roster_id
+            };
+            // console.log(' checkRosterPin q_data',q_data);
+            this.manageRosterSVC.checkRosterPin(q_data)
+            .subscribe(
+              response => {
+                if(response.length == '0'){
+                  isValid = false;
+                } else{
+                  roster_pin_id = response[0].id
                 }
-              );
-
-              resolve(otp);
-            } else {
-              Swal.fire({
-                title: 'Attendance Not Recorded',
-                icon: 'error',
-                text: 'Your PIN is Invalid.',
-              });
+              },
+              error => {
+                console.error('Error getting section', error);
+              }
+            );
+    
+            setTimeout(() => {
+              // Placeholder for validation result
+              if (isValid) {
+                const currentUser = this.authService.currentUserValue;
+  
+                const e = new Date();
+                // e.setHours(3);
+                // e.setMinutes(41);
+                // e.setSeconds(1);
+                const d = new Date();
+                var is_present_variable = 0;
+                var check = class_start.split(':');
+                d.setHours(check[0]);
+                d.setMinutes(check[1]);
+                d.setSeconds(check[2]);
+      
+                var diff_time = (e.getTime()-d.getTime())/1000/60;
+                if(diff_time <= 5){
+                  is_present_variable = 1;
+                } else if(diff_time > 5 && diff_time <= 15){
+                  is_present_variable = 2;
+                }
+            
+                // console.log('now_date',new Date().getTime());
+                // console.log('class_start',d.getTime());
+                // console.log('diff_time',diff_time);
+                // console.log('is_present_variable',is_present_variable);
+  
+                let q_data = {
+                  student_id: currentUser.id,
+                  roster_pin_id: roster_pin_id,
+                  updated_by: currentUser.firstName+' '+currentUser.lastName,
+                  updated_datetime: this.formatDate(new Date()),
+                  is_present: is_present_variable,
+                  is_present_datetime: this.formatDate(new Date()),
+                  is_present_update_display_name: currentUser.firstName+' '+currentUser.lastName,
+                }
+                // console.log(' updateAttendance q_data',q_data);
+  
+                this.todayService.updateAttendanceStudent(q_data)
+                .subscribe(
+                  response => {
+                      let w_data = {
+                        created_by: currentUser.firstName+' '+currentUser.lastName,
+                        created_datetime: this.formatDate(new Date()),
+                        updated_by: currentUser.firstName+' '+currentUser.lastName,
+                        updated_datetime: this.formatDate(new Date()),
+                        student_id: currentUser.id,
+                        roster_pin_id: roster_pin_id,
+                        remarks: currentUser.firstName+' '+currentUser.lastName + ' responded on his/her attendance',
+                      }
+                      
+                      this.myProjectsService.addResponseFromStudent(w_data)
+                      .subscribe(
+                        response => {
+                          console.log('added response from student');
+                        },
+                        error => {
+                          console.error('Error getting section', error);
+                        }
+                      );
+    
+                      this.ngOnInit();
+                      console.log('updateAttendance ',response);
+                  },
+                  error => {
+                    console.error('Error getting Alerts', error);
+                  }
+                );
+  
+                resolve(otp);
+              } else {
+                Swal.fire({
+                  title: 'Attendance Not Recorded',
+                  icon: 'error',
+                  text: 'Your PIN is Invalid.',
+                });
+              }
+            }, 1000);
+          });
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const attendanceOTP = result.value;
+          Swal.fire({
+            title: 'Attendance Recorded',
+            icon: 'success',
+            text: 'Your attendance has been successfully recorded.',
+            allowOutsideClick: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
             }
-          }, 1000);
-        });
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const attendanceOTP = result.value;
-        Swal.fire({
-          title: 'Attendance Recorded',
-          icon: 'success',
-          text: 'Your attendance has been successfully recorded.',
-          allowOutsideClick: false,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.reload();
-          }
-        });
-       
-      }
-    });
+          });
+        }
+      });
+    } else{
+      Swal.fire({
+        title: 'Attendance Error',
+        icon: 'error',
+        text: 'Invalid user\'s location.',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    }
+   
   }
   //end of modal
   //ANOTHER MODAL

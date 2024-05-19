@@ -30,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { DDialogComponent } from 'app/admin/teachers/allteachers/dialogs/d-dialog/d-dialog.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-allsubjects',
@@ -210,21 +211,28 @@ export class AllsubjectsComponent
   removeSelectedRows() {
     const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
-      const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
+      this.subjectService.deleteSubject(item.subjectCode).subscribe(
+        () => {
+         
+        },
+        (error) => {
+          // Handle error if deletion fails
+          console.error('Error deleting record:', error);
+        }
       );
-      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.dataChange.value.splice(index, 1);
-
-      this.refreshTable();
-      this.selection = new SelectionModel<Allsubjects>(true, []);
     });
-    this.showNotification(
-      'snackbar-danger',
-      totalSelect + ' Record Delete Successfully...!!!',
-      'bottom',
-      'center'
-    );
+    setTimeout(()=>{
+      Swal.fire({
+        title: 'Deleted Rows',
+        icon: 'success',
+        text: 'You were able to delete the subjects.',
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    },1000);
   }
   public loadData() {
     this.exampleDatabase = new SubjectsService(this.httpClient);
