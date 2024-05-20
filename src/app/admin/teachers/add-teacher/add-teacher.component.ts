@@ -67,7 +67,7 @@ export class AddTeacherComponent {
   constructor(private fb: FormBuilder, private teacherService: TeachersService, private snackBar: MatSnackBar, private _dialog: MatDialog) {
     this.docForm = this.fb.group({
       id_number: ['', [Validators.required]],
-      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z\s]+')]],
       middlename: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
       gender: ['', [Validators.required]],

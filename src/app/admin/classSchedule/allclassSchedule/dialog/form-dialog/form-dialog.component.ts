@@ -223,7 +223,7 @@ export class FormDialogComponent implements OnInit {
         class_subject_id: this.classScheduleForm.value.class_subject,
         class_section_id: this.classScheduleForm.value.class_section,
       };
-      console.log('q_data',q_data);
+      // console.log('q_data',q_data);
 
       this.classScheduleService.updateClassSchedule(this.data.classSchedule.id, q_data).subscribe({
         next: (val: any) => {

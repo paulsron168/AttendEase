@@ -77,7 +77,7 @@ export class FormDialogComponent implements OnInit {
 
   ) {
     // Set the defaults
-    console.log('data',data);
+    // console.log('data',data);
     this.action = data.action;
     if (this.action === 'edit') {
       this.dialogTitle = 'Class Roster [' + data.manageRoster.id + ']';
@@ -162,7 +162,7 @@ export class FormDialogComponent implements OnInit {
         schedule_id: this.manageRosterForm.value.schedule,
         teacher_id: this.manageRosterForm.value.teacher,
       };
-      console.log(q_data);
+      // console.log(q_data);
 
       this.manageRosterService.addRoster(q_data).subscribe({
         next: (val: any) => {

@@ -97,6 +97,7 @@ export class SidebarComponent
 
       this.userFullName = this.authService.currentUserValue.firstName + ' ' + this.authService.currentUserValue.lastName;
       this.userImg = this.authService.currentUserValue.img;
+      console.log('userImg',this.userImg);
       const userRole = this.authService.currentUserValue.role;
 
       let s_data = {};

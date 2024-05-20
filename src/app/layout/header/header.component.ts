@@ -249,7 +249,7 @@ export class HeaderComponent
       this.studentService.getNotificationAlertsTeacher(currentUser.id,s_data)
       .subscribe(
         response => {
-          console.log(response);
+          // console.log(response);
           this.notif = response;
           this.notifList = [];
           this.notif.forEach((alert:any)=>{
