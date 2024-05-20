@@ -123,60 +123,107 @@ export class SettingsComponent implements OnInit{
           response => {
             filePath = environment.ImagesPath + response[0]['filename'];
             console.log('uploadedImagePath',filePath);
+
+            setTimeout(()=>{
+              const currentUser = this.authService.currentUserValue;
+              let q_data = {};
+        
+              if(filePath != ""){
+                q_data = {
+                  firstname: this.docForm.value.First_Name,
+                  middlename: this.docForm.value.Middle_Name,
+                  lastname: this.docForm.value.Last_Name,
+                  email_address: this.docForm.value.Email_Address,
+                  contact_number: this.docForm.value.Contact_Number,
+                  profile_picture:filePath
+                }
+              }else{
+                q_data = {
+                  firstname: this.docForm.value.First_Name,
+                  middlename: this.docForm.value.Middle_Name,
+                  lastname: this.docForm.value.Last_Name,
+                  email_address: this.docForm.value.Email_Address,
+                  contact_number: this.docForm.value.Contact_Number
+                }
+              }
+        
+              this.settingService.updateAccount(currentUser.id,q_data)
+              .subscribe(
+                response => {
+                  Swal.fire({
+                    title: 'Update Account Successfully',
+                    icon: 'success',
+                    text: "Please check the updated account data.",
+                    allowOutsideClick: false,
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.reload();
+                    }
+                  });
+                },
+                error => {
+                  Swal.fire({
+                    title: 'Update failed',
+                    icon: 'error',
+                    text: 'Please ask the administrator.',
+                  });
+                }
+              );
+            },1000);
           },
           error => {
             console.error(error);
           }
         );
+      } else{
+        setTimeout(()=>{
+          const currentUser = this.authService.currentUserValue;
+          let q_data = {};
+    
+          if(filePath != ""){
+            q_data = {
+              firstname: this.docForm.value.First_Name,
+              middlename: this.docForm.value.Middle_Name,
+              lastname: this.docForm.value.Last_Name,
+              email_address: this.docForm.value.Email_Address,
+              contact_number: this.docForm.value.Contact_Number,
+              profile_picture:filePath
+            }
+          }else{
+            q_data = {
+              firstname: this.docForm.value.First_Name,
+              middlename: this.docForm.value.Middle_Name,
+              lastname: this.docForm.value.Last_Name,
+              email_address: this.docForm.value.Email_Address,
+              contact_number: this.docForm.value.Contact_Number
+            }
+          }
+    
+          this.settingService.updateAccount(currentUser.id,q_data)
+          .subscribe(
+            response => {
+              Swal.fire({
+                title: 'Update Account Successfully',
+                icon: 'success',
+                text: "Please check the updated account data.",
+                allowOutsideClick: false,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.reload();
+                }
+              });
+            },
+            error => {
+              Swal.fire({
+                title: 'Update failed',
+                icon: 'error',
+                text: 'Please ask the administrator.',
+              });
+            }
+          );
+        },1000);
       }
 
-      setTimeout(()=>{
-        const currentUser = this.authService.currentUserValue;
-        let q_data = {};
-  
-        if(filePath != ""){
-          q_data = {
-            firstname: this.docForm.value.First_Name,
-            middlename: this.docForm.value.Middle_Name,
-            lastname: this.docForm.value.Last_Name,
-            email_address: this.docForm.value.Email_Address,
-            contact_number: this.docForm.value.Contact_Number,
-            profile_picture:filePath
-          }
-        }else{
-          q_data = {
-            firstname: this.docForm.value.First_Name,
-            middlename: this.docForm.value.Middle_Name,
-            lastname: this.docForm.value.Last_Name,
-            email_address: this.docForm.value.Email_Address,
-            contact_number: this.docForm.value.Contact_Number
-          }
-        }
-  
-        this.settingService.updateAccount(currentUser.id,q_data)
-        .subscribe(
-          response => {
-            Swal.fire({
-              title: 'Update Account Successfully',
-              icon: 'success',
-              text: "Please check the updated account data.",
-              allowOutsideClick: false,
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.reload();
-              }
-            });
-          },
-          error => {
-            Swal.fire({
-              title: 'Update failed',
-              icon: 'error',
-              text: 'Please ask the administrator.',
-            });
-          }
-        );
-      },1000);
-    
     }    
   }
 
