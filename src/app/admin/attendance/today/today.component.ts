@@ -82,7 +82,7 @@ export class TodayComponent
       response => {
 
         this.studentAttendance = response;
-        console.log(response);
+        // console.log(response);
         this.dataSource2 = this.studentAttendance;
         this.dataSource2.paginator = this.paginator;
         this.dataSource2.sort = this.sort;

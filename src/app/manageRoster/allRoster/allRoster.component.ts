@@ -187,7 +187,7 @@ export class AllRosterComponent
     } else {
       tempDirection = 'ltr';
     }
-    console.log(row);
+    // console.log(row);
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       height: '270px',
       width: '300px',
