@@ -19,6 +19,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
+import * as moment from 'moment';
 
 export interface DialogData{
   roster_pin_id: number;
@@ -79,6 +80,21 @@ export class Attendance_Record_Component implements OnInit {
   ngOnInit(): void {
   
     this.initializeData();
+  }
+
+  addDateTimeHours(date:any){
+    var convertDate = date;
+
+    if(date != null){
+      let h = 12;
+      convertDate = new Date(date);
+      convertDate.setTime(convertDate.getTime() - (h*60*60*1000));
+    } else{
+      convertDate = null;
+    }
+
+    return convertDate;
+   
   }
 
   initializeData(){
