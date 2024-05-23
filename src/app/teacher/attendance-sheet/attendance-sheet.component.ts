@@ -11,6 +11,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { NgClass } from '@angular/common';
+import { TableExportUtil, TableElement } from '@shared';
 import { MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -85,34 +86,6 @@ refresh() {
   this.loadData();
 }
 
-/* addNew() {
-  let tempDirection: Direction;
-  if (localStorage.getItem('isRtl') === 'true') {
-    tempDirection = 'rtl';
-  } else {
-    tempDirection = 'ltr';
-  }
-  const dialogRef = this.dialog.open(FormDialogComponent, {
-    data: { name: this.name, manual: this.manual },
-    direction: tempDirection,
-  });
-  this.subs.sink = dialogRef.afterClosed().subscribe((result: number) => {
-    if (result === 1) {
-      // After dialog is closed we're doing frontend updates
-      // For add we're just pushing a new row inside DataServicex
-      this.exampleDatabase?.dataChange.value.unshift(
-        this.todayService.getDialogData()
-      );
-      this.refreshTable();
-      this.showNotification(
-        'snackbar-success',
-        'Successfully Save...!!!',
-        'bottom',
-        'center'
-      );
-    }
-  });
-}*/
 
 editCall(row: Today) {
   this.id = row.id;
@@ -203,6 +176,24 @@ applyFilter(){
   this.arrayData.filter = this.searchKey.trim().toLowerCase();
 }
 
+exportExcel() {
+  // key name with space add in brackets
+  const exportData: Partial<TableElement>[] =
+    this.arrayData.filteredData.map((x:any) => ({
+      RosterID: x.roster_id,
+      Subject : x.subject_name,
+      StartTime : x.class_start,
+      EndTime : x.class_end,
+      RosterDate : x.roster_date,
+      PIN : x.pin,
+      Section : x.section,
+      ID: x.id,
+
+    }));
+
+  TableExportUtil.exportToExcel(exportData, 'excel');
+}
+
 current_attendance(roster_pin_id:any){
   let tempDirection: Direction;
 
@@ -231,6 +222,7 @@ public loadData() {
   this.rosterService.getRosterPinPerTeacher(currentUser.id,q_data)
   .subscribe(
     response => {
+
       this.arrayData = new MatTableDataSource(response);
       this.arrayData.sort = this.sort;
       this.arrayData.paginator = this.paginator;
