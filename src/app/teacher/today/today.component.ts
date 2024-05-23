@@ -10,6 +10,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Today } from './today.model';
+import { TableExportUtil, TableElement } from '@shared';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { NgClass } from '@angular/common';
@@ -163,7 +164,6 @@ export class TodayComponent
     'subject',
     'class_start',
     'class_end',
-    'roster_id',
     'roster_date',
     'pin',
     'section',
@@ -198,6 +198,24 @@ export class TodayComponent
     this.arrayData.filter = this.searchKey.trim().toLowerCase();
   }
 
+  exportExcel() {
+    // key name with space add in brackets
+    const exportData: Partial<TableElement>[] =
+      this.arrayData.filteredData.map((x:any) => ({
+        RosterID: x.roster_id,
+        Subject : x.subject_name,
+        StartTime : x.class_start,
+        EndTime : x.class_end,
+        RosterDate : x.roster_date,
+        PIN : x.pin,
+        Section : x.section,
+        ID: x.id,
+
+      }));
+
+    TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+
   current_attendance(roster_pin_id:any){
     let tempDirection: Direction;
 
@@ -226,6 +244,8 @@ export class TodayComponent
     this.rosterService.getRosterPinPerTeacherToday(currentUser.id,q_data)
     .subscribe(
       response => {
+    console.log(response);
+
         this.arrayData = new MatTableDataSource(response);
         this.arrayData.sort = this.sort;
         this.arrayData.paginator = this.paginator;
