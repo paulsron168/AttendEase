@@ -13,6 +13,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource,MatTableModule  } from '@angular/material/table';
 import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
 import { EditAttendanceComponent } from '../edit-attendance/edit-attendance.component';
+import { TableExportUtil, TableElement } from '@shared';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
@@ -97,6 +98,51 @@ export class Attendance_Record_Component implements OnInit {
    
   }
 
+  formatDate(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    seconds = seconds < 10 ? '0'+seconds : seconds;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds + ' ' +ampm;
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
+  }
+
+  
+  convertDateTOTimeAMPM(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    seconds = seconds < 10 ? '0'+seconds : seconds;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+
+  exportExcel() {
+    // key name with space add in brackets
+    console.log('this.select_source',this.select_source.filteredData);
+    const exportData: Partial<TableElement>[] =
+      this.select_source.filteredData.map((x:any) => ({
+        StudentName: x.student_name,
+        ID_Number : x.id_number,
+        Attendance : x.is_present == 2 ? 'Late': x.is_present == 1 ? "Present" : "Absent",
+        UpdatedDatime : x.is_present_datetime == null  ? "" :  this.formatDate(new Date(x.is_present_datetime)),
+
+        UpdatedBy : x.is_present_update_display_name,
+        ID: x.alert_id,
+      }));
+  
+    TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+  
+
   initializeData(){
     let q_data = {
       roster_pin_id: this.roster_pin_id
@@ -104,7 +150,6 @@ export class Attendance_Record_Component implements OnInit {
     this.rosterService.getRosterPinAlertsPerSection(this.roster_pin_id,q_data)
     .subscribe(
       response => {
-        // console.log('response',response);
         this.select_source = new MatTableDataSource(response);
       },
       error => {
