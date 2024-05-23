@@ -3,7 +3,12 @@
     <mat-spinner></mat-spinner>
   </div>
   <div mat-dialog-content *ngIf="!loading">
-      <div class="confirm-title">Attendance Record</div>
+      <div class="confirm-title">
+        Attendance Record
+        <div class="export-button m-l-12" matTooltip="XLSX">
+          <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+        </div>
+      </div>
       <mat-divider></mat-divider>
   </div>
 
