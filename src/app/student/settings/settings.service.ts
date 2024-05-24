@@ -16,6 +16,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   private readonly GET_MYACCOUNT_DATA_URL = environment.apiUrl + '/my_account';
   private readonly CHECK_PASSWORD_URL = environment.apiUrl + '/check_password';
+  private readonly CHECK_EMAIL_URL = environment.apiUrl + '/check_email';
   private readonly UPDATE_PASSWORD_URL = environment.apiUrl + '/update_password';
   private readonly UPDATE_MYACCOUNT_URL = environment.apiUrl + '/update_myaccount';
 
@@ -35,6 +36,11 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   checkPassword(id: number,data:any): Observable<any> {
     const url = `${this.CHECK_PASSWORD_URL}/${id}`;
+    return this.httpClient.post(url,data);
+  }
+
+  checkEmail(id: number,data:any): Observable<any> {
+    const url = `${this.CHECK_EMAIL_URL}/${id}`;
     return this.httpClient.post(url,data);
   }
   

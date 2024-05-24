@@ -20,6 +20,7 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   private readonly GET_ROSTER_PIN_ALERTS_PER_ID_URL = environment.apiUrl + '/roster_pin_alerts_per_id';
   private readonly GET_ROSTER_PIN_PER_TEACHER_URL = environment.apiUrl + '/roster_pin_per_teacher';
   private readonly GET_ROSTER_PIN_PER_TEACHER_TODAY_URL = environment.apiUrl + '/roster_pin_per_teacher_today';
+  private readonly GET_ROSTER_PIN_ALL_TEACHER_TODAY_URL = environment.apiUrl + '/roster_pin_all_teacher_today';
   
   isTblLoading = true;
   dataChange: BehaviorSubject<ManageRoster[]> = new BehaviorSubject<ManageRoster[]>([]);
@@ -94,6 +95,11 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
 
   getRosterPinPerTeacherToday(pin_id: any,manageRosterData:any): Observable<any> {
     const url = `${this.GET_ROSTER_PIN_PER_TEACHER_TODAY_URL}/${pin_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
+
+  getRosterPinAllTeacherToday(pin_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_ALL_TEACHER_TODAY_URL}/${pin_id}`;
     return this.httpClient.post<any>(url, manageRosterData);
   }
 

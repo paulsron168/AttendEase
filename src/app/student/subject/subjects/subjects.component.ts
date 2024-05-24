@@ -93,11 +93,12 @@ export class MyProjectsComponent implements OnInit {
     
  //start of modal
   PA(roster_id:any,class_start:any) {
+    console.log('this.center = ',this.center);
     console.log('this.onLocation = ',this.onLocation);
     console.log('roster_id = ',roster_id);
     console.log('class_start = ',class_start);
     
-    if(this.onLocation == true){
+    // if(this.onLocation == true){
       Swal.fire({
         title: 'Enter OTP for attendance',
         input: 'text',
@@ -239,17 +240,17 @@ export class MyProjectsComponent implements OnInit {
           });
         }
       });
-    } else{
-      Swal.fire({
-        title: 'Attendance Error',
-        icon: 'error',
-        text: 'Invalid user\'s location.',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.reload();
-        }
-      });
-    }
+    // } else{
+    //   Swal.fire({
+    //     title: 'Attendance Error',
+    //     icon: 'error',
+    //     text: 'Invalid user\'s location.',
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       window.location.reload();
+    //     }
+    //   });
+    // }
    
   }
   //end of modal
