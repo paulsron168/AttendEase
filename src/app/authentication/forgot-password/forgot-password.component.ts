@@ -5,6 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { SettingsService } from 'app/student/settings/settings.service';
+import Swal from 'sweetalert2';
+
+
 @Component({
     selector: 'app-forgot-password',
     templateUrl: './forgot-password.component.html',
@@ -27,7 +31,8 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private settingService:SettingsService
   ) {}
   ngOnInit() {
     this.authForm = this.formBuilder.group({
@@ -48,7 +53,51 @@ export class ForgotPasswordComponent implements OnInit {
     if (this.authForm.invalid) {
       return;
     } else {
-      this.router.navigate(['/dashboard/main']);
+      let q_data = {
+        email: this.authForm.value.email
+      };
+
+      this.settingService.checkEmail(0,q_data).subscribe(
+        response => {
+
+          if(response.length > 0){
+
+            let s_data = {
+              password: response[0]['lastname'],
+            }
+
+            this.settingService.updatePassword(response[0]['id'],s_data)
+            .subscribe(
+              response => {
+                Swal.fire({
+                  title: 'Reset Password Successfully',
+                  icon: 'success',
+                  text: 'Password has been reset. Your new password will be your lastname. Please don\'t forget to change your password afterwards!', 
+                  allowOutsideClick: false,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                     this.router.navigate(['/authentication/signin']);
+                  }
+                });
+              },
+              error => {
+                console.error('Error getting updatePassword', error);
+              }
+            );
+          
+          } else{
+            Swal.fire({
+              title: 'Invalid Email Address',
+              icon: 'error',
+              text: 'Please check your email address and try again',
+            });
+          }
+        },
+        error => {
+          console.error('Error getting section', error);
+        }
+      );
+     
     }
   }
 }

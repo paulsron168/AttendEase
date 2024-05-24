@@ -10,14 +10,19 @@ import { map } from 'rxjs/operators';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource,MatTableModule  } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { NgClass } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { AuthService } from '@core';
 import { DatePipe } from '@angular/common';
+import { TableExportUtil, TableElement } from '@shared';
+import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
+import { Attendance_Record_Component } from 'app/teacher/attendance_record/attendance_record.component';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-today',
   templateUrl: './today.component.html',
@@ -30,7 +35,9 @@ import { DatePipe } from '@angular/common';
     NgClass,
     MatRippleModule,
     MatProgressSpinnerModule,
-    MatPaginatorModule,
+    MatPaginatorModule, 
+    MatIconModule,
+    MatButtonModule,
     DatePipe
   ],
 })
@@ -40,12 +47,15 @@ export class TodayComponent
 {
   filterToggle = false;
   displayedColumns = [
-    'img',
-    'name',
-    'time_in',
+    'roster_id',
     'subject',
-    'date',
-    'status'
+    'class_start',
+    'class_end',
+    'roster_date',
+    'pin',
+    'section',
+    'id',
+    'modal',
   ];
 
   loading:boolean = false
@@ -58,7 +68,8 @@ export class TodayComponent
     public httpClient: HttpClient,
     private authService:AuthService,
     public todayService: TodayService,
-    private todayService2: TodayService2
+    public dialog: MatDialog,
+    private rosterService: ManageRosterService
   ) {
     super();
   }
@@ -77,21 +88,65 @@ export class TodayComponent
     this.loading = true;
     let s_data = {};
     const currentUser = this.authService.currentUserValue;
-    this.todayService2.getStudentsPerTeacher(currentUser.id,s_data)
+    this.rosterService.getRosterPinAllTeacherToday(currentUser.id,s_data)
     .subscribe(
       response => {
 
         this.studentAttendance = response;
-        // console.log(response);
-        this.dataSource2 = this.studentAttendance;
-        this.dataSource2.paginator = this.paginator;
+        this.dataSource2 = new MatTableDataSource(response);
         this.dataSource2.sort = this.sort;
-
+        this.dataSource2.paginator = this.paginator;
         this.loading = false;
       },
       error => {
         console.error('Error getting section', error);
       }
     );
+  }
+
+  formatDate(date:any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    seconds = seconds < 10 ? '0'+seconds : seconds;
+    var strTime =  ("0" + hours).slice(-2) + ':' + minutes + ':' + seconds + ' ' +ampm;
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2) + " " + strTime;
+  }
+
+  current_attendance(roster_pin_id:any){
+
+    const dialogRef = this.dialog.open(Attendance_Record_Component, {
+      width: "1000px",
+      height: "700px",
+      data: {
+        roster_pin_id: roster_pin_id,
+        action: 'add',
+      }
+    });
+    
+    dialogRef.afterClosed().subscribe((_result: any) => {
+      this.loadData();
+    });
+  }
+
+
+  exportExcel() {
+    // key name with space add in brackets
+    console.log('this.dataSource2',this.dataSource2.filteredData);
+    const exportData: Partial<TableElement>[] =
+      this.dataSource2.filteredData.map((x:any) => ({
+        StudentName: x.student_name,
+        ID_Number : x.id_number,
+        Attendance : x.is_present == 2 ? 'Late': x.is_present == 1 ? "Present" : "Absent",
+        UpdatedDatime : x.is_present_datetime == null  ? "" :  this.formatDate(new Date(x.is_present_datetime)),
+        UpdatedBy : x.is_present_update_display_name,
+        ID: x.alert_id,
+      }));
+  
+    TableExportUtil.exportToExcel(exportData, 'excel');
   }
 }

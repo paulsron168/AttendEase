@@ -134,7 +134,6 @@ export class Attendance_Record_Component implements OnInit {
         ID_Number : x.id_number,
         Attendance : x.is_present == 2 ? 'Late': x.is_present == 1 ? "Present" : "Absent",
         UpdatedDatime : x.is_present_datetime == null  ? "" :  this.formatDate(new Date(x.is_present_datetime)),
-
         UpdatedBy : x.is_present_update_display_name,
         ID: x.alert_id,
       }));
