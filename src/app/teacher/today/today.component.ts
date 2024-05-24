@@ -82,35 +82,6 @@ export class TodayComponent
     this.loadData();
   }
 
- /* addNew() {
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(FormDialogComponent, {
-      data: { name: this.name, manual: this.manual },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result: number) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataServicex
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.todayService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Successfully Save...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    });
-  }*/
-
   editCall(row: Today) {
     this.id = row.id;
     let tempDirection: Direction;
@@ -217,7 +188,6 @@ export class TodayComponent
   }
 
   current_attendance(roster_pin_id:any){
-    let tempDirection: Direction;
 
     const dialogRef = this.dialog.open(Attendance_Record_Component, {
       width: "1000px",

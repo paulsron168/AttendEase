@@ -14,7 +14,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { NgClass } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { AuthService } from '@core';
 import { DatePipe } from '@angular/common';
@@ -28,6 +28,7 @@ import { DatePipe } from '@angular/common';
     MatTableModule,
     MatSortModule,
     NgClass,
+    MatTableModule,
     MatRippleModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
@@ -49,7 +50,7 @@ displayedColumns = [
   
 ];
 exampleDatabase?: TodayService;
-studentAttendance: any;
+studentAttendance: any[] = [];
 studentAttendanceList:any;
 dataSource2!: any;
 dayOfWeek:any;
@@ -88,6 +89,11 @@ contextMenuPosition = { x: '0px', y: '0px' };
     console.log(row);
   }
 
+  formatDate(date:any) {
+    return date.getFullYear()+'-'+("0" + (date.getMonth()+1)).slice(-2)+ "-" + ("0" + date.getDate()).slice(-2);
+  }
+
+
   loadData() {
 
     this.loading = true;
@@ -98,17 +104,21 @@ contextMenuPosition = { x: '0px', y: '0px' };
       response => {
 
         this.studentAttendanceList = response;
+        console.log(response);
         this.studentAttendanceList.forEach((row:any)=>{
-          if(row.class_days.includes(this.currentDate)){
+
+          if(row.class_days.includes(this.dayOfWeek) && this.formatDate(new Date(row.roster_date)) == this.formatDate(this.currentDate)){
             this.studentAttendance.push(row);
           }
+          // this.studentAttendance.push(row);
         });
 
-        setTimeout(()=>{
-          this.dataSource2 = this.studentAttendance;
-          this.dataSource2.paginator = this.paginator;
-          this.dataSource2.sort = this.sort;
-        },1000);
+        this.dataSource2 = new MatTableDataSource(this.studentAttendance);
+        this.dataSource2.paginator = this.paginator;
+        this.dataSource2.sort = this.sort;
+        // setTimeout(()=>{
+        
+        // },1000);
        
 
         this.loading = false;
