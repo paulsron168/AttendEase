@@ -21,6 +21,7 @@ import {
 } from '@angular/material/snack-bar';
 import { ManageRosterService } from 'app/manageRoster/allRoster/manageRoster.service';
 import * as moment from 'moment';
+import { AuthService } from '@core';
 
 export interface DialogData{
   roster_pin_id: number;
@@ -67,14 +68,19 @@ export class Attendance_Record_Component implements OnInit {
     'id',
     'actions'
   ];
+  
+  userRole:any;
 
   constructor(
     public dialogRef: MatDialogRef<Attendance_Record_Component>,
     private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private rosterService:ManageRosterService,
-    private dialog:MatDialog) {
+    private dialog:MatDialog,
+    private authService:AuthService) {
     this.roster_pin_id = data.roster_pin_id
+
+
     // constructor
   }
 
@@ -143,6 +149,23 @@ export class Attendance_Record_Component implements OnInit {
   
 
   initializeData(){
+
+    const currentUser = this.authService.currentUserValue;
+    this.userRole = currentUser.role;
+
+    if(this.userRole=="Admin"){
+      this.displayedColumns = [
+        'select',
+        'student_id',
+        'student_name',
+        'id_number',
+        'is_present',
+        'is_present_datetime',
+        'is_present_update_display_name',
+        'id'
+      ];
+    }
+    
     let q_data = {
       roster_pin_id: this.roster_pin_id
     }
