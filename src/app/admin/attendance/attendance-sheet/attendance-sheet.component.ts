@@ -186,6 +186,10 @@ export class AttendanceSheetComponent implements OnInit{
     .subscribe(
       response => {
 
+        this.dayArray = [];
+        this.dateArray = [];
+        this.studentList = [];
+
         var date1 = new Date(startmonth);
         var date2 = new Date(endmonth);
         
