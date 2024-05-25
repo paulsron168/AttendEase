@@ -52,14 +52,12 @@ export interface DialogData {
 export class FormDialogComponent implements OnInit {
   classSection: any[] = [];
 
-
   loading: boolean = false;
   action: string;
   dialogTitle: string;
   classScheduleForm: UntypedFormGroup;
   classSchedule: ClassSchedule;
    
-
   //dialog: any;
   isReadOnly: boolean = true;
   private _dialogRef: MatDialogRef<UpdateDialogComponent> | undefined;
@@ -74,6 +72,7 @@ export class FormDialogComponent implements OnInit {
     'Thursday',
     'Friday',
     'Saturday',
+    'Sunday'
   ];
 
   constructor(
