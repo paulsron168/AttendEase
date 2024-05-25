@@ -17,6 +17,7 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
   private readonly CHECK_ROSTER_PIN_URL = environment.apiUrl + '/check_roster_pin';
   private readonly ADD_ROSTER_PIN_ALERTS_URL = environment.apiUrl + '/add_roster_pin_alerts';
   private readonly GET_ROSTER_PIN_ALERTS_PERSECTION_URL = environment.apiUrl + '/roster_pin_alerts_per_section';
+  private readonly GET_ROSTER_PIN_ALERTS_PERSECTION_PERSUBJECT_URL = environment.apiUrl + '/roster_pin_alerts_per_section_subject';
   private readonly GET_ROSTER_PIN_ALERTS_PER_ID_URL = environment.apiUrl + '/roster_pin_alerts_per_id';
   private readonly GET_ROSTER_PIN_PER_TEACHER_URL = environment.apiUrl + '/roster_pin_per_teacher';
   private readonly GET_ROSTER_PIN_PER_TEACHER_TODAY_URL = environment.apiUrl + '/roster_pin_per_teacher_today';
@@ -80,6 +81,11 @@ export class ManageRosterService extends UnsubscribeOnDestroyAdapter {
 
   getRosterPinAlertsPerSection(roster_pin_id: any,manageRosterData:any): Observable<any> {
     const url = `${this.GET_ROSTER_PIN_ALERTS_PERSECTION_URL}/${roster_pin_id}`;
+    return this.httpClient.post<any>(url, manageRosterData);
+  }
+
+  getRosterPinAlertsPerSectionPerSubject(roster_pin_id: any,manageRosterData:any): Observable<any> {
+    const url = `${this.GET_ROSTER_PIN_ALERTS_PERSECTION_PERSUBJECT_URL}/${roster_pin_id}`;
     return this.httpClient.post<any>(url, manageRosterData);
   }
   
